@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiation: Blackbody Radiation and Related Laws</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family:'Lucky Guy' Comfortaa, 'Roboto Condensed', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #bb4451;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #7244bb;
+            border-bottom: 3px solid #303f9f;
+            padding-bottom: 15px;
+            font-size: 2.8em;
+            font-family:'Luckiest Guy', Impact, Georgia, Roboto, serif;
+            background-color: #FFFFFF;
+        }
+        
+        h2 {
+            color: #FFFFFF;
+            border-bottom: 2px solid #3f51b5;
+            padding-bottom: 10px;
+            font-size: 2em;
+            font-family:'Rock Salt', Rosario, Rubik, Anton, 'Noto Sans', sans;
+            background-color: #7244bb;
+        }
+        
+        h3 {
+            color: #f7f4dc;
+            font-size: 1.5em;
+            font-family: Constantia, Consolas, 'Comic Sans', 'Noto Serif', sans;
+            background-color: #eb148e;
+        }
+        
+        h4 {
+            color: #7244bb;
+            font-size: 1.2em;
+            font-family: Montserrat, 'Roboto Mono', serif;
+        }
+        
+        .container {
+            background-color: #b144ff;
+            padding: 25px;
+            border-radius: 2px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .definition {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-left: 6px solid #2196f3;
+            margin: 15px 0;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        }
+        
+        .statement {
+            background-color: #f1f8e9;
+            padding: 20px;
+            border-left: 6px solid #8bc34a;
+            margin: 15px 0;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .deduction {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-left: 6px solid #ffc107;
+            margin: 15px 0;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .proof {
+            background-color: #fce4ec;
+            padding: 20px;
+            border-left: 6px solid #e91e63;
+            margin: 15px 0;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .problem {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-left: 6px solid #795548;
+            margin: 15px 0;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .graph-container {
+            width: 100%;
+            height: 500px;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .interactive-btn {
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        
+        .interactive-btn:hover {
+            background-color: #b3d12e;
+            transform: scale(1.20);
+        }
+        
+        .math {
+            font-size: 1.2em;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            gap: 10px;
+            background-color: #316f73;
+        }
+        
+        .nav a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav a:hover {
+            background-color: #b34c83;
+        }
+        
+        .constants-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #b34c83;
+        }
+        
+        .constants-table th, .constants-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .constants-table th {
+            background-color: #3f51b5;
+            color: white;
+        }
+        
+        .constants-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .note {
+            background-color: #c6d629;
+            padding: 15px;
+            border-left: 6px solid #ff9800;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-style: italic;
+        }
+        
+        .summary {
+            background-color: #eb148e;
+            padding: 15px;
+            border-left: 6px solid #4caf50;
+            margin: 15px 0;
+            border-radius: 0px;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thermal Radiation: A Documentation on Blackbody Radiation and Related Laws</h1>
+    <h2>Made with Mistral Vibe by Soumyajit Roy</h2>
+    <div class="nav">
+        <a href="#introduction">Introduction</a>
+        <a href="#blackbody-radiation">Blackbody Radiation</a>
+        <a href="#energy-density">Energy Density</a>
+        <a href="#planck-law">Planck's Law</a>
+        <a href="#stefan-boltzmann">Stefan-Boltzmann Law</a>
+        <a href="#rayleigh-jeans">Rayleigh-Jeans Law</a>
+        <a href="#wien-displacement">Wien's Displacement Law</a>
+        <a href="#comparison-laws">Comparison of Laws</a>
+        <a href="#applications">Applications</a>
+        <a href="#problems">Solved Problems</a>
+        <a href="#references">References</a>
+    </div>
+
+    <!-- Introduction Section -->
+    <div id="introduction" class="container">
+        <h2>Introduction</h2>
+        <p style="color: #f7f4dc">
+            This documentation provides a <strong>detailed and rigorous</strong> exploration of blackbody radiation and its spectral distribution, 
+            including the derivation of Planck's law and the deduction of the Stefan-Boltzmann law, Rayleigh-Jeans law, and Wien's displacement law. 
+            It is designed for <strong>undergraduate to postgraduate physics students</strong> and includes definitions, statements, deductions, proofs, and solved problems.
+        </p>
+        
+        <div class="note">
+            <p><strong>Note:</strong> All mathematical derivations are presented step-by-step, and interactive graphs are provided to visualize the concepts.</p>
+        </div>
+        
+        <h3>Fundamental Constants</h3>
+        <table class="constants-table">
+            <tr>
+                <th>Constant</th>
+                <th>Symbol</th>
+                <th>Value</th>
+                <th>Units</th>
+            </tr>
+            <tr>
+                <td>Planck's Constant</td>
+                <td>\( h \)</td>
+                <td>\( 6.62607015 \times 10^{-34} \)</td>
+                <td>J·s</td>
+            </tr>
+            <tr>
+                <td>Speed of Light in Vacuum</td>
+                <td>\( c \)</td>
+                <td>\( 2.99792458 \times 10^8 \)</td>
+                <td>m/s</td>
+            </tr>
+            <tr>
+                <td>Boltzmann's Constant</td>
+                <td>\( k \)</td>
+                <td>\( 1.380649 \times 10^{-23} \)</td>
+                <td>J/K</td>
+            </tr>
+            <tr>
+                <td>Stefan-Boltzmann Constant</td>
+                <td>\( \sigma \)</td>
+                <td>\( 5.670374419 \times 10^{-8} \)</td>
+                <td>W·m⁻²·K⁻⁴</td>
+            </tr>
+            <tr>
+                <td>Wien's Displacement Constant</td>
+                <td>\( b \)</td>
+                <td>\( 2.897771955 \times 10^{-3} \)</td>
+                <td>m·K</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Blackbody Radiation Section -->
+    <div id="blackbody-radiation" class="container">
+        <h2>Blackbody Radiation and Its Spectral Distribution</h2>
+        <div class="definition">
+            <h3>Definition</h3>
+            <p>
+                A <strong>blackbody</strong> is an idealized physical body that absorbs <strong>all</strong> incident electromagnetic radiation, 
+                regardless of frequency or angle of incidence. It is also a <strong>perfect emitter</strong> of radiation, and its spectral distribution 
+                depends <strong>only</strong> on its temperature. The concept of a blackbody is fundamental in understanding thermal radiation and the laws governing it.
+            </p>
+        </div>
+        
+        <div class="statement">
+            <h3>Key Properties</h3>
+            <ul>
+                <li><strong>Absorptivity:</strong> A blackbody absorbs 100% of the radiation incident on it.</li>
+                <li><strong>Emissivity:</strong> A blackbody emits the maximum possible radiation at a given temperature.</li>
+                <li><strong>Spectral Distribution:</strong> The radiation emitted by a blackbody is continuous and spans all wavelengths.</li>
+                <li><strong>Isotropy:</strong> The radiation is isotropic, meaning it is emitted uniformly in all directions.</li>
+            </ul>
+        </div>
+        
+        <div class="deduction">
+            <h3>Spectral Radiance and Its Dependence</h3>
+            <p>
+                The <strong>spectral radiance</strong> \( B_\nu(T) \) of a blackbody is defined as the power emitted per unit area, per unit solid angle, 
+                and per unit frequency. It is a function of:
+                <ul>
+                    <li>Frequency \( \nu \) or wavelength \( \lambda \) of the radiation.</li>
+                    <li>Temperature \( T \) of the blackbody.</li>
+                </ul>
+                The relationship between frequency and wavelength is given by:
+            </p>
+            <div class="math">
+                \[ \lambda = \frac{c}{\nu} \]
+            </div>
+        </div>
+        
+        <div class="graph-container">
+            <canvas id="blackbodyGraph"></canvas>
+        </div>
+        
+        <p>
+            The graph above shows the spectral distribution of blackbody radiation for different temperatures. 
+            Use the buttons below to interact with the graph:
+        </p>
+        
+        <button class="interactive-btn" onclick="updateBlackbodyGraph(300)">300 K (Room Temperature)</button>
+        <button class="interactive-btn" onclick="updateBlackbodyGraph(1000)">1000 K (Red Hot)</button>
+        <button class="interactive-btn" onclick="updateBlackbodyGraph(3000)">3000 K (Incandescent Lamp)</button>
+        <button class="interactive-btn" onclick="updateBlackbodyGraph(5000)">5000 K (Sun's Surface)</button>
+        <button class="interactive-btn" onclick="updateBlackbodyGraph(10000)">10000 K (Blue Star)</button>
+        
+        <div class="note">
+            <p><strong>Observation:</strong> As the temperature increases, the peak of the spectral radiance shifts to higher frequencies (shorter wavelengths), and the total emitted power increases rapidly.</p>
+        </div>
+    </div>
+
+    <!-- Energy Density Section -->
+    <div id="energy-density" class="container">
+        <h2>Concept of Energy Density</h2>
+        
+        <div class="definition">
+            <h3>Definition</h3>
+            <p>
+                The <strong>energy density</strong> \( u \) of blackbody radiation is the total energy per unit volume of the radiation field. 
+                It is a measure of how much energy is contained in the electromagnetic radiation inside a cavity in thermal equilibrium.
+            </p>
+        </div>
+        
+        <div class="deduction">
+            <h3>Relationship with Spectral Radiance</h3>
+            <p>
+                The energy density is related to the spectral radiance \( B_\nu(T) \) by integrating over all frequencies and solid angles. 
+                The relationship is given by:
+            </p>
+            <div class="math">
+                \[ u = \frac{4\pi}{c} \int_0^\infty B_\nu(T) d\nu \]
+            </div>
+            <p>
+                Substituting Planck's law for \( B_\nu(T) \):
+            </p>
+            <div class="math">
+                \[ u = \frac{4\pi}{c} \int_0^\infty \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} d\nu \]
+            </div>
+        </div>
+        
+        <div class="proof">
+            <h3>Derivation of Energy Density</h3>
+            <p>
+                To derive the energy density, we start with Planck's law and integrate over all frequencies:
+            </p>
+            <div class="math">
+                \[ u = \frac{8\pi h}{c^3} \int_0^\infty \frac{\nu^3}{e^{h\nu / kT} - 1} d\nu \]
+            </div>
+            <p>
+                Let \( x = \frac{h\nu}{kT} \), then \( d\nu = \frac{kT}{h} dx \), and the integral becomes:
+            </p>
+            <div class="math">
+                \[ u = \frac{8\pi h}{c^3} \left( \frac{kT}{h} \right)^4 \int_0^\infty \frac{x^3}{e^x - 1} dx \]
+            </div>
+            <p>
+                The integral \( \int_0^\infty \frac{x^3}{e^x - 1} dx \) is a standard definite integral and evaluates to \( \frac{\pi^4}{15} \). 
+                Therefore:
+            </p>
+            <div class="math">
+                \[ u = \frac{8\pi^5 k^4}{15 c^3 h^3} T^4 \]
+            </div>
+        </div>
+        
+        <div class="summary">
+            <h3>Summary</h3>
+            <p>
+                The energy density of blackbody radiation is proportional to the fourth power of the temperature. 
+                This result is consistent with the Stefan-Boltzmann law, which describes the total power radiated by a blackbody.
+            </p>
+        </div>
+    </div>
+
+    <!-- Planck's Law Section -->
+    <div id="planck-law" class="container">
+        <h2>Derivation of Planck's Law</h2>
+        
+        <div class="statement">
+            <h3>Statement</h3>
+            <p>
+                Planck's law describes the spectral density of electromagnetic radiation emitted by a blackbody in thermal equilibrium at a given temperature \( T \). 
+                It is one of the most fundamental results in quantum mechanics and marks the beginning of quantum theory.
+            </p>
+        </div>
+        
+        <div class="deduction">
+            <h3>Historical Context</h3>
+            <p>
+                In the late 19th century, classical physics failed to explain the spectral distribution of blackbody radiation, particularly at high frequencies (the "ultraviolet catastrophe"). 
+                Max Planck resolved this issue in 1900 by proposing that the energy of electromagnetic oscillators is quantized, i.e., it can only take discrete values:
+            </p>
+            <div class="math">
+                \[ E = n h \nu \quad \text{where} \quad n = 0, 1, 2, \dots \]
+            </div>
+            <p>
+                Here, \( h \) is Planck's constant, and \( \nu \) is the frequency of the radiation.
+            </p>
+        </div>
+        
+        <div class="proof">
+            <h3>Derivation</h3>
+            <p>
+                The spectral radiance \( B_\nu(T) \) is derived by considering the average energy of a quantum harmonic oscillator and the density of states in the radiation field. 
+                The average energy of an oscillator with frequency \( \nu \) is:
+            </p>
+            <div class="math">
+                \[ \langle E \rangle = \frac{h\nu}{e^{h\nu / kT} - 1} \]
+            </div>
+            <p>
+                The number of modes per unit volume per unit frequency in the radiation field is:
+            </p>
+            <div class="math">
+                \[ D(\nu) = \frac{8\pi \nu^2}{c^3} \]
+            </div>
+            <p>
+                Combining these results, the spectral radiance is:
+            </p>
+            <div class="math">
+                \[ B_\nu(T) = \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} \]
+            </div>
+            <p>
+                This is <strong>Planck's law</strong> in terms of frequency. In terms of wavelength \( \lambda \), it can be written as:
+            </p>
+            <div class="math">
+                \[ B_\lambda(T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^{hc / \lambda kT} - 1} \]
+            </div>
+        </div>
+        
+        <div class="graph-container">
+            <canvas id="planckLawGraph"></canvas>
+        </div>
+        
+        <p>
+            The graph above shows Planck's law for different temperatures. 
+            Use the buttons below to interact with the graph:
+        </p>
+        
+        <button class="interactive-btn" onclick="updatePlanckLawGraph(300)">300 K</button>
+        <button class="interactive-btn" onclick="updatePlanckLawGraph(1000)">1000 K</button>
+        <button class="interactive-btn" onclick="updatePlanckLawGraph(3000)">3000 K</button>
+        <button class="interactive-btn" onclick="updatePlanckLawGraph(5000)">5000 K</button>
+        <button class="interactive-btn" onclick="updatePlanckLawGraph(10000)">10000 K</button>
+        
+        <div class="note">
+            <p><strong>Observation:</strong> Planck's law predicts a peak in the spectral radiance, which shifts to higher frequencies as the temperature increases. This explains the color change of objects as they are heated.</p>
+        </div>
+    </div>
+
+    <!-- Stefan-Boltzmann Law Section -->
+    <div id="stefan-boltzmann" class="container">
+        <h2>Deduction of the Stefan-Boltzmann Law</h2>
+        
+        <div class="statement">
+            <h3>Statement</h3>
+            <p>
+                The Stefan-Boltzmann law states that the <strong>total energy radiated per unit surface area</strong> of a blackbody across all wavelengths is directly proportional to the fourth power of the blackbody's thermodynamic temperature \( T \).
+            </p>
+            <div class="math">
+                \[ P = \sigma T^4 \]
+            </div>
+            <p>
+                where \( P \) is the total power radiated per unit area, and \( \sigma \) is the Stefan-Boltzmann constant.
+            </p>
+        </div>
+        
+        <div class="deduction">
+            <h3>Relationship with Planck's Law</h3>
+            <p>
+                The Stefan-Boltzmann law can be derived by integrating Planck's law over all frequencies and solid angles. 
+                The total power radiated per unit area is:
+            </p>
+            <div class="math">
+                \[ P = \int_0^\infty \pi B_\nu(T) d\nu \]
+            </div>
+            <p>
+                Substituting Planck's law:
+            </p>
+            <div class="math">
+                \[ P = \pi \int_0^\infty \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} d\nu \]
+            </div>
+        </div>
+        
+        <div class="proof">
+            <h3>Derivation</h3>
+            <p>
+                Let \( x = \frac{h\nu}{kT} \), then \( d\nu = \frac{kT}{h} dx \), and the integral becomes:
+            </p>
+            <div class="math">
+                \[ P = \frac{2\pi h}{c^2} \left( \frac{kT}{h} \right)^4 \int_0^\infty \frac{x^3}{e^x - 1} dx \]
+            </div>
+            <p>
+                The integral \( \int_0^\infty \frac{x^3}{e^x - 1} dx \) evaluates to \( \frac{\pi^4}{15} \). Therefore:
+            </p>
+            <div class="math">
+                \[ P = \frac{2\pi^5 k^4}{15 c^2 h^3} T^4 \]
+            </div>
+            <p>
+                Comparing with the Stefan-Boltzmann law, we identify the Stefan-Boltzmann constant as:
+            </p>
+            <div class="math">
+                \[ \sigma = \frac{2\pi^5 k^4}{15 c^2 h^3} \approx 5.670374419 \times 10^{-8} \, \text{W} \cdot \text{m}^{-2} \cdot \text{K}^{-4} \]
+            </div>
+        </div>
+        
+        <div class="summary">
+            <h3>Physical Interpretation</h3>
+            <p>
+                The Stefan-Boltzmann law shows that the total energy radiated by a blackbody increases <strong>rapidly</strong> with temperature. 
+                This explains why hot objects (e.g., stars) emit enormous amounts of energy as their temperature rises.
+            </p>
+        </div>
+    </div>
+
+    <!-- Rayleigh-Jeans Law Section -->
+    <div id="rayleigh-jeans" class="container">
+        <h2>Rayleigh-Jeans Law</h2>
+        
+        <div class="statement">
+            <h3>Statement</h3>
+            <p>
+                The Rayleigh-Jeans law describes the spectral radiance of blackbody radiation at <strong>low frequencies</strong> (long wavelengths). 
+                It is a classical limit of Planck's law and is derived from the equipartition theorem of classical statistical mechanics.
+            </p>
+            <div class="math">
+                \[ B_\nu(T) = \frac{2\nu^2 kT}{c^2} \]
+            </div>
+        </div>
+        
+        <div class="deduction">
+            <h3>Classical Derivation</h3>
+            <p>
+                In classical physics, the average energy of an oscillator is given by the equipartition theorem:
+            </p>
+            <div class="math">
+                \[ \langle E \rangle = kT \]
+            </div>
+            <p>
+                The number of modes per unit volume per unit frequency is:
+            </p>
+            <div class="math">
+                \[ D(\nu) = \frac{8\pi \nu^2}{c^3} \]
+            </div>
+            <p>
+                Combining these results, the spectral radiance is:
+            </p>
+            <div class="math">
+                \[ B_\nu(T) = \frac{2\nu^2 kT}{c^2} \]
+            </div>
+        </div>
+        
+        <div class="proof">
+            <h3>Deduction from Planck's Law</h3>
+            <p>
+                For low frequencies (\( h\nu \ll kT \)), the exponential term in Planck's law can be approximated using the Taylor series:
+            </p>
+            <div class="math">
+                \[ e^{h\nu / kT} \approx 1 + \frac{h\nu}{kT} + \frac{1}{2} \left( \frac{h\nu}{kT} \right)^2 + \dots \]
+            </div>
+            <p>
+                For \( h\nu \ll kT \), higher-order terms can be neglected, so:
+            </p>
+            <div class="math">
+                \[ e^{h\nu / kT} \approx 1 + \frac{h\nu}{kT} \]
+            </div>
+            <p>
+                Substituting this into Planck's law:
+            </p>
+            <div class="math">
+                \[ B_\nu(T) = \frac{2h\nu^3}{c^2} \frac{1}{1 + \frac{h\nu}{kT} - 1} = \frac{2h\nu^3}{c^2} \frac{kT}{h\nu} = \frac{2\nu^2 kT}{c^2} \]
+            </div>
+            <p>
+                This is the Rayleigh-Jeans law. It agrees with Planck's law at low frequencies but fails at high frequencies, leading to the ultraviolet catastrophe.
+            </p>
+        </div>
+        
+        <div class="graph-container">
+            <canvas id="rayleighJeansGraph"></canvas>
+        </div>
+        
+        <p>
+            The graph above compares the Rayleigh-Jeans law with Planck's law at low frequencies. 
+            Use the buttons below to interact with the graph:
+        </p>
+        
+        <button class="interactive-btn" onclick="updateRayleighJeansGraph(300)">300 K</button>
+        <button class="interactive-btn" onclick="updateRayleighJeansGraph(1000)">1000 K</button>
+        <button class="interactive-btn" onclick="updateRayleighJeansGraph(3000)">3000 K</button>
+        
+        <div class="note">
+            <p><strong>Observation:</strong> The Rayleigh-Jeans law matches Planck's law at low frequencies but diverges significantly at high frequencies, where quantum effects dominate.</p>
+        </div>
+    </div>
+
+    <!-- Wien's Displacement Law Section -->
+    <div id="wien-displacement" class="container">
+        <h2>Wien's Displacement Law</h2>
+        
+        <div class="statement">
+            <h3>Statement</h3>
+            <p>
+                Wien's displacement law states that the wavelength at which the spectral radiance of a blackbody is at its maximum is <strong>inversely proportional</strong> to the temperature:
+            </p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{b}{T} \]
+            </div>
+            <p>
+                where \( b \approx 2.897771955 \times 10^{-3} \, \text{m} \cdot \text{K} \) is Wien's displacement constant.
+            </p>
+        </div>
+        
+        <div class="deduction">
+            <h3>Physical Interpretation</h3>
+            <p>
+                Wien's displacement law explains why the color of a hot object changes as its temperature increases. 
+                For example:
+                <ul>
+                    <li>At \( T = 3000 \, \text{K} \), \( \lambda_{\text{max}} \approx 966 \, \text{nm} \) (infrared/red).</li>
+                    <li>At \( T = 6000 \, \text{K} \) (Sun's surface), \( \lambda_{\text{max}} \approx 483 \, \text{nm} \) (visible light, green).</li>
+                </ul>
+            </p>
+        </div>
+        
+        <div class="proof">
+            <h3>Deduction from Planck's Law</h3>
+            <p>
+                To find the maximum of Planck's law, we take the derivative of \( B_\lambda(T) \) with respect to \( \lambda \) and set it to zero:
+            </p>
+            <div class="math">
+                \[ B_\lambda(T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^{hc / \lambda kT} - 1} \]
+            </div>
+            <p>
+                Let \( x = \frac{hc}{\lambda kT} \), then:
+            </p>
+            <div class="math">
+                \[ B_\lambda(T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^x - 1} = \frac{2k^5 T^5}{h^4 c^3} \frac{x^5}{e^x - 1} \]
+            </div>
+            <p>
+                To find the maximum, we set \( \frac{dB_\lambda}{d\lambda} = 0 \), which reduces to solving:
+            </p>
+            <div class="math">
+                \[ \frac{d}{dx} \left( \frac{x^5}{e^x - 1} \right) = 0 \]
+            </div>
+            <p>
+                This equation is transcendental and cannot be solved analytically. However, its solution is approximately:
+            </p>
+            <div class="math">
+                \[ x \approx 4.965 \]
+            </div>
+            <p>
+                Therefore:
+            </p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{hc}{4.965 kT} = \frac{b}{T} \]
+            </div>
+        </div>
+        
+        <div class="graph-container">
+            <canvas id="wienDisplacementGraph"></canvas>
+        </div>
+        
+        <p>
+            The graph above shows the peak wavelength for different temperatures. 
+            Use the buttons below to interact with the graph:
+        </p>
+        
+        <button class="interactive-btn" onclick="updateWienDisplacementGraph(300)">300 K</button>
+        <button class="interactive-btn" onclick="updateWienDisplacementGraph(1000)">1000 K</button>
+        <button class="interactive-btn" onclick="updateWienDisplacementGraph(3000)">3000 K</button>
+        <button class="interactive-btn" onclick="updateWienDisplacementGraph(5000)">5000 K</button>
+        <button class="interactive-btn" onclick="updateWienDisplacementGraph(10000)">10000 K</button>
+        
+        <div class="note">
+            <p><strong>Observation:</strong> As the temperature increases, the peak wavelength shifts to shorter wavelengths (higher frequencies), which is why hotter stars appear bluer.</p>
+        </div>
+    </div>
+
+    <!-- Comparison of Laws Section -->
+    <div id="comparison-laws" class="container">
+        <h2>Comparison of Radiation Laws</h2>
+        
+        <div class="deduction">
+            <h3>Overview</h3>
+            <p>
+                The following table summarizes the key radiation laws and their applicability:
+            </p>
+            <table class="constants-table">
+                <tr>
+                    <th>Law</th>
+                    <th>Formula</th>
+                    <th>Applicability</th>
+                    <th>Limitations</th>
+                </tr>
+                <tr>
+                    <td>Planck's Law</td>
+                    <td>\( B_\nu(T) = \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} \)</td>
+                    <td>All frequencies and temperatures</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>Rayleigh-Jeans Law</td>
+                    <td>\( B_\nu(T) = \frac{2\nu^2 kT}{c^2} \)</td>
+                    <td>Low frequencies (\( h\nu \ll kT \))</td>
+                    <td>Fails at high frequencies (UV catastrophe)</td>
+                </tr>
+                <tr>
+                    <td>Wien's Law</td>
+                    <td>\( B_\nu(T) \approx \frac{2h\nu^3}{c^2} e^{-h\nu / kT} \)</td>
+                    <td>High frequencies (\( h\nu \gg kT \))</td>
+                    <td>Fails at low frequencies</td>
+                </tr>
+                <tr>
+                    <td>Stefan-Boltzmann Law</td>
+                    <td>\( P = \sigma T^4 \)</td>
+                    <td>Total power radiated</td>
+                    <td>None</td>
+                </tr>
+                <tr>
+                    <td>Wien's Displacement Law</td>
+                    <td>\( \lambda_{\text{max}} = \frac{b}{T} \)</td>
+                    <td>Peak wavelength</td>
+                    <td>None</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="graph-container">
+            <canvas id="comparisonGraph"></canvas>
+        </div>
+        
+        <p>
+            The graph above compares Planck's law, the Rayleigh-Jeans law, and Wien's law for a temperature of 3000 K. 
+            Use the buttons below to change the temperature:
+        </p>
+        
+        <button class="interactive-btn" onclick="updateComparisonGraph(300)">300 K</button>
+        <button class="interactive-btn" onclick="updateComparisonGraph(1000)">1000 K</button>
+        <button class="interactive-btn" onclick="updateComparisonGraph(3000)">3000 K</button>
+        <button class="interactive-btn" onclick="updateComparisonGraph(5000)">5000 K</button>
+    </div>
+
+    <!-- Applications Section -->
+    <div id="applications" class="container">
+        <h2>Applications of Blackbody Radiation</h2>
+        
+        <div class="deduction">
+            <h3>Astrophysics</h3>
+            <p>
+                Blackbody radiation is fundamental in astrophysics:
+                <ul>
+                    <li><strong>Stellar Spectra:</strong> Stars are often approximated as blackbodies. The Sun, for example, has a surface temperature of ~5778 K, and its spectral radiance closely follows Planck's law.</li>
+                    <li><strong>Cosmic Microwave Background (CMB):</strong> The CMB is the afterglow of the Big Bang and is one of the most perfect blackbody spectra observed, with a temperature of ~2.725 K.</li>
+                    <li><strong>Determining Temperatures:</strong> By measuring the spectral distribution of a star, astronomers can estimate its temperature using Wien's displacement law.</li>
+                </ul>
+            </p>
+        </div>
+        
+        <div class="deduction">
+            <h3>Earth and Atmospheric Sciences</h3>
+            <p>
+                Blackbody radiation plays a role in understanding Earth's energy balance:
+                <ul>
+                    <li><strong>Earth's Radiation Budget:</strong> The Earth absorbs solar radiation and re-emits it as thermal radiation. The Earth's average temperature can be estimated using the Stefan-Boltzmann law.</li>
+                    <li><strong>Greenhouse Effect:</strong> The atmosphere absorbs and re-emits radiation, affecting the Earth's temperature. Understanding blackbody radiation helps in modeling climate change.</li>
+                </ul>
+            </p>
+        </div>
+        
+        <div class="deduction">
+            <h3>Engineering and Technology</h3>
+            <p>
+                Blackbody radiation is used in various engineering applications:
+                <ul>
+                    <li><strong>Incandescent Light Bulbs:</strong> The filament in an incandescent bulb emits radiation approximately as a blackbody. The color and efficiency of the bulb depend on its temperature.</li>
+                    <li><strong>Thermal Imaging:</strong> Infrared cameras detect the thermal radiation emitted by objects, allowing for temperature measurements and thermal imaging.</li>
+                    <li><strong>Industrial Furnaces:</strong> The design of furnaces and kilns often involves calculations of radiative heat transfer using blackbody radiation principles.</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+
+    <!-- Solved Problems Section -->
+    <div id="problems" class="container">
+        <h2>Solved Problems</h2>
+        
+        <div class="problem">
+            <h3>Problem 1: Blackbody Radiation at Different Temperatures</h3>
+            <p><strong>Question:</strong> Calculate the total power radiated by a blackbody of surface area \( 1 \, \text{m}^2 \) at temperatures of 300 K, 1000 K, and 5000 K. Compare the results.</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using the Stefan-Boltzmann law:</p>
+            <div class="math">
+                \[ P = \sigma T^4 \]
+            </div>
+            <p>For \( T = 300 \, \text{K} \):</p>
+            <div class="math">
+                \[ P = 5.67 \times 10^{-8} \times (300)^4 \approx 459.3 \, \text{W} \]
+            </div>
+            <p>For \( T = 1000 \, \text{K} \):</p>
+            <div class="math">
+                \[ P = 5.67 \times 10^{-8} \times (1000)^4 \approx 56700 \, \text{W} \]
+            </div>
+            <p>For \( T = 5000 \, \text{K} \):</p>
+            <div class="math">
+                \[ P = 5.67 \times 10^{-8} \times (5000)^4 \approx 3.54 \times 10^8 \, \text{W} \]
+            </div>
+            <p><strong>Conclusion:</strong> The power radiated increases dramatically with temperature, as expected from the \( T^4 \) dependence.</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 2: Wien's Displacement Law</h3>
+            <p><strong>Question:</strong> Find the wavelength at which the spectral radiance of a blackbody is at its maximum for temperatures of 3000 K and 6000 K. Compare these with the visible spectrum (400 nm to 700 nm).</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using Wien's displacement law:</p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{b}{T} \]
+            </div>
+            <p>For \( T = 3000 \, \text{K} \):</p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{2.898 \times 10^{-3}}{3000} \approx 966 \, \text{nm} \]
+            </div>
+            <p>For \( T = 6000 \, \text{K} \):</p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{2.898 \times 10^{-3}}{6000} \approx 483 \, \text{nm} \]
+            </div>
+            <p><strong>Conclusion:</strong> At 3000 K, the peak is in the infrared region, while at 6000 K, it is in the visible spectrum (green light). This explains why the Sun (surface temperature ~5778 K) appears yellow-white.</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 3: Energy Density of Blackbody Radiation</h3>
+            <p><strong>Question:</strong> Calculate the energy density of blackbody radiation at temperatures of 1000 K and 5000 K.</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using the energy density formula:</p>
+            <div class="math">
+                \[ u = \frac{8\pi^5 k^4}{15 c^3 h^3} T^4 \]
+            </div>
+            <p>The constant \( \frac{8\pi^5 k^4}{15 c^3 h^3} \) evaluates to \( 7.5657 \times 10^{-16} \, \text{J/m}^3 \cdot \text{K}^{-4} \).</p>
+            <p>For \( T = 1000 \, \text{K} \):</p>
+            <div class="math">
+                \[ u = 7.5657 \times 10^{-16} \times (1000)^4 \approx 7.5657 \times 10^{-4} \, \text{J/m}^3 \]
+            </div>
+            <p>For \( T = 5000 \, \text{K} \):</p>
+            <div class="math">
+                \[ u = 7.5657 \times 10^{-16} \times (5000)^4 \approx 0.4728 \, \text{J/m}^3 \]
+            </div>
+            <p><strong>Conclusion:</strong> The energy density increases rapidly with temperature, similar to the Stefan-Boltzmann law.</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 4: Rayleigh-Jeans vs. Planck's Law</h3>
+            <p><strong>Question:</strong> At what frequency does the Rayleigh-Jeans law deviate by 10% from Planck's law at a temperature of 1000 K?</p>
+            <p><strong>Solution:</strong></p>
+            <p>The Rayleigh-Jeans law is:</p>
+            <div class="math">
+                \[ B_\nu^{RJ}(T) = \frac{2\nu^2 kT}{c^2} \]
+            </div>
+            <p>Planck's law is:</p>
+            <div class="math">
+                \[ B_\nu^{P}(T) = \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} \]
+            </div>
+            <p>We want to find \( \nu \) such that:</p>
+            <div class="math">
+                \[ \frac{B_\nu^{RJ}(T) - B_\nu^{P}(T)}{B_\nu^{P}(T)} = 0.1 \]
+            </div>
+            <p>This is a transcendental equation and must be solved numerically. Using an iterative approach or graphing, we find:</p>
+            <div class="math">
+                \[ \nu \approx 1.2 \times 10^{13} \, \text{Hz} \]
+            </div>
+            <p><strong>Conclusion:</strong> The Rayleigh-Jeans law begins to deviate significantly from Planck's law at frequencies above \( 10^{13} \, \text{Hz} \) for \( T = 1000 \, \text{K} \).</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 5: Temperature of the Sun</h3>
+            <p><strong>Question:</strong> The peak wavelength of the Sun's radiation is approximately 500 nm. Estimate the surface temperature of the Sun using Wien's displacement law.</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using Wien's displacement law:</p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{b}{T} \]
+            </div>
+            <p>Rearranging for \( T \):</p>
+            <div class="math">
+                \[ T = \frac{b}{\lambda_{\text{max}}} = \frac{2.898 \times 10^{-3}}{500 \times 10^{-9}} \approx 5796 \, \text{K} \]
+            </div>
+            <p><strong>Conclusion:</strong> The estimated surface temperature of the Sun is approximately 5796 K, which is close to the accepted value of 5778 K.</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 6: Power Radiated by a Star</h3>
+            <p><strong>Question:</strong> A star has a radius of \( 7 \times 10^8 \, \text{m} \) and a surface temperature of 6000 K. Calculate the total power radiated by the star, assuming it behaves as a blackbody.</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using the Stefan-Boltzmann law for the total power radiated:</p>
+            <div class="math">
+                \[ P_{\text{total}} = 4\pi R^2 \sigma T^4 \]
+            </div>
+            <p>Substituting the values:</p>
+            <div class="math">
+                \[ P_{\text{total}} = 4\pi (7 \times 10^8)^2 (5.67 \times 10^{-8}) (6000)^4 \]
+            </div>
+            <div class="math">
+                \[ P_{\text{total}} \approx 4\pi \times 4.9 \times 10^{17} \times 5.67 \times 10^{-8} \times 1.296 \times 10^{15} \]
+            </div>
+            <div class="math">
+                \[ P_{\text{total}} \approx 4.53 \times 10^{26} \, \text{W} \]
+            </div>
+            <p><strong>Conclusion:</strong> The star radiates approximately \( 4.53 \times 10^{26} \, \text{W} \) of power.</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 7: Energy Density in a Cavity</h3>
+            <p><strong>Question:</strong> A cavity of volume \( 1 \, \text{m}^3 \) is filled with blackbody radiation at a temperature of 1000 K. Calculate the total energy in the cavity.</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using the energy density formula:</p>
+            <div class="math">
+                \[ u = \frac{8\pi^5 k^4}{15 c^3 h^3} T^4 \]
+            </div>
+            <p>The total energy \( U \) in the cavity is:</p>
+            <div class="math">
+                \[ U = u \times V = 7.5657 \times 10^{-16} \times (1000)^4 \times 1 \approx 7.5657 \times 10^{-4} \, \text{J} \]
+            </div>
+            <p><strong>Conclusion:</strong> The total energy in the cavity is approximately \( 7.5657 \times 10^{-4} \, \text{J} \).</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 8: Frequency of Peak Emission</h3>
+            <p><strong>Question:</strong> For a blackbody at 3000 K, find the frequency at which the spectral radiance is at its maximum.</p>
+            <p><strong>Solution:</strong></p>
+            <p>First, find the peak wavelength using Wien's displacement law:</p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{b}{T} = \frac{2.898 \times 10^{-3}}{3000} \approx 966 \, \text{nm} \]
+            </div>
+            <p>Convert the wavelength to frequency using \( c = \lambda \nu \):</p>
+            <div class="math">
+                \[ \nu_{\text{max}} = \frac{c}{\lambda_{\text{max}}} = \frac{3 \times 10^8}{966 \times 10^{-9}} \approx 3.10 \times 10^{14} \, \text{Hz} \]
+            </div>
+            <p><strong>Conclusion:</strong> The frequency at which the spectral radiance is at its maximum is approximately \( 3.10 \times 10^{14} \, \text{Hz} \).</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 9: Comparison of Radiated Power</h3>
+            <p><strong>Question:</strong> Two blackbodies have temperatures of 500 K and 1000 K. Calculate the ratio of the total power radiated by the hotter blackbody to the colder one.</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using the Stefan-Boltzmann law, the power radiated is proportional to \( T^4 \). Therefore, the ratio is:</p>
+            <div class="math">
+                \[ \frac{P_{1000}}{P_{500}} = \left( \frac{1000}{500} \right)^4 = 2^4 = 16 \]
+            </div>
+            <p><strong>Conclusion:</strong> The hotter blackbody radiates 16 times more power than the colder one.</p>
+        </div>
+        
+        <div class="problem">
+            <h3>Problem 10: Blackbody Radiation in a Furnace</h3>
+            <p><strong>Question:</strong> A furnace operates at a temperature of 1500 K. Calculate the wavelength at which the spectral radiance is at its maximum. In which part of the electromagnetic spectrum does this wavelength fall?</p>
+            <p><strong>Solution:</strong></p>
+            <p>Using Wien's displacement law:</p>
+            <div class="math">
+                \[ \lambda_{\text{max}} = \frac{b}{T} = \frac{2.898 \times 10^{-3}}{1500} \approx 1932 \, \text{nm} \]
+            </div>
+            <p><strong>Conclusion:</strong> The peak wavelength is approximately 1932 nm, which falls in the <strong>infrared</strong> region of the electromagnetic spectrum.</p>
+        </div>
+    </div>
+
+    <!-- References Section -->
+    <div id="references" class="container" style="background-color: #d12e62; color: #f7f4dc">
+        <h2>References</h2>
+        <ul>
+            <li><strong>Books:</strong>
+                <ul>
+                    <li>Griffiths, D. J. (2017). <em>Introduction to Electrodynamics</em> (4th ed.). Pearson.</li>
+                    <li>Purcell, E. M., & Morin, D. J. (2013). <em>Electricity and Magnetism</em> (3rd ed.). Cambridge University Press.</li>
+                    <li>Hecht, E. (2016). <em>Optics</em> (5th ed.). Pearson.</li>
+                    <li>OpenStax. (2016). <em>University Physics</em>. Rice University.</li>
+                </ul>
+            </li>
+            <li><strong>Online Resources:</strong>
+                <ul>
+                    <li>National Institute of Standards and Technology (NIST): <a href="https://www.nist.gov/" target="_blank">https://www.nist.gov/</a></li>
+                    <li>NASA's Cosmic Microwave Background (CMB) Resources: <a href="https://science.nasa.gov/astrophysics/focus-areas/what-powered-the-big-bang" target="_blank">https://science.nasa.gov/astrophysics/focus-areas/what-powered-the-big-bang</a></li>
+                </ul>
+            </li>
+            <li><strong>Software and Tools:</strong>
+                <ul>
+                    <li>MathJax for mathematical typesetting: <a href="https://www.mathjax.org/" target="_blank">https://www.mathjax.org/</a></li>
+                    <li>Chart.js for interactive graphs: <a href="https://www.chartjs.org/" target="_blank">https://www.chartjs.org/</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        // Constants
+        const h = 6.626e-34; // Planck's constant (J·s)
+        const c = 3e8; // Speed of light (m/s)
+        const k = 1.38e-23; // Boltzmann's constant (J/K)
+        const pi = Math.PI;
+        const sigma = 5.67e-8; // Stefan-Boltzmann constant (W/m²/K⁴)
+        const b = 2.898e-3; // Wien's displacement constant (m·K)
+
+        // Blackbody Graph
+        const blackbodyCtx = document.getElementById('blackbodyGraph').getContext('2d');
+        let blackbodyChart = new Chart(blackbodyCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Spectral Distribution of Blackbody Radiation',
+                        font: {
+                            size: 18
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Frequency (Hz)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Spectral Radiance (W/m²/Hz/sr)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function planckLaw(nu, T) {
+            return (2 * h * Math.pow(nu, 3) / Math.pow(c, 2)) / (Math.exp(h * nu / (k * T)) - 1);
+        }
+
+        function updateBlackbodyGraph(T) {
+            const frequencies = [];
+            const radiance = [];
+            for (let nu = 1e11; nu <= 1e15; nu += 1e12) {
+                frequencies.push(nu);
+                radiance.push(planckLaw(nu, T));
+            }
+            blackbodyChart.data.labels = frequencies.map(nu => nu.toExponential(2));
+            blackbodyChart.data.datasets = [{
+                label: `Blackbody Radiation at ${T} K`,
+                data: radiance,
+                borderColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                backgroundColor: `hsla(${Math.random() * 360}, 100%, 50%, 0.2)`,
+                tension: 0.4,
+                pointRadius: 0
+            }];
+            blackbodyChart.update();
+        }
+
+        // Planck's Law Graph
+        const planckLawCtx = document.getElementById('planckLawGraph').getContext('2d');
+        let planckLawChart = new Chart(planckLawCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Planck's Law for Different Temperatures",
+                        font: {
+                            size: 18
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Frequency (Hz)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Spectral Radiance (W/m²/Hz/sr)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function updatePlanckLawGraph(T) {
+            const frequencies = [];
+            const radiance = [];
+            for (let nu = 1e11; nu <= 1e15; nu += 1e12) {
+                frequencies.push(nu);
+                radiance.push(planckLaw(nu, T));
+            }
+            planckLawChart.data.labels = frequencies.map(nu => nu.toExponential(2));
+            planckLawChart.data.datasets = [{
+                label: `Planck's Law at ${T} K`,
+                data: radiance,
+                borderColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                backgroundColor: `hsla(${Math.random() * 360}, 100%, 50%, 0.2)`,
+                tension: 0.4,
+                pointRadius: 0
+            }];
+            planckLawChart.update();
+        }
+
+        // Rayleigh-Jeans Graph
+        const rayleighJeansCtx = document.getElementById('rayleighJeansGraph').getContext('2d');
+        let rayleighJeansChart = new Chart(rayleighJeansCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Comparison of Rayleigh-Jeans Law and Planck\'s Law',
+                        font: {
+                            size: 18
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Frequency (Hz)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Spectral Radiance (W/m²/Hz/sr)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function rayleighJeansLaw(nu, T) {
+            return (2 * Math.pow(nu, 2) * k * T) / Math.pow(c, 2);
+        }
+
+        function updateRayleighJeansGraph(T) {
+            const frequencies = [];
+            const radiancePlanck = [];
+            const radianceRayleigh = [];
+            for (let nu = 1e10; nu <= 1e13; nu += 1e11) {
+                frequencies.push(nu);
+                radiancePlanck.push(planckLaw(nu, T));
+                radianceRayleigh.push(rayleighJeansLaw(nu, T));
+            }
+            rayleighJeansChart.data.labels = frequencies.map(nu => nu.toExponential(2));
+            rayleighJeansChart.data.datasets = [
+                {
+                    label: `Planck's Law at ${T} K`,
+                    data: radiancePlanck,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.4,
+                    pointRadius: 0
+                },
+                {
+                    label: `Rayleigh-Jeans Law at ${T} K`,
+                    data: radianceRayleigh,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.4,
+                    pointRadius: 0
+                }
+            ];
+            rayleighJeansChart.update();
+        }
+
+        // Wien's Displacement Graph
+        const wienDisplacementCtx = document.getElementById('wienDisplacementGraph').getContext('2d');
+        let wienDisplacementChart = new Chart(wienDisplacementCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: "Wien's Displacement Law: Peak Wavelength vs. Temperature",
+                        font: {
+                            size: 18
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Wavelength (m)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Spectral Radiance (W/m³/sr)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function planckLawWavelength(lambda, T) {
+            const nu = c / lambda;
+            return (2 * h * Math.pow(nu, 3) / Math.pow(c, 2)) / (Math.exp(h * nu / (k * T)) - 1);
+        }
+
+        function updateWienDisplacementGraph(T) {
+            const wavelengths = [];
+            const radiance = [];
+            const lambdaMax = b / T;
+            for (let lambda = 1e-7; lambda <= 1e-5; lambda += 1e-7) {
+                wavelengths.push(lambda);
+                radiance.push(planckLawWavelength(lambda, T));
+            }
+            wienDisplacementChart.data.labels = wavelengths.map(lambda => lambda.toExponential(2));
+            wienDisplacementChart.data.datasets = [{
+                label: `Planck's Law at ${T} K`,
+                data: radiance,
+                borderColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                backgroundColor: `hsla(${Math.random() * 360}, 100%, 50%, 0.2)`,
+                tension: 0.4,
+                pointRadius: 0
+            }];
+            wienDisplacementChart.update();
+            
+            // Mark the peak wavelength
+            const peakIndex = wavelengths.findIndex(lambda => lambda >= lambdaMax);
+            if (peakIndex !== -1) {
+                wienDisplacementChart.data.datasets.push({
+                    label: `Peak at λ_max = ${lambdaMax.toExponential(2)} m`,
+                    data: Array(radiance.length).fill(0),
+                    pointBackgroundColor: 'rgba(255, 0, 0, 1)',
+                    pointBorderColor: 'rgba(255, 0, 0, 1)',
+                    pointRadius: 5,
+                    showLine: false
+                });
+                wienDisplacementChart.data.datasets[1].data[peakIndex] = radiance[peakIndex];
+                wienDisplacementChart.update();
+            }
+        }
+
+        // Comparison Graph
+        const comparisonCtx = document.getElementById('comparisonGraph').getContext('2d');
+        let comparisonChart = new Chart(comparisonCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Comparison of Planck\'s Law, Rayleigh-Jeans Law, and Wien\'s Law',
+                        font: {
+                            size: 18
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Frequency (Hz)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Spectral Radiance (W/m²/Hz/sr)',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value.toExponential(2);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function wienLaw(nu, T) {
+            return (2 * h * Math.pow(nu, 3) / Math.pow(c, 2)) * Math.exp(-h * nu / (k * T));
+        }
+
+        function updateComparisonGraph(T) {
+            const frequencies = [];
+            const radiancePlanck = [];
+            const radianceRayleigh = [];
+            const radianceWien = [];
+            for (let nu = 1e11; nu <= 1e15; nu += 1e12) {
+                frequencies.push(nu);
+                radiancePlanck.push(planckLaw(nu, T));
+                radianceRayleigh.push(rayleighJeansLaw(nu, T));
+                radianceWien.push(wienLaw(nu, T));
+            }
+            comparisonChart.data.labels = frequencies.map(nu => nu.toExponential(2));
+            comparisonChart.data.datasets = [
+                {
+                    label: `Planck's Law at ${T} K`,
+                    data: radiancePlanck,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.4,
+                    pointRadius: 0
+                },
+                {
+                    label: `Rayleigh-Jeans Law at ${T} K`,
+                    data: radianceRayleigh,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.4,
+                    pointRadius: 0
+                },
+                {
+                    label: `Wien's Law at ${T} K`,
+                    data: radianceWien,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4,
+                    pointRadius: 0
+                }
+            ];
+            comparisonChart.update();
+        }
+
+        // Initialize graphs
+        updateBlackbodyGraph(300);
+        updatePlanckLawGraph(300);
+        updateRayleighJeansGraph(300);
+        updateWienDisplacementGraph(300);
+        updateComparisonGraph(300);
+    </script>
+</body>
+<footer style="color: #f7f4dc">🄯 Copyleft 2026 by Soumyajit Roy under The Unlicense</footer>
+</html>
