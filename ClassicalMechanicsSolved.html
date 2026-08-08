@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Classical Dynamics - Assignment Solutions (Sem IV, 2026)</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  line-height: 1.65;
+  max-width: 920px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f7fafc;
+  color: #1a202c;
+}
+h1 {
+  text-align: center;
+  color: #1a365d;
+  border-bottom: 3px solid #2b6cb0;
+  padding-bottom: 12px;
+}
+h2 {
+  color: #2b6cb0;
+  margin-top: 45px;
+  border-left: 6px solid #2b6cb0;
+  padding-left: 14px;
+  background: #ebf8ff;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+h3 {
+  color: #2c5282;
+  margin-top: 28px;
+}
+.answer {
+  background: #e6fffa;
+  border-left: 5px solid #38b2ac;
+  padding: 16px 20px;
+  margin: 14px 0;
+  border-radius: 0 8px 8px 0;
+}
+.reason {
+  background: #fffaf0;
+  border-left: 4px solid #ed8936;
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.97em;
+}
+.step {
+  margin: 10px 0 10px 15px;
+}
+.final {
+  background: #c6f6d5;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-top: 12px;
+}
+.note {
+  font-size: 0.92em;
+  color: #4a5568;
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<h1>Classical Mechanics<br></h1>
+<p style="text-align:center;"><strong>Complete Solutions with Detailed Reasoning &amp; Step-by-Step Explanations</strong></p>
+
+<!-- ===================== QUESTION 1 ===================== -->
+<h2>Question 1</h2>
+<p>A double pendulum consists of two point masses $m$ attached by strings of length $l$. The strings make angles $\theta_1$ and $\theta_2$ with the vertical axis. Find the kinetic energy of the pendulum.</p>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+In Lagrangian mechanics the kinetic energy $T$ must be expressed in terms of the generalised coordinates and their time derivatives. For a double pendulum the natural generalised coordinates are the angles $\theta_1$ and $\theta_2$. We first write the Cartesian coordinates of each mass, differentiate them with respect to time to obtain the velocity components, and finally form $\frac12 m v^2$ for each mass.
+</div>
+
+<p><strong>Step 1 – Cartesian coordinates</strong></p>
+<div class="step">
+Place the fixed support at the origin.
+Position of the first mass $m_1$:
+$$
+\begin{align*}
+x_1 &= l\sin\theta_1, \\
+y_1 &= -l\cos\theta_1.
+\end{align*}
+$$
+Position of the second mass $m_2$:
+$$
+\begin{align*}
+x_2 &= l\sin\theta_1 + l\sin\theta_2, \\
+y_2 &= -l\cos\theta_1 - l\cos\theta_2.
+\end{align*}
+$$
+</div>
+
+<p><strong>Step 2 – Velocities</strong></p>
+<div class="step">
+Differentiate with respect to time:
+$$
+\begin{align*}
+\dot x_1 &= l\dot\theta_1\cos\theta_1, \\
+\dot y_1 &= l\dot\theta_1\sin\theta_1.
+\end{align*}
+$$
+$$
+\begin{align*}
+\dot x_2 &= l\dot\theta_1\cos\theta_1 + l\dot\theta_2\cos\theta_2, \\
+\dot y_2 &= l\dot\theta_1\sin\theta_1 + l\dot\theta_2\sin\theta_2.
+\end{align*}
+$$
+</div>
+
+<p><strong>Step 3 – Squared speeds</strong></p>
+<div class="step">
+$$
+v_1^2 = \dot x_1^2 + \dot y_1^2 = l^2\dot\theta_1^2,
+$$
+$$
+\begin{align*}
+v_2^2 &= \dot x_2^2 + \dot y_2^2 \\
+&= l^2\dot\theta_1^2 + l^2\dot\theta_2^2 + 2l^2\dot\theta_1\dot\theta_2\cos(\theta_1-\theta_2).
+\end{align*}
+$$
+(The cross term arises from the product of the two velocity vectors and the angle between them.)
+</div>
+
+<p><strong>Step 4 – Total kinetic energy</strong></p>
+<div class="step">
+$$
+T = \frac12 m v_1^2 + \frac12 m v_2^2
+= \frac12 m l^2\dot\theta_1^2 + \frac12 m\bigl(l^2\dot\theta_1^2 + l^2\dot\theta_2^2 + 2l^2\dot\theta_1\dot\theta_2\cos(\theta_1-\theta_2)\bigr).
+$$
+Simplifying:
+$$
+T = ml^2\dot\theta_1^2 + \frac12 ml^2\dot\theta_2^2 + ml^2\dot\theta_1\dot\theta_2\cos(\theta_1-\theta_2).
+$$
+</div>
+
+<div class="final">
+Kinetic energy of the double pendulum:
+$$
+T = ml^{2}\dot{\theta}_{1}^{2}+\frac{1}{2}ml^{2}\dot{\theta}_{2}^{2}+ml^{2}\dot{\theta}_{1}\dot{\theta}_{2}\cos(\theta_{1}-\theta_{2}).
+$$
+</div>
+</div>
+
+<!-- ===================== QUESTION 2 ===================== -->
+<h2>Question 2</h2>
+<p>The Lagrangian of a particle is
+$$
+L=\frac{m}{2}(\dot{x}_{1}^{2}+\dot{x}_{2}^{2})-\frac{\lambda}{2}(x_{1}^{2}+x_{2}^{2}).
+$$
+Find the Hamiltonian.</p>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+The Hamiltonian is obtained from the Legendre transform
+$$
+H=\sum_i p_i\dot q_i-L,
+$$
+where the generalised momenta are defined by $p_i=\partial L/\partial\dot q_i$. Because $L$ is quadratic in the velocities, $H$ will turn out to be the total energy.
+</div>
+
+<p><strong>Step 1 – Generalised momenta</strong></p>
+<div class="step">
+$$
+p_1=\frac{\partial L}{\partial\dot x_1}=m\dot x_1\qquad\Rightarrow\qquad\dot x_1=\frac{p_1}{m},
+$$
+$$
+p_2=\frac{\partial L}{\partial\dot x_2}=m\dot x_2\qquad\Rightarrow\qquad\dot x_2=\frac{p_2}{m}.
+$$
+</div>
+
+<p><strong>Step 2 – Construct $H$</strong></p>
+<div class="step">
+$$
+H=p_1\dot x_1+p_2\dot x_2-L
+=p_1\Bigl(\frac{p_1}{m}\Bigr)+p_2\Bigl(\frac{p_2}{m}\Bigr)
+-\frac{m}{2}\Bigl(\frac{p_1^2}{m^2}+\frac{p_2^2}{m^2}\Bigr)
++\frac{\lambda}{2}(x_1^2+x_2^2).
+$$
+$$
+H=\frac{p_1^2}{m}+\frac{p_2^2}{m}-\frac{1}{2m}(p_1^2+p_2^2)+\frac{\lambda}{2}(x_1^2+x_2^2)
+=\frac{1}{2m}(p_1^2+p_2^2)+\frac{\lambda}{2}(x_1^2+x_2^2).
+$$
+</div>
+
+<div class="final">
+Hamiltonian:
+$$
+H=\frac{1}{2m}(p_1^2+p_2^2)+\frac{\lambda}{2}(x_1^2+x_2^2).
+$$
+</div>
+</div>
+
+<!-- ===================== QUESTION 3 ===================== -->
+<h2>Question 3</h2>
+<p>Show that the Hamiltonian of a system remains constant if the Lagrangian of the system does not depend upon time explicitly.</p>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+We use the total time derivative of $H$ together with the Euler-Lagrange equations. When $\partial L/\partial t=0$, the energy function (which coincides with $H$ for standard kinetic-energy forms) is a constant of motion.
+</div>
+
+<p><strong>Step 1 – Definition of $H$</strong></p>
+<div class="step">
+$$
+H(q,p,t)=\sum_i p_i\dot q_i-L(q,\dot q,t).
+$$
+</div>
+
+<p><strong>Step 2 – Total time derivative</strong></p>
+<div class="step">
+$$
+\frac{dH}{dt}=\sum_i\Bigl(\dot p_i\dot q_i+p_i\ddot q_i\Bigr)
+-\sum_i\Bigl(\frac{\partial L}{\partial q_i}\dot q_i+\frac{\partial L}{\partial\dot q_i}\ddot q_i\Bigr)
+-\frac{\partial L}{\partial t}.
+$$
+Because $p_i=\partial L/\partial\dot q_i$, the terms containing $\ddot q_i$ cancel:
+$$
+\frac{dH}{dt}=\sum_i\Bigl(\dot p_i\dot q_i-\frac{\partial L}{\partial q_i}\dot q_i\Bigr)-\frac{\partial L}{\partial t}.
+$$
+</div>
+
+<p><strong>Step 3 – Use Euler-Lagrange equations</strong></p>
+<div class="step">
+$$
+\frac{d}{dt}\Bigl(\frac{\partial L}{\partial\dot q_i}\Bigr)=\frac{\partial L}{\partial q_i}\qquad\Rightarrow\qquad\dot p_i=\frac{\partial L}{\partial q_i}.
+$$
+Substitution yields
+$$
+\frac{dH}{dt}=-\frac{\partial L}{\partial t}.
+$$
+</div>
+
+<p><strong>Step 4 – Conclusion</strong></p>
+<div class="step">
+If the Lagrangian does not depend explicitly on time,
+$$
+\frac{\partial L}{\partial t}=0\qquad\Rightarrow\qquad\frac{dH}{dt}=0.
+$$
+Hence $H$ is a constant of the motion.
+</div>
+
+<div class="final">
+If $\partial L/\partial t=0$, then $H=\text{constant}$.
+</div>
+</div>
+
+<!-- ===================== QUESTION 4 ===================== -->
+<h2>Question 4</h2>
+<p>Derive Hamilton’s equations of motion of a system. Show that the Hamiltonian of a conservative system is the total energy of the system.</p>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+Hamilton’s equations follow directly from the differential of the Legendre transform that defines $H$. For a conservative system the potential depends only on coordinates, the kinetic energy is a homogeneous quadratic form in the velocities, and Euler’s theorem then shows that $H=T+V$.
+</div>
+
+<p><strong>Part A – Derivation of Hamilton’s equations</strong></p>
+<div class="step">
+From the definition
+$$
+H(q,p,t)=\sum_i p_i\dot q_i-L(q,\dot q,t)
+$$
+we form the total differential:
+$$
+dH=\sum_i\bigl(\dot q_i\,dp_i+p_i\,d\dot q_i\bigr)
+-\sum_i\Bigl(\frac{\partial L}{\partial q_i}dq_i+\frac{\partial L}{\partial\dot q_i}d\dot q_i\Bigr)
+-\frac{\partial L}{\partial t}dt.
+$$
+The terms $p_i\,d\dot q_i$ and $\frac{\partial L}{\partial\dot q_i}d\dot q_i$ cancel because $p_i=\partial L/\partial\dot q_i$.
+Using the Euler-Lagrange equation $\dot p_i=\partial L/\partial q_i$ we obtain
+$$
+dH=\sum_i\bigl(\dot q_i\,dp_i-\dot p_i\,dq_i\bigr)-\frac{\partial L}{\partial t}dt.
+$$
+On the other hand, treating $H$ as a function of the independent variables $q,p,t$,
+$$
+dH=\sum_i\Bigl(\frac{\partial H}{\partial q_i}dq_i+\frac{\partial H}{\partial p_i}dp_i\Bigr)+\frac{\partial H}{\partial t}dt.
+$$
+Comparing coefficients yields Hamilton’s canonical equations:
+$$
+\begin{align*}
+\dot q_i&=\frac{\partial H}{\partial p_i},\\
+\dot p_i&=-\frac{\partial H}{\partial q_i},\\
+\frac{\partial H}{\partial t}&=-\frac{\partial L}{\partial t}.
+\end{align*}
+$$
+</div>
+
+<p><strong>Part B – $H$ is the total energy for a conservative system</strong></p>
+<div class="step">
+For a standard mechanical system
+$$
+T=\frac12\sum_{i,j}m_{ij}(q)\dot q_i\dot q_j,\qquad V=V(q)
+$$
+(so $L=T-V$ does not depend explicitly on time).
+$T$ is a homogeneous quadratic function of the velocities. Euler’s theorem on homogeneous functions gives
+$$
+\sum_i\dot q_i\frac{\partial T}{\partial\dot q_i}=2T.
+$$
+But $p_i=\partial L/\partial\dot q_i=\partial T/\partial\dot q_i$, therefore
+$$
+\sum_i p_i\dot q_i=2T.
+$$
+Hence
+$$
+H=\sum_i p_i\dot q_i-L=2T-(T-V)=T+V.
+$$
+Thus the Hamiltonian is identical with the total mechanical energy.
+</div>
+
+<div class="final">
+Hamilton’s equations:
+$$
+\dot q_i=\frac{\partial H}{\partial p_i},\qquad\dot p_i=-\frac{\partial H}{\partial q_i}.
+$$
+For a conservative system $H=T+V=$ total energy.
+</div>
+</div>
+
+<!-- ===================== QUESTION 5 ===================== -->
+<h2>Question 5</h2>
+
+<h3>(a) State the principle of Hamilton’s least action. Hence derive Euler-Lagrange’s equation of motion.</h3>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+Hamilton’s principle is a variational statement: the true path renders the action integral stationary. Applying the calculus of variations immediately produces the Euler-Lagrange equations.
+</div>
+
+<p><strong>Statement of Hamilton’s principle</strong></p>
+<div class="step">
+The actual motion of a system between two fixed times $t_1$ and $t_2$ is such that the action integral
+$$
+S=\int_{t_1}^{t_2}L(q,\dot q,t)\,dt
+$$
+is stationary (usually a minimum) with respect to all varied paths that have the same end-points:
+$$
+\delta S=0.
+$$
+</div>
+
+<p><strong>Derivation of the Euler-Lagrange equations</strong></p>
+<div class="step">
+Consider a varied path $q_i(t)+\varepsilon\eta_i(t)$ where $\eta_i(t_1)=\eta_i(t_2)=0$.
+The first variation of the action is
+$$
+\delta S=\varepsilon\int_{t_1}^{t_2}\sum_i\Bigl(\frac{\partial L}{\partial q_i}\eta_i+\frac{\partial L}{\partial\dot q_i}\dot\eta_i\Bigr)dt.
+$$
+Integrate the second term by parts:
+$$
+\int\frac{\partial L}{\partial\dot q_i}\dot\eta_i\,dt
+=\Bigl[\frac{\partial L}{\partial\dot q_i}\eta_i\Bigr]_{t_1}^{t_2}
+-\int\eta_i\frac{d}{dt}\Bigl(\frac{\partial L}{\partial\dot q_i}\Bigr)dt.
+$$
+The boundary term vanishes. Therefore
+$$
+\delta S=\varepsilon\int_{t_1}^{t_2}\sum_i\Biggl(\frac{\partial L}{\partial q_i}-\frac{d}{dt}\Bigl(\frac{\partial L}{\partial\dot q_i}\Bigr)\Biggr)\eta_i\,dt=0.
+$$
+Since the $\eta_i$ are arbitrary we must have
+$$
+\frac{d}{dt}\Bigl(\frac{\partial L}{\partial\dot q_i}\Bigr)-\frac{\partial L}{\partial q_i}=0
+\qquad(i=1,2,\dots,n).
+$$
+These are the Euler-Lagrange equations of motion.
+</div>
+</div>
+
+<h3>(b) A particle of mass $m$ is constrained to move on a circle under gravity. The circle is placed in a vertical plane and rests on the ground. Mention the generalised coordinate(s). Find Lagrange’s equation of motion.</h3>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+The constraint (motion on a fixed circle) reduces the degrees of freedom to one. The natural generalised coordinate is the polar angle measured from the downward vertical. Gravity supplies a potential linear in the height, which is easily written in terms of that angle.
+</div>
+
+<p><strong>Generalised coordinate</strong></p>
+<div class="step">
+Let the radius of the circle be $R$.
+Place the centre of the circle at height $R$ above the ground.
+The single generalised coordinate is the angle $\theta$ that the radius vector makes with the downward vertical.
+</div>
+
+<p><strong>Lagrangian</strong></p>
+<div class="step">
+Cartesian coordinates:
+$$
+x=R\sin\theta,\qquad y=R(1-\cos\theta)
+$$
+(so $y=0$ at the bottom).
+Velocity:
+$$
+v^2=R^2\dot\theta^2.
+$$
+Kinetic energy:
+$$
+T=\frac12 m R^2\dot\theta^2.
+$$
+Potential energy (taking $y=0$ as zero):
+$$
+V=mgy=mgR(1-\cos\theta).
+$$
+Lagrangian:
+$$
+L=T-V=\frac12 m R^2\dot\theta^2-mgR(1-\cos\theta).
+$$
+</div>
+
+<p><strong>Lagrange’s equation</strong></p>
+<div class="step">
+$$
+\frac{\partial L}{\partial\theta}=-mgR\sin\theta,\qquad
+\frac{\partial L}{\partial\dot\theta}=m R^2\dot\theta.
+$$
+$$
+\frac{d}{dt}\Bigl(\frac{\partial L}{\partial\dot\theta}\Bigr)=m R^2\ddot\theta.
+$$
+Euler-Lagrange equation:
+$$
+m R^2\ddot\theta+mgR\sin\theta=0
+\qquad\Rightarrow\qquad
+\ddot\theta+\frac{g}{R}\sin\theta=0.
+$$
+</div>
+
+<div class="final">
+Generalised coordinate: $\theta$ (angle from downward vertical).
+Equation of motion:
+$$
+\ddot{\theta}+\frac{g}{R}\sin\theta=0.
+$$
+</div>
+</div>
+
+<!-- ===================== QUESTION 6 ===================== -->
+<h2>Question 6</h2>
+<p>The Hamiltonian of a system is
+$$
+H=\frac{\alpha}{2}p^{2}q^{4}+\frac{\beta}{q^{2}},
+$$
+where $\alpha$ and $\beta$ are constants, and $q$ and $p$ are the generalised coordinate and momentum. Find the Lagrangian of the system.</p>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+We recover the Lagrangian by the inverse Legendre transform. First express the velocity $\dot q$ in terms of $p$ from Hamilton’s equation $\dot q=\partial H/\partial p$, then substitute into $L=p\dot q-H$.
+</div>
+
+<p><strong>Step 1 – Velocity from Hamilton’s equation</strong></p>
+<div class="step">
+$$
+\dot q=\frac{\partial H}{\partial p}=\alpha p q^4
+\qquad\Rightarrow\qquad
+p=\frac{\dot q}{\alpha q^4}.
+$$
+</div>
+
+<p><strong>Step 2 – Form the Lagrangian</strong></p>
+<div class="step">
+$$
+L=p\dot q-H
+=\Bigl(\frac{\dot q}{\alpha q^4}\Bigr)\dot q
+-\frac{\alpha}{2}\Bigl(\frac{\dot q}{\alpha q^4}\Bigr)^2 q^4
+-\frac{\beta}{q^2}.
+$$
+$$
+L=\frac{\dot q^2}{\alpha q^4}
+-\frac{1}{2\alpha}\frac{\dot q^2}{q^4}
+-\frac{\beta}{q^2}
+=\frac{1}{2\alpha}\frac{\dot q^2}{q^4}-\frac{\beta}{q^2}.
+$$
+</div>
+
+<div class="final">
+Lagrangian:
+$$
+L=\frac{1}{2\alpha}\frac{\dot{q}^{2}}{q^{4}}-\frac{\beta}{q^{2}}.
+$$
+</div>
+</div>
+
+<!-- ===================== QUESTION 7 ===================== -->
+<h2>Question 7</h2>
+<p>A particle of mass $m$ slides under gravity along the parabolic path $y=ax^{2}$ ($a=\text{constant}$). Find the Lagrangian and Lagrange’s equation of motion of the particle.</p>
+
+<div class="answer">
+<div class="reason">
+<strong>Reasoning:</strong>
+The constraint $y=ax^{2}$ reduces the system to one degree of freedom. We choose $x$ as the generalised coordinate, express the kinetic energy in terms of $\dot x$ by differentiating the constraint, and write the gravitational potential in terms of $x$. The Euler-Lagrange equation then yields the equation of motion.
+</div>
+
+<p><strong>Step 1 – Constraint and velocity</strong></p>
+<div class="step">
+$$
+y=ax^{2}\qquad\Rightarrow\qquad\dot y=2ax\dot x.
+$$
+Speed squared:
+$$
+v^{2}=\dot x^{2}+\dot y^{2}=\dot x^{2}+4a^{2}x^{2}\dot x^{2}=\dot x^{2}(1+4a^{2}x^{2}).
+$$
+</div>
+
+<p><strong>Step 2 – Lagrangian</strong></p>
+<div class="step">
+Kinetic energy:
+$$
+T=\frac12 m\dot x^{2}(1+4a^{2}x^{2}).
+$$
+Potential energy (taking $y=0$ as reference):
+$$
+V=mgy=mg\,ax^{2}.
+$$
+Lagrangian:
+$$
+L=T-V=\frac12 m\dot x^{2}(1+4a^{2}x^{2})-mga x^{2}.
+$$
+</div>
+
+<p><strong>Step 3 – Lagrange’s equation</strong></p>
+<div class="step">
+$$
+\frac{\partial L}{\partial\dot x}=m\dot x(1+4a^{2}x^{2}),
+$$
+$$
+\frac{d}{dt}\Bigl(\frac{\partial L}{\partial\dot x}\Bigr)
+=m\ddot x(1+4a^{2}x^{2})+m\dot x\cdot 8a^{2}x\dot x
+=m\ddot x(1+4a^{2}x^{2})+8ma^{2}x\dot x^{2}.
+$$
+$$
+\frac{\partial L}{\partial x}= \frac12 m\dot x^{2}\cdot 8a^{2}x -2mga x
+=4ma^{2}x\dot x^{2}-2mga x.
+$$
+Euler-Lagrange equation:
+$$
+m\ddot x(1+4a^{2}x^{2})+8ma^{2}x\dot x^{2}
+-4ma^{2}x\dot x^{2}+2mga x=0.
+$$
+Simplify:
+$$
+\ddot x(1+4a^{2}x^{2})+4a^{2}x\dot x^{2}+2ga x=0.
+$$
+</div>
+
+<div class="final">
+Lagrangian:
+$$
+L=\frac12 m\dot{x}^{2}(1+4a^{2}x^{2})-mga x^{2}.
+$$
+Equation of motion:
+$$
+\ddot{x}(1+4a^{2}x^{2})+4a^{2}x\dot{x}^{2}+2ga x=0.
+$$
+</div>
+</div>
+
+<hr>
+<p class="note" style="text-align:center;">
+All derivations follow the standard framework of analytical mechanics (Lagrange and Hamilton formalisms).
+Symbols have their usual meanings: $m$ = mass, $g$ = acceleration due to gravity, etc.
+</p>
+
+</body>
+</html>

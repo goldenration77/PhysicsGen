@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Special Theory of Relativity - Solutions</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  line-height: 1.6;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fafafa;
+  color: #222;
+}
+h1 {
+  text-align: center;
+  color: #1a365d;
+  border-bottom: 3px solid #2b6cb0;
+  padding-bottom: 10px;
+}
+h2 {
+  color: #2b6cb0;
+  margin-top: 40px;
+  border-left: 5px solid #2b6cb0;
+  padding-left: 12px;
+}
+h3 {
+  color: #2c5282;
+  margin-top: 25px;
+}
+.box {
+  background: #edf2f7;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin: 15px 0;
+}
+.answer {
+  background: #e6fffa;
+  border-left: 4px solid #38b2ac;
+  padding: 12px 18px;
+  margin: 10px 0;
+}
+.note {
+  font-size: 0.95em;
+  color: #4a5568;
+}
+</style>
+</head>
+<body>
+
+<h1>Special Theory of Relativity</h1>
+<p style="text-align:center;"><strong>Complete Solutions</strong></p>
+
+<!-- ==================== QUESTION 1 ==================== -->
+<h2>Question 1</h2>
+<p>Explain the following terms in Special Theory of Relativity:</p>
+
+<h3>(a) Simultaneity of two events</h3>
+<div class="answer">
+In classical physics, two events that occur at the same time are simultaneous for all observers.
+In Special Relativity, <strong>simultaneity is relative</strong>.
+
+Two events that are simultaneous in one inertial frame ($\Delta t = 0$) are generally <em>not</em> simultaneous in another inertial frame moving relative to the first.
+
+From the Lorentz transformation:
+$$
+\Delta t' = \gamma\left(\Delta t - \frac{v\Delta x}{c^2}\right)
+$$
+If $\Delta t = 0$ but $\Delta x \neq 0$, then $\Delta t' \neq 0$.
+Thus, the order and simultaneity of spatially separated events depend on the observer’s frame of reference.
+</div>
+
+<h3>(b) World point and World line</h3>
+<div class="answer">
+<ul>
+<li><strong>World Point</strong>: An event in spacetime is completely specified by four coordinates $(ct, x, y, z)$. This point in four-dimensional Minkowski spacetime is called a <em>world point</em>.</li>
+<li><strong>World Line</strong>: The continuous path traced by a particle (or observer) through spacetime is called its <em>world line</em>.
+For a particle at rest, the world line is parallel to the time axis. For a particle moving with constant velocity, it is a straight line inclined to the time axis. Accelerated particles have curved world lines.</li>
+</ul>
+</div>
+
+<h3>(c) Future and Past Light Cone in STR</h3>
+<div class="answer">
+In Minkowski spacetime, the light cone of an event $O$ is the set of all events that can be connected to $O$ by a light signal.
+
+<ul>
+<li><strong>Future Light Cone</strong>: The region of spacetime that can be reached from $O$ by a light signal or slower signal ($ds^2 \ge 0$, future-directed). Events inside the future light cone are causally connected to $O$ and can be influenced by it.</li>
+<li><strong>Past Light Cone</strong>: The region of spacetime from which a light signal or slower signal can reach $O$. Events inside the past light cone can influence the event at $O$.</li>
+</ul>
+
+The light cone divides spacetime into:
+- Timelike region (inside the cone) – causal influence possible
+- Spacelike region (outside the cone) – no causal influence possible
+- Lightlike (null) surface – the cone itself
+</div>
+
+<h3>(d) Four-velocity, Four-force, Four-momentum
+and proof of $E^2 = p^2c^2 + m_0^2c^4$</h3>
+<div class="answer">
+
+<strong>Four-velocity</strong>
+The four-velocity $U^\mu$ of a particle is the derivative of its world-line coordinates with respect to proper time $\tau$:
+$$
+U^\mu = \frac{dx^\mu}{d\tau} = \gamma(c, \mathbf{v})
+$$
+where $\gamma = \dfrac{1}{\sqrt{1-v^2/c^2}}$. It is a timelike four-vector with constant magnitude:
+$$
+U^\mu U_\mu = c^2
+$$
+
+<strong>Four-momentum</strong>
+$$
+P^\mu = m_0 U^\mu = \gamma m_0 (c, \mathbf{v}) = \left(\frac{E}{c}, \mathbf{p}\right)
+$$
+where $E = \gamma m_0 c^2$ is the total energy and $\mathbf{p} = \gamma m_0 \mathbf{v}$ is the relativistic three-momentum.
+
+<strong>Four-force</strong>
+$$
+F^\mu = \frac{dP^\mu}{d\tau}
+$$
+It is the rate of change of four-momentum with respect to proper time.
+
+<strong>Proof of the energy-momentum relation</strong>
+
+Since $P^\mu P_\mu$ is a Lorentz invariant:
+$$
+P^\mu P_\mu = m_0^2 c^2
+$$
+In components:
+$$
+\left(\frac{E}{c}\right)^2 - p^2 = m_0^2 c^2
+$$
+Multiplying both sides by $c^2$:
+$$
+E^2 - p^2 c^2 = m_0^2 c^4
+$$
+$$
+\therefore \quad E^2 = p^2 c^2 + m_0^2 c^4
+$$
+</div>
+
+<!-- ==================== QUESTION 2 ==================== -->
+<h2>Question 2</h2>
+<p>Two events separated by a distance $9 \times 10^9$ m are simultaneous in one inertial frame. What will be the time interval between the two events in a frame moving with speed $0.8c$?</p>
+
+<div class="answer">
+<strong>Given:</strong>
+$\Delta x = 9 \times 10^9$ m, $\Delta t = 0$ (simultaneous), $v = 0.8c$
+
+From Lorentz transformation:
+$$
+\Delta t' = \gamma \left( \Delta t - \frac{v \Delta x}{c^2} \right) = -\gamma \frac{v \Delta x}{c^2}
+$$
+
+$$
+\gamma = \frac{1}{\sqrt{1 - (0.8)^2}} = \frac{1}{\sqrt{0.36}} = \frac{1}{0.6} = \frac{5}{3}
+$$
+
+$$
+\frac{v}{c^2} = \frac{0.8c}{c^2} = \frac{0.8}{c} = \frac{0.8}{3 \times 10^8} = 2.6667 \times 10^{-9}\ \text{s/m}
+$$
+
+$$
+\frac{v \Delta x}{c^2} = 2.6667 \times 10^{-9} \times 9 \times 10^9 = 24\ \text{s}
+$$
+
+$$
+|\Delta t'| = \frac{5}{3} \times 24 = 40\ \text{s}
+$$
+
+<strong>Answer:</strong> The time interval is $40$ seconds.
+</div>
+
+<!-- ==================== QUESTION 3 ==================== -->
+<h2>Question 3</h2>
+<p>The muon has rest mass $105$ MeV/$c^2$ and energy $315$ MeV. Find the velocity of the muon.</p>
+
+<div class="answer">
+<strong>Given:</strong>
+$m_0 c^2 = 105$ MeV, $E = 315$ MeV
+
+$$
+\gamma = \frac{E}{m_0 c^2} = \frac{315}{105} = 3
+$$
+
+$$
+\gamma = \frac{1}{\sqrt{1 - \beta^2}} = 3 \implies 1 - \beta^2 = \frac{1}{9} \implies \beta^2 = \frac{8}{9}
+$$
+
+$$
+\beta = \sqrt{\frac{8}{9}} = \frac{2\sqrt{2}}{3} \approx 0.9428
+$$
+
+$$
+v = 0.9428\, c
+$$
+
+<strong>Answer:</strong> Velocity of the muon is $0.9428\,c$ (or $\dfrac{2\sqrt{2}}{3}c$).
+</div>
+
+<!-- ==================== QUESTION 4 ==================== -->
+<h2>Question 4</h2>
+<p>Write down the Lorentz transformation in Minkowski space $(x,y,z,t)$. Explain time dilation using Minkowski diagram.</p>
+
+<div class="answer">
+<strong>Lorentz Transformation</strong> (boost along $x$-axis with velocity $v$):
+
+$$
+\begin{align*}
+x' &= \gamma (x - vt) \\
+y' &= y \\
+z' &= z \\
+t' &= \gamma \left(t - \frac{vx}{c^2}\right)
+\end{align*}
+$$
+
+where $\gamma = \dfrac{1}{\sqrt{1-v^2/c^2}}$.
+
+In four-vector notation (Minkowski coordinates $x^0 = ct$, $x^1 = x$, $x^2 = y$, $x^3 = z$):
+
+$$
+\begin{align*}
+x'^0 &= \gamma (x^0 - \beta x^1) \\
+x'^1 &= \gamma (x^1 - \beta x^0) \\
+x'^2 &= x^2 \\
+x'^3 &= x^3
+\end{align*}
+$$
+with $\beta = v/c$.
+
+<strong>Time Dilation via Minkowski Diagram</strong>
+
+In a Minkowski diagram, the time axis ($ct$) is vertical and the space axis ($x$) is horizontal.
+
+- The world-line of a clock at rest in frame $S'$ is a straight line inclined at an angle $\theta$ where $\tan\theta = v/c$.
+- Proper time $\Delta\tau$ is the time measured by a clock moving with the particle (interval along its own world-line).
+- Coordinate time $\Delta t$ in frame $S$ is the projection of this interval onto the $ct$-axis of $S$.
+
+Because of the hyperbolic geometry of Minkowski spacetime (the metric is $ds^2 = c^2dt^2 - dx^2$), the length of the world-line segment (proper time) is shorter than its projection on the time axis of another frame.
+
+Thus:
+$$
+\Delta t = \gamma \Delta\tau > \Delta\tau
+$$
+Moving clocks run slow — this is time dilation.
+</div>
+
+<!-- ==================== QUESTION 5 ==================== -->
+<h2>Question 5</h2>
+<p>Prove that $x_\mu x^\mu$ is an invariant quantity under Lorentz transformation.</p>
+
+<div class="answer">
+The quantity $x_\mu x^\mu$ is the squared interval (Minkowski norm):
+$$
+x_\mu x^\mu = (ct)^2 - x^2 - y^2 - z^2 = c^2 t^2 - \mathbf{r}^2
+$$
+
+Under a Lorentz transformation (boost along $x$):
+$$
+\begin{align*}
+ct' &= \gamma (ct - \beta x) \\
+x' &= \gamma (x - \beta ct) \\
+y' &= y \\
+z' &= z
+\end{align*}
+$$
+
+Compute $x'_\mu x'^\mu$:
+$$
+\begin{align*}
+(ct')^2 - (x')^2 - (y')^2 - (z')^2
+&= \gamma^2 (ct - \beta x)^2 - \gamma^2 (x - \beta ct)^2 - y^2 - z^2 \\
+&= \gamma^2 \Big[ (ct)^2 - 2\beta ct\, x + \beta^2 x^2 - x^2 + 2\beta ct\, x - \beta^2 (ct)^2 \Big] - y^2 - z^2 \\
+&= \gamma^2 \Big[ (1 - \beta^2)(ct)^2 - (1 - \beta^2)x^2 \Big] - y^2 - z^2 \\
+&= \gamma^2 (1 - \beta^2) \big[(ct)^2 - x^2\big] - y^2 - z^2
+\end{align*}
+$$
+
+But $\gamma^2 (1 - \beta^2) = 1$, therefore:
+$$
+(ct')^2 - (x')^2 - (y')^2 - (z')^2 = (ct)^2 - x^2 - y^2 - z^2
+$$
+
+$$
+\therefore \quad x'_\mu x'^\mu = x_\mu x^\mu
+$$
+
+Hence $x_\mu x^\mu$ is a Lorentz invariant.
+</div>
+
+<!-- ==================== QUESTION 6 ==================== -->
+<h2>Question 6</h2>
+<p>The kinetic energy of a particle of rest mass $m_0$ is equal to its rest mass energy. Find its velocity.</p>
+
+<div class="answer">
+<strong>Given:</strong> Kinetic energy $K = m_0 c^2$
+
+Total energy $E = K + m_0 c^2 = 2 m_0 c^2$
+
+$$
+\gamma = \frac{E}{m_0 c^2} = 2
+$$
+
+$$
+\frac{1}{\sqrt{1 - \beta^2}} = 2 \implies 1 - \beta^2 = \frac{1}{4} \implies \beta^2 = \frac{3}{4}
+$$
+
+$$
+\beta = \sqrt{\frac{3}{4}} = \frac{\sqrt{3}}{2} \approx 0.866
+$$
+
+$$
+v = \frac{\sqrt{3}}{2}\, c
+$$
+
+<strong>Answer:</strong> Velocity of the particle is $\dfrac{\sqrt{3}}{2}\, c$.
+</div>
+
+<hr>
+<p class="note" style="text-align:center;">
+All answers follow the standard formulation of Special Relativity in Minkowski spacetime.
+</p>
+
+</body>
+</html>
