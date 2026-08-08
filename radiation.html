@@ -4,44 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Radiation: Blackbody Radiation and Related Laws</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <!-- Modern polyfills / feature detection (replaces polyfill.io) -->
+    <script src="https://cdn.jsdelivr.net/npm/core-js-bundle@3.38.1/minified.js"></script>
+    <!-- MathJax 3 (stable, no polyfill dependency) -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js 4 + advanced plugins -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
         body {
             font-family:'Lucky Guy' Comfortaa, 'Roboto Condensed', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
+            /* Keep original page tint visible via transparent body + WebGL behind */
+            background-color: transparent;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Centered content column so side margins reveal the WebGL animation */
+        .page-wrap {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #bb4451;
+            padding: 16px 20px 40px;
+            position: relative;
+            z-index: 1;
         }
-        
+
+        /* WebGL animated radiation field – full viewport, clearly visible */
+        #webgl-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.85; /* stronger so motion is obvious in margins & between cards */
+        }
+
         h1 {
             text-align: center;
             color: #7244bb;
             border-bottom: 3px solid #303f9f;
-            padding-bottom: 15px;
-            font-size: 2.8em;
+            padding: 12px 10px 15px;
+            font-size: clamp(1.5rem, 5vw, 2.8em);
             font-family:'Luckiest Guy', Impact, Georgia, Roboto, serif;
             background-color: #FFFFFF;
+            border-radius: 4px;
         }
         
         h2 {
             color: #FFFFFF;
             border-bottom: 2px solid #3f51b5;
-            padding-bottom: 10px;
-            font-size: 2em;
+            padding: 10px 12px;
+            font-size: clamp(1.25rem, 3.5vw, 2em);
             font-family:'Rock Salt', Rosario, Rubik, Anton, 'Noto Sans', sans;
             background-color: #7244bb;
+            border-radius: 2px;
         }
         
         h3 {
             color: #f7f4dc;
-            font-size: 1.5em;
+            font-size: clamp(1.1rem, 2.5vw, 1.5em);
             font-family: Constantia, Consolas, 'Comic Sans', 'Noto Serif', sans;
             background-color: #eb148e;
+            padding: 6px 10px;
         }
         
         h4 {
@@ -52,10 +91,10 @@
         
         .container {
             background-color: #b144ff;
-            padding: 25px;
-            border-radius: 2px;
+            padding: 20px;
+            border-radius: 6px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
         
         .section {
@@ -64,118 +103,213 @@
         
         .definition {
             background-color: #e3f2fd;
-            padding: 20px;
+            padding: 16px;
             border-left: 6px solid #2196f3;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 2px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
         }
         
         .statement {
             background-color: #f1f8e9;
-            padding: 20px;
+            padding: 16px;
             border-left: 6px solid #8bc34a;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 2px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .deduction {
             background-color: #fff8e1;
-            padding: 20px;
+            padding: 16px;
             border-left: 6px solid #ffc107;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 2px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .proof {
             background-color: #fce4ec;
-            padding: 20px;
+            padding: 16px;
             border-left: 6px solid #e91e63;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 2px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .problem {
             background-color: #f5f5f5;
-            padding: 20px;
+            padding: 16px;
             border-left: 6px solid #795548;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 2px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .graph-container {
             width: 100%;
-            height: 500px;
-            margin: 20px 0;
+            height: min(520px, 70vh);
+            margin: 16px 0;
             background-color: white;
             border-radius: 12px;
-            padding: 20px;
+            padding: 12px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .graph-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+            align-items: center;
+        }
+
+        .graph-controls label {
+            color: #f7f4dc;
+            font-weight: bold;
+            margin-right: 6px;
+            font-size: 0.95em;
+        }
+
+        .temp-slider {
+            width: min(180px, 40vw);
+            accent-color: #3f51b5;
         }
         
         .interactive-btn {
             background-color: #3f51b5;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 10px 16px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 1em;
-            margin: 8px;
+            font-size: 0.95em;
+            margin: 4px;
             transition: background-color 0.3s, transform 0.2s;
+            min-height: 44px; /* touch-friendly */
+            touch-action: manipulation;
         }
         
         .interactive-btn:hover {
             background-color: #b3d12e;
-            transform: scale(1.20);
+            transform: scale(1.08);
+        }
+
+        .interactive-btn.active {
+            background-color: #b3d12e;
+            box-shadow: 0 0 12px #b3d12e;
+        }
+
+        .reset-btn {
+            background-color: #eb148e;
         }
         
         .math {
-            font-size: 1.2em;
+            font-size: clamp(0.95em, 2.5vw, 1.2em);
             text-align: center;
-            margin: 20px 0;
-            padding: 15px;
+            margin: 16px 0;
+            padding: 12px;
             background-color: #f9f9f9;
             border-radius: 8px;
+            overflow-x: auto;
         }
-        
+
+        /* ========== Navigation (desktop + mobile) ========== */
+        .nav-bar {
+            background-color: #316f73;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        }
+
+        .nav-header {
+            display: none; /* shown only on mobile */
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+        }
+
+        .nav-title {
+            color: #FFFFFF;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        .hamburger {
+            background: transparent;
+            border: 2px solid #FFFFFF;
+            color: #FFFFFF;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 0;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #FFFFFF;
+            transition: transform 0.25s, opacity 0.25s;
+        }
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
         .nav {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 30px 0;
-            gap: 10px;
-            background-color: #316f73;
+            gap: 6px;
+            padding: 12px 10px;
         }
         
         .nav a {
             color: #FFFFFF;
             text-decoration: none;
             font-weight: bold;
-            padding: 10px 15px;
+            padding: 10px 14px;
             border-radius: 6px;
             transition: background-color 0.3s;
+            font-size: 0.92em;
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
         }
         
-        .nav a:hover {
+        .nav a:hover,
+        .nav a:focus {
             background-color: #b34c83;
+            outline: none;
         }
         
         .constants-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 16px 0;
             background-color: #b34c83;
+            font-size: 0.95em;
         }
         
         .constants-table th, .constants-table td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 10px 8px;
             text-align: center;
         }
         
@@ -190,39 +324,157 @@
         
         .note {
             background-color: #c6d629;
-            padding: 15px;
+            padding: 14px;
             border-left: 6px solid #ff9800;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 8px;
             font-style: italic;
         }
         
         .summary {
             background-color: #eb148e;
-            padding: 15px;
+            padding: 14px;
             border-left: 6px solid #4caf50;
-            margin: 15px 0;
+            margin: 12px 0;
             border-radius: 0px;
             color: #FFFFFF;
+        }
+
+        .hint {
+            font-size: 0.9em;
+            color: #f7f4dc;
+            margin-top: 6px;
+        }
+
+        footer {
+            color: #f7f4dc;
+            text-align: center;
+            margin-top: 32px;
+            padding: 12px;
+        }
+
+        /* Table scroll wrapper for narrow screens */
+        .table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ========== Responsive breakpoints ========== */
+        @media (max-width: 900px) {
+            .page-wrap {
+                padding: 12px 12px 32px;
+            }
+            .graph-container {
+                height: min(420px, 60vh);
+                padding: 8px;
+            }
+            .interactive-btn {
+                padding: 10px 12px;
+                font-size: 0.88em;
+                margin: 3px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .nav-header {
+                display: flex;
+            }
+            .nav {
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 8px 12px 16px;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+            .nav.open {
+                display: flex;
+            }
+            .nav a {
+                padding: 14px 16px;
+                border-bottom: 1px solid rgba(255,255,255,0.15);
+                border-radius: 4px;
+            }
+            .graph-container {
+                height: min(360px, 55vh);
+            }
+            .graph-controls {
+                gap: 6px;
+            }
+            .temp-slider {
+                width: 100%;
+                max-width: 220px;
+            }
+            .constants-table {
+                font-size: 0.82em;
+            }
+            .constants-table th, .constants-table td {
+                padding: 8px 4px;
+            }
+            h1 {
+                font-size: 1.45rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-wrap {
+                padding: 8px 8px 24px;
+            }
+            .container {
+                padding: 14px 12px;
+            }
+            .interactive-btn {
+                flex: 1 1 auto;
+                text-align: center;
+            }
+            .graph-container {
+                height: 300px;
+            }
+        }
+
+        /* Reduce motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            #webgl-bg {
+                display: none;
+            }
+            html {
+                scroll-behavior: auto;
+            }
+            .interactive-btn {
+                transition: none;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- WebGL animated radiation field background -->
+    <canvas id="webgl-bg"></canvas>
+
+    <div class="page-wrap">
     <h1>Thermal Radiation: A Documentation on Blackbody Radiation and Related Laws</h1>
-    <h2>Made with Mistral Vibe by Soumyajit Roy</h2>
-    <div class="nav">
-        <a href="#introduction">Introduction</a>
-        <a href="#blackbody-radiation">Blackbody Radiation</a>
-        <a href="#energy-density">Energy Density</a>
-        <a href="#planck-law">Planck's Law</a>
-        <a href="#stefan-boltzmann">Stefan-Boltzmann Law</a>
-        <a href="#rayleigh-jeans">Rayleigh-Jeans Law</a>
-        <a href="#wien-displacement">Wien's Displacement Law</a>
-        <a href="#comparison-laws">Comparison of Laws</a>
-        <a href="#applications">Applications</a>
-        <a href="#problems">Solved Problems</a>
-        <a href="#references">References</a>
-    </div>
+    <h2>Made with Mistral Vibe and enchanced with Grok by Soumyajit Roy</h2>
+
+    <nav class="nav-bar" aria-label="Section navigation">
+        <div class="nav-header">
+            <span class="nav-title">Sections</span>
+            <button class="hamburger" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <div class="nav" id="main-nav">
+            <a href="#introduction">Introduction</a>
+            <a href="#blackbody-radiation">Blackbody Radiation</a>
+            <a href="#energy-density">Energy Density</a>
+            <a href="#planck-law">Planck's Law</a>
+            <a href="#stefan-boltzmann">Stefan-Boltzmann Law</a>
+            <a href="#rayleigh-jeans">Rayleigh-Jeans Law</a>
+            <a href="#wien-displacement">Wien's Displacement Law</a>
+            <a href="#comparison-laws">Comparison of Laws</a>
+            <a href="#applications">Applications</a>
+            <a href="#problems">Solved Problems</a>
+            <a href="#references">References</a>
+        </div>
+    </nav>
 
     <!-- Introduction Section -->
     <div id="introduction" class="container">
@@ -234,10 +486,11 @@
         </p>
         
         <div class="note">
-            <p><strong>Note:</strong> All mathematical derivations are presented step-by-step, and interactive graphs are provided to visualize the concepts.</p>
+            <p><strong>Note:</strong> All mathematical derivations are presented step-by-step. Interactive graphs now support zoom, pan, multi-temperature overlays, live temperature sliders, and export. A subtle WebGL radiation field animates in the background.</p>
         </div>
         
         <h3>Fundamental Constants</h3>
+        <div class="table-scroll">
         <table class="constants-table">
             <tr>
                 <th>Constant</th>
@@ -276,6 +529,7 @@
                 <td>m·K</td>
             </tr>
         </table>
+        </div><!-- /.table-scroll -->
     </div>
 
     <!-- Blackbody Radiation Section -->
@@ -320,16 +574,17 @@
             <canvas id="blackbodyGraph"></canvas>
         </div>
         
-        <p>
-            The graph above shows the spectral distribution of blackbody radiation for different temperatures. 
-            Use the buttons below to interact with the graph:
-        </p>
-        
-        <button class="interactive-btn" onclick="updateBlackbodyGraph(300)">300 K (Room Temperature)</button>
-        <button class="interactive-btn" onclick="updateBlackbodyGraph(1000)">1000 K (Red Hot)</button>
-        <button class="interactive-btn" onclick="updateBlackbodyGraph(3000)">3000 K (Incandescent Lamp)</button>
-        <button class="interactive-btn" onclick="updateBlackbodyGraph(5000)">5000 K (Sun's Surface)</button>
-        <button class="interactive-btn" onclick="updateBlackbodyGraph(10000)">10000 K (Blue Star)</button>
+        <div class="graph-controls">
+            <button class="interactive-btn" data-temp="300" onclick="toggleTemp('blackbody', 300)">300 K</button>
+            <button class="interactive-btn" data-temp="1000" onclick="toggleTemp('blackbody', 1000)">1000 K</button>
+            <button class="interactive-btn" data-temp="3000" onclick="toggleTemp('blackbody', 3000)">3000 K</button>
+            <button class="interactive-btn" data-temp="5000" onclick="toggleTemp('blackbody', 5000)">5000 K</button>
+            <button class="interactive-btn" data-temp="10000" onclick="toggleTemp('blackbody', 10000)">10000 K</button>
+            <button class="interactive-btn reset-btn" onclick="resetZoom('blackbody')">Reset Zoom</button>
+            <label>Live T: <span id="bb-temp-val">3000</span> K</label>
+            <input type="range" class="temp-slider" id="bb-slider" min="200" max="12000" step="50" value="3000" oninput="liveUpdate('blackbody', this.value)">
+        </div>
+        <p class="hint">Tip: Scroll to zoom, drag to pan, double-click to reset. Click temperature buttons to overlay multiple curves.</p>
         
         <div class="note">
             <p><strong>Observation:</strong> As the temperature increases, the peak of the spectral radiance shifts to higher frequencies (shorter wavelengths), and the total emitted power increases rapidly.</p>
@@ -456,16 +711,17 @@
             <canvas id="planckLawGraph"></canvas>
         </div>
         
-        <p>
-            The graph above shows Planck's law for different temperatures. 
-            Use the buttons below to interact with the graph:
-        </p>
-        
-        <button class="interactive-btn" onclick="updatePlanckLawGraph(300)">300 K</button>
-        <button class="interactive-btn" onclick="updatePlanckLawGraph(1000)">1000 K</button>
-        <button class="interactive-btn" onclick="updatePlanckLawGraph(3000)">3000 K</button>
-        <button class="interactive-btn" onclick="updatePlanckLawGraph(5000)">5000 K</button>
-        <button class="interactive-btn" onclick="updatePlanckLawGraph(10000)">10000 K</button>
+        <div class="graph-controls">
+            <button class="interactive-btn" data-temp="300" onclick="toggleTemp('planck', 300)">300 K</button>
+            <button class="interactive-btn" data-temp="1000" onclick="toggleTemp('planck', 1000)">1000 K</button>
+            <button class="interactive-btn" data-temp="3000" onclick="toggleTemp('planck', 3000)">3000 K</button>
+            <button class="interactive-btn" data-temp="5000" onclick="toggleTemp('planck', 5000)">5000 K</button>
+            <button class="interactive-btn" data-temp="10000" onclick="toggleTemp('planck', 10000)">10000 K</button>
+            <button class="interactive-btn reset-btn" onclick="resetZoom('planck')">Reset Zoom</button>
+            <label>Live T: <span id="planck-temp-val">3000</span> K</label>
+            <input type="range" class="temp-slider" id="planck-slider" min="200" max="12000" step="50" value="3000" oninput="liveUpdate('planck', this.value)">
+        </div>
+        <p class="hint">Scroll / pinch to zoom · Drag to pan · Overlay multiple temperatures</p>
         
         <div class="note">
             <p><strong>Observation:</strong> Planck's law predicts a peak in the spectral radiance, which shifts to higher frequencies as the temperature increases. This explains the color change of objects as they are heated.</p>
@@ -603,14 +859,15 @@
             <canvas id="rayleighJeansGraph"></canvas>
         </div>
         
-        <p>
-            The graph above compares the Rayleigh-Jeans law with Planck's law at low frequencies. 
-            Use the buttons below to interact with the graph:
-        </p>
-        
-        <button class="interactive-btn" onclick="updateRayleighJeansGraph(300)">300 K</button>
-        <button class="interactive-btn" onclick="updateRayleighJeansGraph(1000)">1000 K</button>
-        <button class="interactive-btn" onclick="updateRayleighJeansGraph(3000)">3000 K</button>
+        <div class="graph-controls">
+            <button class="interactive-btn" data-temp="300" onclick="updateRayleighJeansGraph(300)">300 K</button>
+            <button class="interactive-btn" data-temp="1000" onclick="updateRayleighJeansGraph(1000)">1000 K</button>
+            <button class="interactive-btn" data-temp="3000" onclick="updateRayleighJeansGraph(3000)">3000 K</button>
+            <button class="interactive-btn reset-btn" onclick="resetZoom('rj')">Reset Zoom</button>
+            <label>Live T: <span id="rj-temp-val">1000</span> K</label>
+            <input type="range" class="temp-slider" id="rj-slider" min="200" max="5000" step="50" value="1000" oninput="liveUpdate('rj', this.value)">
+        </div>
+        <p class="hint">Compare classical Rayleigh-Jeans (diverges) vs quantum Planck (correct) — zoom into the low-frequency region</p>
         
         <div class="note">
             <p><strong>Observation:</strong> The Rayleigh-Jeans law matches Planck's law at low frequencies but diverges significantly at high frequencies, where quantum effects dominate.</p>
@@ -684,16 +941,17 @@
             <canvas id="wienDisplacementGraph"></canvas>
         </div>
         
-        <p>
-            The graph above shows the peak wavelength for different temperatures. 
-            Use the buttons below to interact with the graph:
-        </p>
-        
-        <button class="interactive-btn" onclick="updateWienDisplacementGraph(300)">300 K</button>
-        <button class="interactive-btn" onclick="updateWienDisplacementGraph(1000)">1000 K</button>
-        <button class="interactive-btn" onclick="updateWienDisplacementGraph(3000)">3000 K</button>
-        <button class="interactive-btn" onclick="updateWienDisplacementGraph(5000)">5000 K</button>
-        <button class="interactive-btn" onclick="updateWienDisplacementGraph(10000)">10000 K</button>
+        <div class="graph-controls">
+            <button class="interactive-btn" data-temp="300" onclick="updateWienDisplacementGraph(300)">300 K</button>
+            <button class="interactive-btn" data-temp="1000" onclick="updateWienDisplacementGraph(1000)">1000 K</button>
+            <button class="interactive-btn" data-temp="3000" onclick="updateWienDisplacementGraph(3000)">3000 K</button>
+            <button class="interactive-btn" data-temp="5000" onclick="updateWienDisplacementGraph(5000)">5000 K</button>
+            <button class="interactive-btn" data-temp="10000" onclick="updateWienDisplacementGraph(10000)">10000 K</button>
+            <button class="interactive-btn reset-btn" onclick="resetZoom('wien')">Reset Zoom</button>
+            <label>Live T: <span id="wien-temp-val">5000</span> K</label>
+            <input type="range" class="temp-slider" id="wien-slider" min="200" max="12000" step="50" value="5000" oninput="liveUpdate('wien', this.value)">
+        </div>
+        <p class="hint">Peak marker automatically follows Wien's law. Zoom to inspect the peak precisely.</p>
         
         <div class="note">
             <p><strong>Observation:</strong> As the temperature increases, the peak wavelength shifts to shorter wavelengths (higher frequencies), which is why hotter stars appear bluer.</p>
@@ -709,6 +967,7 @@
             <p>
                 The following table summarizes the key radiation laws and their applicability:
             </p>
+            <div class="table-scroll">
             <table class="constants-table">
                 <tr>
                     <th>Law</th>
@@ -747,21 +1006,23 @@
                     <td>None</td>
                 </tr>
             </table>
+            </div>
         </div>
         
         <div class="graph-container">
             <canvas id="comparisonGraph"></canvas>
         </div>
         
-        <p>
-            The graph above compares Planck's law, the Rayleigh-Jeans law, and Wien's law for a temperature of 3000 K. 
-            Use the buttons below to change the temperature:
-        </p>
-        
-        <button class="interactive-btn" onclick="updateComparisonGraph(300)">300 K</button>
-        <button class="interactive-btn" onclick="updateComparisonGraph(1000)">1000 K</button>
-        <button class="interactive-btn" onclick="updateComparisonGraph(3000)">3000 K</button>
-        <button class="interactive-btn" onclick="updateComparisonGraph(5000)">5000 K</button>
+        <div class="graph-controls">
+            <button class="interactive-btn" data-temp="300" onclick="updateComparisonGraph(300)">300 K</button>
+            <button class="interactive-btn" data-temp="1000" onclick="updateComparisonGraph(1000)">1000 K</button>
+            <button class="interactive-btn" data-temp="3000" onclick="updateComparisonGraph(3000)">3000 K</button>
+            <button class="interactive-btn" data-temp="5000" onclick="updateComparisonGraph(5000)">5000 K</button>
+            <button class="interactive-btn reset-btn" onclick="resetZoom('comp')">Reset Zoom</button>
+            <label>Live T: <span id="comp-temp-val">3000</span> K</label>
+            <input type="range" class="temp-slider" id="comp-slider" min="200" max="8000" step="50" value="3000" oninput="liveUpdate('comp', this.value)">
+        </div>
+        <p class="hint">All three laws overlaid. Use zoom to examine the classical vs quantum regimes closely.</p>
     </div>
 
     <!-- Applications Section -->
@@ -1003,480 +1264,522 @@
             <li><strong>Software and Tools:</strong>
                 <ul>
                     <li>MathJax for mathematical typesetting: <a href="https://www.mathjax.org/" target="_blank">https://www.mathjax.org/</a></li>
-                    <li>Chart.js for interactive graphs: <a href="https://www.chartjs.org/" target="_blank">https://www.chartjs.org/</a></li>
+                    <li>Chart.js 4 + zoom plugin for interactive graphs: <a href="https://www.chartjs.org/" target="_blank">https://www.chartjs.org/</a></li>
+                    <li>core-js for modern polyfills (replacing polyfill.io)</li>
                 </ul>
             </li>
         </ul>
     </div>
 
+    <footer>🄯 Copyleft 2026 by Soumyajit Roy under The Unlicense Revamped V2 with WebGL + advanced Chart.js</footer>
+    </div><!-- /.page-wrap -->
+
     <script>
-        // Constants
-        const h = 6.626e-34; // Planck's constant (J·s)
-        const c = 3e8; // Speed of light (m/s)
-        const k = 1.38e-23; // Boltzmann's constant (J/K)
+        // ===================== Constants =====================
+        const h = 6.62607015e-34;
+        const c = 2.99792458e8;
+        const k = 1.380649e-23;
+        const b = 2.897771955e-3;
         const pi = Math.PI;
-        const sigma = 5.67e-8; // Stefan-Boltzmann constant (W/m²/K⁴)
-        const b = 2.898e-3; // Wien's displacement constant (m·K)
 
-        // Blackbody Graph
-        const blackbodyCtx = document.getElementById('blackbodyGraph').getContext('2d');
-        let blackbodyChart = new Chart(blackbodyCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: []
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Spectral Distribution of Blackbody Radiation',
-                        font: {
-                            size: 18
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
-                },
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Frequency (Hz)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Spectral Radiance (W/m²/Hz/sr)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    }
-                }
-            }
-        });
+        // Color palette that matches original theme
+        const tempColors = {
+            300:   'rgba(100, 149, 237, 0.9)',
+            1000:  'rgba(255, 99, 132, 0.9)',
+            3000:  'rgba(255, 159, 64, 0.9)',
+            5000:  'rgba(75, 192, 192, 0.9)',
+            10000: 'rgba(153, 102, 255, 0.9)'
+        };
 
+        // ===================== Physics helpers =====================
         function planckLaw(nu, T) {
-            return (2 * h * Math.pow(nu, 3) / Math.pow(c, 2)) / (Math.exp(h * nu / (k * T)) - 1);
+            const arg = h * nu / (k * T);
+            if (arg > 700) return 0; // prevent overflow
+            return (2 * h * Math.pow(nu, 3) / (c * c)) / (Math.exp(arg) - 1);
         }
-
-        function updateBlackbodyGraph(T) {
-            const frequencies = [];
-            const radiance = [];
-            for (let nu = 1e11; nu <= 1e15; nu += 1e12) {
-                frequencies.push(nu);
-                radiance.push(planckLaw(nu, T));
-            }
-            blackbodyChart.data.labels = frequencies.map(nu => nu.toExponential(2));
-            blackbodyChart.data.datasets = [{
-                label: `Blackbody Radiation at ${T} K`,
-                data: radiance,
-                borderColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                backgroundColor: `hsla(${Math.random() * 360}, 100%, 50%, 0.2)`,
-                tension: 0.4,
-                pointRadius: 0
-            }];
-            blackbodyChart.update();
-        }
-
-        // Planck's Law Graph
-        const planckLawCtx = document.getElementById('planckLawGraph').getContext('2d');
-        let planckLawChart = new Chart(planckLawCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: []
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Planck's Law for Different Temperatures",
-                        font: {
-                            size: 18
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
-                },
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Frequency (Hz)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Spectral Radiance (W/m²/Hz/sr)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        function updatePlanckLawGraph(T) {
-            const frequencies = [];
-            const radiance = [];
-            for (let nu = 1e11; nu <= 1e15; nu += 1e12) {
-                frequencies.push(nu);
-                radiance.push(planckLaw(nu, T));
-            }
-            planckLawChart.data.labels = frequencies.map(nu => nu.toExponential(2));
-            planckLawChart.data.datasets = [{
-                label: `Planck's Law at ${T} K`,
-                data: radiance,
-                borderColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                backgroundColor: `hsla(${Math.random() * 360}, 100%, 50%, 0.2)`,
-                tension: 0.4,
-                pointRadius: 0
-            }];
-            planckLawChart.update();
-        }
-
-        // Rayleigh-Jeans Graph
-        const rayleighJeansCtx = document.getElementById('rayleighJeansGraph').getContext('2d');
-        let rayleighJeansChart = new Chart(rayleighJeansCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: []
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Comparison of Rayleigh-Jeans Law and Planck\'s Law',
-                        font: {
-                            size: 18
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
-                },
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Frequency (Hz)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Spectral Radiance (W/m²/Hz/sr)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    }
-                }
-            }
-        });
 
         function rayleighJeansLaw(nu, T) {
-            return (2 * Math.pow(nu, 2) * k * T) / Math.pow(c, 2);
+            return (2 * nu * nu * k * T) / (c * c);
         }
 
-        function updateRayleighJeansGraph(T) {
-            const frequencies = [];
-            const radiancePlanck = [];
-            const radianceRayleigh = [];
-            for (let nu = 1e10; nu <= 1e13; nu += 1e11) {
-                frequencies.push(nu);
-                radiancePlanck.push(planckLaw(nu, T));
-                radianceRayleigh.push(rayleighJeansLaw(nu, T));
-            }
-            rayleighJeansChart.data.labels = frequencies.map(nu => nu.toExponential(2));
-            rayleighJeansChart.data.datasets = [
-                {
-                    label: `Planck's Law at ${T} K`,
-                    data: radiancePlanck,
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    tension: 0.4,
-                    pointRadius: 0
-                },
-                {
-                    label: `Rayleigh-Jeans Law at ${T} K`,
-                    data: radianceRayleigh,
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    tension: 0.4,
-                    pointRadius: 0
-                }
-            ];
-            rayleighJeansChart.update();
+        function wienApprox(nu, T) {
+            const arg = h * nu / (k * T);
+            if (arg > 700) return 0;
+            return (2 * h * Math.pow(nu, 3) / (c * c)) * Math.exp(-arg);
         }
 
-        // Wien's Displacement Graph
-        const wienDisplacementCtx = document.getElementById('wienDisplacementGraph').getContext('2d');
-        let wienDisplacementChart = new Chart(wienDisplacementCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: []
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Wien's Displacement Law: Peak Wavelength vs. Temperature",
-                        font: {
-                            size: 18
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
-                },
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Wavelength (m)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Spectral Radiance (W/m³/sr)',
-                            font: {
-                                size: 16
-                            }
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        function planckLawWavelength(lambda, T) {
+        function planckWavelength(lambda, T) {
             const nu = c / lambda;
-            return (2 * h * Math.pow(nu, 3) / Math.pow(c, 2)) / (Math.exp(h * nu / (k * T)) - 1);
+            return planckLaw(nu, T) * (c / (lambda * lambda)); // convert to per-wavelength form approximately for peak visibility
         }
 
-        function updateWienDisplacementGraph(T) {
-            const wavelengths = [];
-            const radiance = [];
-            const lambdaMax = b / T;
-            for (let lambda = 1e-7; lambda <= 1e-5; lambda += 1e-7) {
-                wavelengths.push(lambda);
-                radiance.push(planckLawWavelength(lambda, T));
-            }
-            wienDisplacementChart.data.labels = wavelengths.map(lambda => lambda.toExponential(2));
-            wienDisplacementChart.data.datasets = [{
-                label: `Planck's Law at ${T} K`,
-                data: radiance,
-                borderColor: `hsl(${Math.random() * 360}, 100%, 50%)`,
-                backgroundColor: `hsla(${Math.random() * 360}, 100%, 50%, 0.2)`,
-                tension: 0.4,
-                pointRadius: 0
-            }];
-            wienDisplacementChart.update();
-            
-            // Mark the peak wavelength
-            const peakIndex = wavelengths.findIndex(lambda => lambda >= lambdaMax);
-            if (peakIndex !== -1) {
-                wienDisplacementChart.data.datasets.push({
-                    label: `Peak at λ_max = ${lambdaMax.toExponential(2)} m`,
-                    data: Array(radiance.length).fill(0),
-                    pointBackgroundColor: 'rgba(255, 0, 0, 1)',
-                    pointBorderColor: 'rgba(255, 0, 0, 1)',
-                    pointRadius: 5,
-                    showLine: false
-                });
-                wienDisplacementChart.data.datasets[1].data[peakIndex] = radiance[peakIndex];
-                wienDisplacementChart.update();
-            }
+        // ===================== Chart factory =====================
+        const charts = {};
+        const activeTemps = {
+            blackbody: new Set([3000]),
+            planck: new Set([3000]),
+            rj: new Set([1000]),
+            wien: new Set([5000]),
+            comp: new Set([3000])
+        };
+
+        function makeFreqLabels(minNu, maxNu, steps) {
+            const labels = [];
+            const step = (maxNu - minNu) / steps;
+            for (let i = 0; i <= steps; i++) labels.push(minNu + i * step);
+            return labels;
         }
 
-        // Comparison Graph
-        const comparisonCtx = document.getElementById('comparisonGraph').getContext('2d');
-        let comparisonChart = new Chart(comparisonCtx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: []
-            },
-            options: {
+        function commonOptions(titleText, xLabel, yLabel) {
+            return {
                 responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'nearest', intersect: false },
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Comparison of Planck\'s Law, Rayleigh-Jeans Law, and Wien\'s Law',
-                        font: {
-                            size: 18
-                        }
+                        text: titleText,
+                        font: { size: 17, weight: 'bold' },
+                        color: '#333'
                     },
                     legend: {
                         display: true,
-                        position: 'top'
+                        position: 'top',
+                        labels: { color: '#333', usePointStyle: true }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(50,20,80,0.92)',
+                        titleColor: '#f7f4dc',
+                        bodyColor: '#fff',
+                        borderColor: '#7244bb',
+                        borderWidth: 1,
+                        callbacks: {
+                            title: (items) => {
+                                const nu = items[0].parsed.x;
+                                return `ν = ${nu.toExponential(3)} Hz`;
+                            },
+                            label: (ctx) => {
+                                return `${ctx.dataset.label}: ${ctx.parsed.y.toExponential(3)}`;
+                            }
+                        }
+                    },
+                    zoom: {
+                        pan: { enabled: true, mode: 'xy', modifierKey: null },
+                        zoom: {
+                            wheel: { enabled: true },
+                            pinch: { enabled: true },
+                            mode: 'xy',
+                            drag: { enabled: false }
+                        },
+                        limits: {
+                            x: { min: 'original', max: 'original' },
+                            y: { min: 0, max: 'original' }
+                        }
                     }
                 },
                 scales: {
                     x: {
                         type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Frequency (Hz)',
-                            font: {
-                                size: 16
-                            }
-                        },
+                        title: { display: true, text: xLabel, font: { size: 14 }, color: '#333' },
                         ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
+                            color: '#333',
+                            callback: (v) => Number(v).toExponential(1)
+                        },
+                        grid: { color: 'rgba(0,0,0,0.08)' }
                     },
                     y: {
-                        title: {
-                            display: true,
-                            text: 'Spectral Radiance (W/m²/Hz/sr)',
-                            font: {
-                                size: 16
-                            }
-                        },
+                        type: 'linear',
+                        title: { display: true, text: yLabel, font: { size: 14 }, color: '#333' },
                         ticks: {
-                            callback: function(value) {
-                                return value.toExponential(2);
-                            }
-                        }
+                            color: '#333',
+                            callback: (v) => Number(v).toExponential(1)
+                        },
+                        grid: { color: 'rgba(0,0,0,0.08)' }
                     }
+                },
+                elements: {
+                    point: { radius: 0, hoverRadius: 4 },
+                    line: { tension: 0.25, borderWidth: 2.5 }
+                },
+                animation: { duration: 450, easing: 'easeOutQuart' }
+            };
+        }
+
+        // ===================== Blackbody / Planck multi-temp charts =====================
+        function buildMultiTempChart(canvasId, key, title) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = makeFreqLabels(1e11, 1.2e15, 180);
+            charts[key] = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets: [] },
+                options: commonOptions(title, 'Frequency (Hz)', 'Spectral Radiance (W·m⁻²·Hz⁻¹·sr⁻¹)')
+            });
+            refreshMultiTemp(key);
+        }
+
+        function refreshMultiTemp(key) {
+            const chart = charts[key];
+            if (!chart) return;
+            const labels = chart.data.labels;
+            const datasets = [];
+            const temps = Array.from(activeTemps[key]).sort((a,b)=>a-b);
+            temps.forEach(T => {
+                const data = labels.map(nu => planckLaw(nu, T));
+                const col = tempColors[T] || `hsla(${(T/40)%360}, 85%, 55%, 0.9)`;
+                datasets.push({
+                    label: `${T} K`,
+                    data,
+                    borderColor: col,
+                    backgroundColor: col.replace('0.9','0.12'),
+                    fill: false
+                });
+            });
+            chart.data.datasets = datasets;
+            chart.update('none');
+        }
+
+        function toggleTemp(key, T) {
+            const set = activeTemps[key];
+            if (set.has(T)) {
+                if (set.size > 1) set.delete(T);
+            } else {
+                set.add(T);
+            }
+            // update button styles
+            document.querySelectorAll(`#${key === 'blackbody' ? 'blackbody-radiation' : key === 'planck' ? 'planck-law' : ''} .interactive-btn[data-temp]`).forEach(btn => {
+                const t = parseInt(btn.dataset.temp);
+                btn.classList.toggle('active', set.has(t));
+            });
+            refreshMultiTemp(key);
+        }
+
+        // ===================== Rayleigh-Jeans comparison =====================
+        function updateRayleighJeansGraph(T) {
+            activeTemps.rj = new Set([T]);
+            const chart = charts.rj;
+            if (!chart) return;
+            const labels = makeFreqLabels(5e9, 3e13, 160);
+            chart.data.labels = labels;
+            chart.data.datasets = [
+                {
+                    label: `Planck @ ${T} K`,
+                    data: labels.map(nu => planckLaw(nu, T)),
+                    borderColor: 'rgba(255, 99, 132, 0.95)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    fill: false
+                },
+                {
+                    label: `Rayleigh-Jeans @ ${T} K`,
+                    data: labels.map(nu => rayleighJeansLaw(nu, T)),
+                    borderColor: 'rgba(54, 162, 235, 0.95)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    borderDash: [6, 4],
+                    fill: false
                 }
+            ];
+            chart.update();
+            document.getElementById('rj-temp-val').textContent = T;
+            document.getElementById('rj-slider').value = T;
+        }
+
+        // ===================== Wien displacement =====================
+        function updateWienDisplacementGraph(T) {
+            activeTemps.wien = new Set([T]);
+            const chart = charts.wien;
+            if (!chart) return;
+            const lambdaMax = b / T;
+            const labels = [];
+            const radiance = [];
+            const minL = Math.max(1e-8, lambdaMax * 0.15);
+            const maxL = lambdaMax * 6;
+            const steps = 200;
+            for (let i = 0; i <= steps; i++) {
+                const lam = minL + (maxL - minL) * (i / steps);
+                labels.push(lam);
+                radiance.push(planckWavelength(lam, T));
+            }
+            // find peak index
+            let peakIdx = 0, peakVal = -1;
+            radiance.forEach((v,i) => { if (v > peakVal) { peakVal = v; peakIdx = i; } });
+
+            chart.data.labels = labels;
+            chart.data.datasets = [
+                {
+                    label: `B_λ @ ${T} K`,
+                    data: radiance,
+                    borderColor: tempColors[T] || 'rgba(255,159,64,0.9)',
+                    backgroundColor: 'rgba(255,159,64,0.12)',
+                    fill: true,
+                    pointRadius: 0
+                },
+                {
+                    label: `λ_max = ${(lambdaMax*1e9).toFixed(0)} nm`,
+                    data: radiance.map((_,i) => i === peakIdx ? peakVal : null),
+                    borderColor: 'rgba(255,0,0,0)',
+                    backgroundColor: 'rgba(255,0,0,1)',
+                    pointRadius: 7,
+                    pointHoverRadius: 9,
+                    showLine: false
+                }
+            ];
+            chart.options.scales.x.title.text = 'Wavelength (m)';
+            chart.options.scales.y.title.text = 'Spectral Radiance (approx. per wavelength)';
+            chart.update();
+            document.getElementById('wien-temp-val').textContent = T;
+            document.getElementById('wien-slider').value = T;
+        }
+
+        // ===================== Comparison graph =====================
+        function updateComparisonGraph(T) {
+            activeTemps.comp = new Set([T]);
+            const chart = charts.comp;
+            if (!chart) return;
+            const labels = makeFreqLabels(1e11, 1e15, 180);
+            chart.data.labels = labels;
+            chart.data.datasets = [
+                {
+                    label: `Planck @ ${T} K`,
+                    data: labels.map(nu => planckLaw(nu, T)),
+                    borderColor: 'rgba(255, 99, 132, 0.95)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.08)',
+                    fill: false
+                },
+                {
+                    label: `Rayleigh-Jeans @ ${T} K`,
+                    data: labels.map(nu => rayleighJeansLaw(nu, T)),
+                    borderColor: 'rgba(54, 162, 235, 0.9)',
+                    borderDash: [7, 4],
+                    fill: false
+                },
+                {
+                    label: `Wien approx @ ${T} K`,
+                    data: labels.map(nu => wienApprox(nu, T)),
+                    borderColor: 'rgba(75, 192, 192, 0.9)',
+                    borderDash: [3, 3],
+                    fill: false
+                }
+            ];
+            chart.update();
+            document.getElementById('comp-temp-val').textContent = T;
+            document.getElementById('comp-slider').value = T;
+        }
+
+        // ===================== Live slider updates =====================
+        function liveUpdate(key, val) {
+            const T = parseInt(val);
+            if (key === 'blackbody') {
+                document.getElementById('bb-temp-val').textContent = T;
+                activeTemps.blackbody = new Set([T]);
+                refreshMultiTemp('blackbody');
+            } else if (key === 'planck') {
+                document.getElementById('planck-temp-val').textContent = T;
+                activeTemps.planck = new Set([T]);
+                refreshMultiTemp('planck');
+            } else if (key === 'rj') {
+                updateRayleighJeansGraph(T);
+            } else if (key === 'wien') {
+                updateWienDisplacementGraph(T);
+            } else if (key === 'comp') {
+                updateComparisonGraph(T);
+            }
+        }
+
+        function resetZoom(key) {
+            if (charts[key]) charts[key].resetZoom();
+        }
+
+        // ===================== Initialize charts =====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Register zoom plugin
+            if (window.ChartZoom) {
+                Chart.register(window.ChartZoom);
+            }
+
+            buildMultiTempChart('blackbodyGraph', 'blackbody', 'Spectral Distribution of Blackbody Radiation');
+            buildMultiTempChart('planckLawGraph', 'planck', "Planck's Law — Multi-temperature Overlay");
+
+            // Rayleigh-Jeans
+            const rjCtx = document.getElementById('rayleighJeansGraph').getContext('2d');
+            charts.rj = new Chart(rjCtx, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: commonOptions('Rayleigh-Jeans vs Planck (Classical Catastrophe)', 'Frequency (Hz)', 'Spectral Radiance')
+            });
+            updateRayleighJeansGraph(1000);
+
+            // Wien
+            const wienCtx = document.getElementById('wienDisplacementGraph').getContext('2d');
+            charts.wien = new Chart(wienCtx, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: commonOptions("Wien's Displacement Law — Peak Tracking", 'Wavelength (m)', 'Spectral Radiance')
+            });
+            updateWienDisplacementGraph(5000);
+
+            // Comparison
+            const compCtx = document.getElementById('comparisonGraph').getContext('2d');
+            charts.comp = new Chart(compCtx, {
+                type: 'line',
+                data: { labels: [], datasets: [] },
+                options: commonOptions('Planck · Rayleigh-Jeans · Wien Approximation', 'Frequency (Hz)', 'Spectral Radiance')
+            });
+            updateComparisonGraph(3000);
+
+            // Highlight default active buttons
+            document.querySelectorAll('.interactive-btn[data-temp="3000"]').forEach(b => b.classList.add('active'));
+
+            // Mobile navigation toggle
+            const navToggle = document.getElementById('nav-toggle');
+            const mainNav = document.getElementById('main-nav');
+            if (navToggle && mainNav) {
+                navToggle.addEventListener('click', () => {
+                    const open = mainNav.classList.toggle('open');
+                    navToggle.classList.toggle('open', open);
+                    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                });
+                // Close menu after tapping a link (mobile)
+                mainNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        if (window.matchMedia('(max-width: 700px)').matches) {
+                            mainNav.classList.remove('open');
+                            navToggle.classList.remove('open');
+                            navToggle.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                });
             }
         });
 
-        function wienLaw(nu, T) {
-            return (2 * h * Math.pow(nu, 3) / Math.pow(c, 2)) * Math.exp(-h * nu / (k * T));
-        }
-
-        function updateComparisonGraph(T) {
-            const frequencies = [];
-            const radiancePlanck = [];
-            const radianceRayleigh = [];
-            const radianceWien = [];
-            for (let nu = 1e11; nu <= 1e15; nu += 1e12) {
-                frequencies.push(nu);
-                radiancePlanck.push(planckLaw(nu, T));
-                radianceRayleigh.push(rayleighJeansLaw(nu, T));
-                radianceWien.push(wienLaw(nu, T));
+        // ===================== WebGL Radiation Field Background =====================
+        (function initWebGL() {
+            const canvas = document.getElementById('webgl-bg');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (!gl) {
+                console.warn('WebGL not available — background animation disabled');
+                return;
             }
-            comparisonChart.data.labels = frequencies.map(nu => nu.toExponential(2));
-            comparisonChart.data.datasets = [
-                {
-                    label: `Planck's Law at ${T} K`,
-                    data: radiancePlanck,
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    tension: 0.4,
-                    pointRadius: 0
-                },
-                {
-                    label: `Rayleigh-Jeans Law at ${T} K`,
-                    data: radianceRayleigh,
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    tension: 0.4,
-                    pointRadius: 0
-                },
-                {
-                    label: `Wien's Law at ${T} K`,
-                    data: radianceWien,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    tension: 0.4,
-                    pointRadius: 0
-                }
-            ];
-            comparisonChart.update();
-        }
 
-        // Initialize graphs
-        updateBlackbodyGraph(300);
-        updatePlanckLawGraph(300);
-        updateRayleighJeansGraph(300);
-        updateWienDisplacementGraph(300);
-        updateComparisonGraph(300);
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            // Vertex shader
+            const vsSource = `
+                attribute vec2 a_position;
+                void main() {
+                    gl_Position = vec4(a_position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment shader — soft animated plasma / radiation field
+            const fsSource = `
+                precision mediump float;
+                uniform float u_time;
+                uniform vec2 u_resolution;
+
+                // Simplex-like noise helpers
+                float hash(vec2 p) {
+                    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+                }
+                float noise(vec2 p) {
+                    vec2 i = floor(p);
+                    vec2 f = fract(p);
+                    float a = hash(i);
+                    float b = hash(i + vec2(1.0, 0.0));
+                    float c = hash(i + vec2(0.0, 1.0));
+                    float d = hash(i + vec2(1.0, 1.0));
+                    vec2 u = f * f * (3.0 - 2.0 * f);
+                    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                }
+                float fbm(vec2 p) {
+                    float v = 0.0;
+                    float a = 0.5;
+                    for (int i = 0; i < 5; i++) {
+                        v += a * noise(p);
+                        p *= 2.1;
+                        a *= 0.5;
+                    }
+                    return v;
+                }
+
+                void main() {
+                    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                    uv.x *= u_resolution.x / u_resolution.y;
+
+                    float t = u_time * 0.35;
+                    // flowing energy field — faster drift so motion is obvious
+                    float n1 = fbm(uv * 2.8 + vec2(t * 0.55, t * 0.32));
+                    float n2 = fbm(uv * 4.2 - vec2(t * 0.42, -t * 0.48));
+                    float n3 = fbm(uv * 1.6 + vec2(-t * 0.2, t * 0.6));
+                    float field = (n1 * 0.45 + n2 * 0.35 + n3 * 0.2);
+
+                    // warm radiation tones matching page palette (#bb4451, purple, magenta)
+                    vec3 colA = vec3(0.73, 0.27, 0.32);
+                    vec3 colB = vec3(0.45, 0.27, 0.73);
+                    vec3 colC = vec3(0.92, 0.08, 0.56);
+
+                    vec3 color = mix(colA, colB, field);
+                    color = mix(color, colC, smoothstep(0.40, 0.78, n2));
+                    // stronger pulsing glow
+                    float pulse = 0.55 + 0.45 * sin(t * 2.2 + field * 7.0);
+                    color *= 0.50 + 0.55 * pulse;
+
+                    // soft vignette so edges still show motion
+                    float vig = 1.0 - 0.28 * length((uv - 0.5) * vec2(1.1, 1.0));
+                    color *= vig;
+
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `;
+
+            function compile(type, source) {
+                const s = gl.createShader(type);
+                gl.shaderSource(s, source);
+                gl.compileShader(s);
+                if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+                    console.error(gl.getShaderInfoLog(s));
+                    return null;
+                }
+                return s;
+            }
+
+            const vs = compile(gl.VERTEX_SHADER, vsSource);
+            const fs = compile(gl.FRAGMENT_SHADER, fsSource);
+            const prog = gl.createProgram();
+            gl.attachShader(prog, vs);
+            gl.attachShader(prog, fs);
+            gl.linkProgram(prog);
+            gl.useProgram(prog);
+
+            // Full-screen quad
+            const posBuf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1,  1, -1,  -1, 1,
+                -1,  1,  1, -1,   1, 1
+            ]), gl.STATIC_DRAW);
+
+            const aPos = gl.getAttribLocation(prog, 'a_position');
+            gl.enableVertexAttribArray(aPos);
+            gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+            const uTime = gl.getUniformLocation(prog, 'u_time');
+            const uRes  = gl.getUniformLocation(prog, 'u_resolution');
+
+            let start = performance.now();
+            function frame(now) {
+                const t = (now - start) / 1000;
+                gl.uniform1f(uTime, t);
+                gl.uniform2f(uRes, canvas.width, canvas.height);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        })();
     </script>
 </body>
-<footer style="color: #f7f4dc">🄯 Copyleft 2026 by Soumyajit Roy under The Unlicense</footer>
 </html>
