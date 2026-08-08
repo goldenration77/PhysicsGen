@@ -1,16 +1,373 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Special Theory of Relativity</title>
-</head>  
-  <body>
-    <p>
-      <li><a href="radiation.html" target=_blank>Thermal Radiation and Introduction to Quantum Mechanics</a></li>
-      <li><a href="str.html" target=_blank>The Special Theory of Relativity</a></li>
-    </p>
-  </body>
-  <footer>
-    Just a temporary redirection
-  </footer>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SJR's Physics Docs</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Comfortaa, Inter, Roboto, system-ui, -apple-system, sans-serif;
+      background: #111;
+      color: #eee;
+    }
+
+    #webgl-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 0;
+    }
+
+    .overlay {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      pointer-events: none;
+    }
+
+    .card {
+      pointer-events: auto;
+      background: rgba(10, 10, 18, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+      background: linear-gradient(90deg, #ff6b9d, #c77dff, #72e0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 1.75rem;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    li {
+      margin-bottom: 0.65rem;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #f0f0f5;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+
+    a:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateX(4px);
+    }
+
+    a .icon {
+      font-size: 1.15rem;
+      opacity: 0.85;
+    }
+
+    a .label {
+      flex: 1;
+      font-size: 0.95rem;
+    }
+
+    a .arrow {
+      opacity: 0.4;
+      font-size: 0.85rem;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.35);
+      text-align: center;
+    }
+
+    .footer a {
+      display: inline;
+      padding: 0;
+      background: none;
+      border: none;
+      color: rgba(200, 180, 255, 0.7);
+    }
+
+    .footer a:hover {
+      background: none;
+      border: none;
+      transform: none;
+      color: #cbb8ff;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="webgl-canvas"></canvas>
+
+  <div class="overlay">
+    <div class="card">
+      <h1>SJR's Physics Docs</h1>
+      <p class="subtitle">Physics Git by SJR</p>
+
+      <ul>
+        <li>
+          <a href="radiation.html" target="_blank" rel="noopener">
+            <span class="icon">✦</span>
+            <span class="label">Thermal Radiation: A documentation</span>
+            <span class="arrow">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="str.html" target="_blank" rel="noopener">
+            <span class="icon">⬡</span>
+            <span class="label">The Special Theory of Relativity</span>
+            <span class="arrow">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://codepen.io/Web_yuki1027/pen/yLgYpWM" target="_blank" rel="noopener">
+            <span class="icon">◈</span>
+            <span class="label">CodePen · Original Pen (Yuki)</span>
+            <span class="arrow">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/goldenration77" target="_blank" rel="noopener">
+            <span class="icon">◎</span>
+            <span class="label">My Github Page</span>
+            <span class="arrow">↗</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/soumyajit-r-004685316/" target="_blank" rel="noopener">
+          <span class="icon">L</span>
+          <span class="label">My Linkedin</span>
+          <span class="arrow">↗</span>
+          </a>
+      </ul>
+
+      <p class="footer">
+        Background: Chromatic Aberration WebGL Sine Wave · MIT ·
+        <a href="https://codepen.io/Web_yuki1027/pen/yLgYpWM" target="_blank" rel="noopener">Yuki</a>
+      </p>
+      <p class="footer">The page is 🄯 Copyleft 2026 Assembled by Soumyajit Roy with Grok</footer>
+    </div>
+  </div>
+
+  <!-- Vertex Shader -->
+  <script id="js-vertex-shader" type="x-shader/x-vertex">
+    attribute vec3 position;
+    void main() {
+      gl_Position = vec4(position, 1.0);
+    }
+  </script>
+
+  <!-- Fragment Shader -->
+  <script id="js-fragment-shader" type="x-shader/x-fragment">
+    precision highp float;
+    uniform vec2 resolution;
+    uniform float time;
+    uniform float xScale;
+    uniform float yScale;
+    uniform float distortion;
+
+    void main() {
+      vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
+
+      float d = length(p) * distortion;
+
+      float rx = p.x * (1.0 + d);
+      float gx = p.x;
+      float bx = p.x * (1.0 - d);
+
+      float r = 0.05 / abs(p.y + sin((rx + time) * xScale) * yScale);
+      float g = 0.05 / abs(p.y + sin((gx + time) * xScale) * yScale);
+      float b = 0.05 / abs(p.y + sin((bx + time) * xScale) * yScale);
+
+      gl_FragColor = vec4(r, g, b, 1.0);
+    }
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    class Stage {
+      constructor() {
+        this.renderParam = {
+          clearColor: 0x111111,
+          width: window.innerWidth,
+          height: window.innerHeight
+        };
+
+        this.cameraParam = {
+          left: -1,
+          right: 1,
+          top: 1,
+          bottom: -1,
+          near: 0,
+          far: 1
+        };
+
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.isInitialized = false;
+      }
+
+      init() {
+        this._setScene();
+        this._setRender();
+        this._setCamera();
+        this.isInitialized = true;
+      }
+
+      _setScene() {
+        this.scene = new THREE.Scene();
+      }
+
+      _setRender() {
+        this.renderer = new THREE.WebGLRenderer({
+          canvas: document.getElementById("webgl-canvas"),
+          antialias: false
+        });
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setClearColor(new THREE.Color(this.renderParam.clearColor));
+        this.renderer.setSize(this.renderParam.width, this.renderParam.height);
+      }
+
+      _setCamera() {
+        if (!this.isInitialized) {
+          this.camera = new THREE.OrthographicCamera(
+            this.cameraParam.left,
+            this.cameraParam.right,
+            this.cameraParam.top,
+            this.cameraParam.bottom,
+            this.cameraParam.near,
+            this.cameraParam.far
+          );
+        }
+
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        this.renderer.setSize(w, h);
+      }
+
+      _render() {
+        this.renderer.render(this.scene, this.camera);
+      }
+
+      onResize() {
+        this._setCamera();
+      }
+
+      onRaf() {
+        this._render();
+      }
+    }
+
+    class Mesh {
+      constructor(stage) {
+        this.stage = stage;
+        this.mesh = null;
+
+        this.uniforms = {
+          resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+          time: { value: 0.0 },
+          xScale: { value: 1.0 },
+          yScale: { value: 0.5 },
+          distortion: { value: 0.05 }
+        };
+      }
+
+      init() {
+        this._setMesh();
+      }
+
+      _setMesh() {
+        const positions = new Float32Array([
+          -1, -1, 0,
+           1, -1, 0,
+          -1,  1, 0,
+           1, -1, 0,
+          -1,  1, 0,
+           1,  1, 0
+        ]);
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
+        const material = new THREE.RawShaderMaterial({
+          vertexShader: document.getElementById("js-vertex-shader").textContent,
+          fragmentShader: document.getElementById("js-fragment-shader").textContent,
+          uniforms: this.uniforms,
+          side: THREE.DoubleSide
+        });
+
+        this.mesh = new THREE.Mesh(geometry, material);
+        this.stage.scene.add(this.mesh);
+      }
+
+      updateResolution() {
+        this.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+      }
+
+      onRaf() {
+        this.uniforms.time.value += 0.01;
+      }
+    }
+
+    (() => {
+      const stage = new Stage();
+      stage.init();
+
+      const mesh = new Mesh(stage);
+      mesh.init();
+
+      window.addEventListener("resize", () => {
+        stage.onResize();
+        mesh.updateResolution();
+      });
+
+      const raf = () => {
+        requestAnimationFrame(raf);
+        mesh.onRaf();
+        stage.onRaf();
+      };
+      raf();
+    })();
+  </script>
+</body>
 </html>
