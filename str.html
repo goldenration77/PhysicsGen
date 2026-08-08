@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Special Theory of Relativity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root {
+  --bg: #0b0f19;
+  --surface: #121826;
+  --surface2: #1a2234;
+  --border: #2a3548;
+  --text: #e8eef7;
+  --muted: #9aa8bc;
+  --accent: #5b9cff;
+  --accent2: #7c5cff;
+  --success: #3dd68c;
+  --warning: #f5a524;
+  --danger: #f31260;
+  --code-bg: #0d1117;
+  --radius: 12px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.35);
+  --font: Comfortaa, 'Inter', system-ui, sans-serif;
+  --mono: 'Roboto Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 16.5px;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Layout */
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 300px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+.sidebar-header {
+  padding: 1.5rem 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 2;
+}
+.sidebar-header h1 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.sidebar-header p { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+.toc { padding: 1rem 0.75rem 2rem; }
+.toc-section { margin-bottom: 1.25rem; }
+.toc-section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 0 0.75rem 0.4rem;
+  font-weight: 600;
+}
+.toc a {
+  display: block;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 0.875rem;
+  transition: all 0.15s;
+}
+.toc a:hover, .toc a.active {
+  background: var(--surface2);
+  color: var(--text);
+  text-decoration: none;
+}
+.toc a.active { border-left: 3px solid var(--accent); }
+
+.main {
+  margin-left: 300px;
+  flex: 1;
+  max-width: 920px;
+  padding: 2.5rem 2.5rem 6rem;
+}
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem; left: 1rem;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 44px; height: 44px;
+  border-radius: 2px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.video-wrapper video {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+}
+/* Typography */
+h1.page-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #fff 30%, var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 2.5rem; }
+h2 {
+  font-size: 1.65rem;
+  font-weight: 650;
+  margin: 3.5rem 0 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  letter-spacing: -0.02em;
+}
+h2:first-of-type { border-top: none; margin-top: 0; }
+h3 { font-size: 1.25rem; font-weight: 600; margin: 2rem 0 0.85rem; color: #c5d4e8; }
+h4 { font-size: 1.05rem; font-weight: 600; margin: 1.5rem 0 0.6rem; color: #a8bdd4; }
+p { margin-bottom: 1.1rem; color: #d0dae8; }
+ul, ol { margin: 0 0 1.25rem 1.4rem; color: #d0dae8; }
+li { margin-bottom: 0.4rem; }
+strong { color: #fff; font-weight: 600; }
+
+/* Cards & boxes */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.35rem 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: var(--shadow);
+}
+.card.note { border-left: 4px solid var(--accent); }
+.card.warning { border-left: 4px solid var(--warning); }
+.card.important { border-left: 4px solid var(--success); }
+.card-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+}
+.card.warning .card-title { color: var(--warning); }
+.card.important .card-title { color: var(--success); }
+
+/* Equations */
+.katex-display { margin: 1.5rem 0 !important; overflow-x: auto; overflow-y: hidden; }
+.eq-block {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  text-align: center;
+}
+.eq-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.6rem;
+  font-family: var(--mono);
+}
+
+/* Code / tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.7rem 1rem;
+  text-align: left;
+}
+th { background: var(--surface2); font-weight: 600; color: #c5d4e8; }
+td { background: var(--surface); }
+code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+/* Figures & canvas */
+.figure {
+  margin: 2rem 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-align: center;
+}
+.figure canvas, .figure #minkowski-canvas, .figure #lorentz-canvas {
+  max-width: 100%;
+  border-radius: 8px;
+  background: #0a0e17;
+}
+.figure-caption {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.75rem;
+  text-align: center;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0 0.5rem;
+  font-size: 0.9rem;
+}
+.controls label { color: var(--muted); }
+.controls input[type="range"] { width: 140px; accent-color: var(--accent); }
+.controls select, .controls button {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.controls button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Hero */
+.hero {
+  background: linear-gradient(145deg, #121a2b 0%, #0d1320 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(91,156,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Progress / badge */
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(91,156,255,0.15);
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; padding: 1.5rem 1.25rem 4rem; }
+  .mobile-toggle { display: flex; }
+  h1.page-title { font-size: 1.85rem; }
+  h2 { font-size: 1.4rem; }
+}
+@media (max-width: 600px) {
+  .controls { flex-direction: column; }
+  .controls input[type="range"] { width: 100%; }
+}
+
+/* Print */
+@media print {
+  .sidebar, .mobile-toggle { display: none !important; }
+  .main { margin-left: 0; max-width: 100%; }
+  body { background: #fff; color: #111; }
+  h2 { page-break-before: always; }
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<button class="mobile-toggle" id="menuBtn" aria-label="Toggle menu">☰</button>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h1>Special Relativity</h1>
+    <p>For Undergraduates</p>
+  </div>
+  <nav class="toc">
+    <div class="toc-section">
+      <div class="toc-section-title">Foundations</div>
+      <a href="#videos">Video Lectures</a>
+      <a href="#intro">Introduction</a>
+      <a href="#michelson">1. Michelson–Morley Experiment</a>
+      <a href="#events">2. Events in Inertial Frames</a>
+      <a href="#simultaneity">3. Simultaneity & Order of Events</a>
+      <a href="#postulates">4. Postulates of STR</a>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-title">Kinematics</div>
+      <a href="#lorentz">5. Lorentz Transformations</a>
+      <a href="#contraction">6. Length Contraction</a>
+      <a href="#dilation">7. Time Dilation</a>
+      <a href="#twin">8. Twin Paradox</a>
+      <a href="#proper">9. Proper Time & Proper Length</a>
+      <a href="#vel-trans">10. Velocity & Frequency Transformation</a>
+      <a href="#intervals">11. Spacetime Intervals & Causality</a>
+      <a href="#vel-add">12. Addition of Velocities</a>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-title">Dynamics</div>
+      <a href="#mass-vel">13. Variation of Mass with Velocity</a>
+      <a href="#mass-energy">14. Massless Particles & $E=mc^2$</a>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-title">Four-Vector Formalism</div>
+      <a href="#fourvec">15. Four-Vector Formalism</a>
+      <a href="#minkowski">16. Minkowski Diagram</a>
+      <a href="#fourvel">17. Four-Velocity</a>
+      <a href="#fouracc">18. Four-Acceleration</a>
+      <a href="#fourforce">19. Four-Force & Four-Momentum</a>
+      <a href="#cons-mom">20. Conservation of Four-Momentum</a>
+      <a href="#energy-cons">21. Energy Conservation</a>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-title">Optics & Electromagnetism</div>
+      <a href="#doppler">22. Relativistic Doppler Effect</a>
+      <a href="#aberration">23. Longitudinal / Transverse Doppler & Aberration</a>
+      <a href="#decay">24. Decay Processes</a>
+      <a href="#eb-fields">25. Transformation of $\mathbf{E}$ and $\mathbf{B}$</a>
+      <a href="#maxwell">26. Invariance of Maxwell Equations</a>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-title">Appendices</div>
+      <a href="#summary">Summary of Key Formulae</a>
+      <a href="#references">References & Further Reading</a>
+    </div>
+  </nav>
+</aside>
+
+<main class="main">
+  <!-- HERO -->
+  <div class="hero">
+    <span class="badge">For Undergraduates</span>
+    <h1 class="page-title">Special Theory of Relativity</h1>
+    <p class="subtitle">A complete, self-contained exposition covering kinematics, dynamics, four-vector formalism, relativistic optics and the electromagnetic field transformations.</p>
+  </div>
+
+  <!-- INTRODUCTION -->
+  <section id="intro">
+    <h2>Introduction</h2>
+    <p>
+      The Special Theory of Relativity (STR), published by Albert Einstein in 1905, revolutionised our understanding of space and time. It rests on two deceptively simple postulates and yields profound consequences: the relativity of simultaneity, length contraction, time dilation, the equivalence of mass and energy, and the unification of electric and magnetic fields.
+    </p>
+    <p>
+      This document presents a systematic, book-level treatment of the theory. Mathematical derivations are given in full, physical interpretations are emphasised, and interactive visualisations are provided where they aid intuition (Minkowski diagrams, velocity addition, Doppler shift, etc.).
+    </p>
+    <div class="card note">
+      <div class="card-title">Notation conventions</div>
+      <ul>
+        <li>Units where $c=1$ are frequently used; $c$ is restored when needed for clarity.</li>
+        <li>Greek indices $\mu,\nu,\dots = 0,1,2,3$; Latin indices $i,j,\dots = 1,2,3$.</li>
+        <li>Metric signature $(+,-,-,-)$ (mostly-plus convention is also common; we adopt mostly-minus).</li>
+        <li>Four-vectors are written $A^\mu = (A^0,\mathbf{A})$.</li>
+      </ul>
+    </div>
+  </section>
+  <!-- VIDEO LECTURES SECTION -->
+<section id="videos">
+  <h2>Video Lectures — Continuum: The Special Theory of Relativity</h2>
+  <p>
+    Classic educational film (two reels) that visually develops the core ideas of special relativity:
+    the constancy of the speed of light, the Lorentz transformations, time dilation, length contraction,
+    and the geometric structure of spacetime.
+  </p>
+
+  <div class="card" style="margin-bottom: 2rem;">
+    <div class="card-title">Reel 1</div>
+    <div class="video-wrapper">
+      <video controls preload="metadata" poster="" style="width:100%; border-radius:10px; background:#000;">
+        <source src="https://dn720305.ca.archive.org/0/items/continuumthespecialtheoryofrelativity/continuumthespecialtheoryofrelativityreel1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <p class="figure-caption" style="margin-top:0.75rem;">
+      Continuum – The Special Theory of Relativity (Reel 1)
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Reel 2</div>
+    <div class="video-wrapper">
+      <video controls preload="metadata" style="width:100%; border-radius:10px; background:#000;">
+        <source src="https://dn720305.ca.archive.org/0/items/continuumthespecialtheoryofrelativity/continuumthespecialtheoryofrelativityreel2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <p class="figure-caption" style="margin-top:0.75rem;">
+      Continuum – The Special Theory of Relativity (Reel 2)
+    </p>
+  </div>
+</section>
+  <!-- 1. MICHELSON-MORLEY -->
+  <section id="michelson">
+    <h2>1. Michelson–Morley Experiment and its Outcome</h2>
+    <h3>1.1 Historical context</h3>
+    <p>
+      In the late 19th century the luminiferous aether was postulated as the medium that carries light waves. The Earth was assumed to move through this aether, producing an “aether wind”. Albert A. Michelson (1881) and later Michelson & Edward Morley (1887) designed an interferometric experiment to detect this wind.
+    </p>
+
+    <h3>1.2 Principle of the experiment</h3>
+    <p>
+      A beam of light is split into two perpendicular paths of equal length $L$. After reflection the beams recombine and interfere. If the apparatus moves at velocity $v$ relative to the aether, the travel times along the parallel and perpendicular arms differ:
+    </p>
+    <div class="eq-block">
+      $$
+      t_\parallel = \frac{2L}{c}\frac{1}{1-\beta^2},\qquad
+      t_\perp = \frac{2L}{c}\frac{1}{\sqrt{1-\beta^2}}
+      $$
+      <div class="eq-label">$\beta = v/c$</div>
+    </div>
+    <p>
+      The expected time difference is
+    </p>
+    <div class="eq-block">
+      $$
+      \Delta t = t_\parallel - t_\perp \approx \frac{L}{c}\beta^2
+      $$
+    </div>
+    <p>
+      which produces a fringe shift of order $\delta = (L/\lambda)\beta^2$. For the 1887 apparatus $L\approx 11\,\mathrm{m}$ and the expected shift was about 0.4 fringe — easily detectable.
+    </p>
+
+    <h3>1.3 Outcome</h3>
+    <p>
+      The experiment yielded a null result: the fringe shift was consistent with zero to within experimental error (upper limit $\lesssim 0.01$ fringe). Subsequent repetitions with greater precision (Illingworth, Joos, Kennedy–Thorndike, modern laser interferometers) confirmed the null result to extraordinary accuracy.
+    </p>
+    <div class="card important">
+      <div class="card-title">Physical implication</div>
+      The speed of light is independent of the motion of the Earth (and, by extension, of any inertial observer). There is no detectable aether wind. This experimental fact is one of the two pillars of special relativity.
+    </div>
+  </section>
+
+  <!-- 2. EVENTS -->
+  <section id="events">
+    <h2>2. Two Events in Two Different Inertial Frames</h2>
+    <p>
+      An <strong>event</strong> is a point in spacetime specified by four coordinates $(ct,x,y,z)$. Consider two inertial frames $S$ and $S'$ related by a boost of velocity $v$ along the common $x$-axis (standard configuration). The origins coincide at $t=t'=0$.
+    </p>
+    <p>
+      Let event $A$ have coordinates $(ct_A,x_A,y_A,z_A)$ in $S$ and $(ct'_A,x'_A,y'_A,z'_A)$ in $S'$. Likewise for event $B$. The coordinate differences
+    </p>
+    <div class="eq-block">
+      $$
+      \Delta t = t_B-t_A,\quad
+      \Delta x = x_B-x_A,\quad\dots
+      $$
+    </div>
+    <p>
+      transform according to the Lorentz transformation (derived in §5). The correspondence between the two descriptions is therefore completely determined once the relative velocity and the orientation of the axes are known.
+    </p>
+    <div class="card note">
+      <div class="card-title">Invariant interval</div>
+      Although the individual $\Delta t$ and $\Delta x$ change from frame to frame, the combination
+      $$
+      (\Delta s)^2 = c^2(\Delta t)^2 - (\Delta x)^2 - (\Delta y)^2 - (\Delta z)^2
+      $$
+      is the same in every inertial frame. This is the geometric foundation of special relativity.
+    </div>
+  </section>
+
+  <!-- 3. SIMULTANEITY -->
+  <section id="simultaneity">
+    <h2>3. Simultaneity and Order of Events</h2>
+    <h3>3.1 Relativity of simultaneity</h3>
+    <p>
+      Two events that occur at the same time ($\Delta t=0$) but at different locations ($\Delta x\neq 0$) in frame $S$ are <em>not</em> simultaneous in $S'$:
+    </p>
+    <div class="eq-block">
+      $$
+      \Delta t' = \gamma\Bigl(\Delta t - \frac{v}{c^2}\Delta x\Bigr)
+      = -\gamma\frac{v}{c^2}\Delta x \neq 0
+      $$
+    </div>
+    <p>
+      Thus simultaneity is frame-dependent. This is the deepest conceptual novelty of special relativity.
+    </p>
+
+    <h3>3.2 Order of events and causality</h3>
+    <p>
+      The temporal order of two events can be reversed by a Lorentz transformation if and only if the interval between them is spacelike ($(\Delta s)^2<0$). For timelike or lightlike intervals the order is absolute and coincides with the causal order: a cause always precedes its effect in every inertial frame.
+    </p>
+    <div class="card warning">
+      <div class="card-title">No causal paradoxes</div>
+      Because information and physical influences cannot travel faster than light, the region of spacetime that can be influenced by a given event (its future light-cone) is the same for all observers. Hence the relativity of simultaneity never produces causal contradictions.
+    </div>
+  </section>
+
+  <!-- 4. POSTULATES -->
+  <section id="postulates">
+    <h2>4. Postulates of the Special Theory of Relativity</h2>
+    <p>Einstein’s 1905 paper rests on two postulates:</p>
+    <div class="card important">
+      <div class="card-title">Postulate I — Principle of Relativity</div>
+      The laws of physics take the same form in all inertial frames of reference. No experiment can detect absolute uniform motion.
+    </div>
+    <div class="card important">
+      <div class="card-title">Postulate II — Invariance of the speed of light</div>
+      The speed of light in vacuum, $c$, is the same for all inertial observers, independent of the motion of the source or the observer.
+    </div>
+    <p>
+      From these two statements alone the entire kinematic structure of special relativity follows. The Lorentz transformations are the unique linear coordinate transformations that leave the speed of light invariant and reduce to the Galilean transformations when $v/c\to 0$.
+    </p>
+  </section>
+
+  <!-- 5. LORENTZ TRANSFORMATIONS -->
+  <section id="lorentz">
+    <h2>5. Lorentz Transformations</h2>
+    <h3>5.1 Derivation (standard boost)</h3>
+    <p>
+      Consider a light signal emitted at the common origin at $t=t'=0$. Its world-line satisfies
+    </p>
+    <div class="eq-block">
+      $$
+      c^2t^2 - x^2 - y^2 - z^2 = 0 = c^2t'^2 - x'^2 - y'^2 - z'^2.
+      $$
+    </div>
+    <p>
+      Assuming linearity and the standard configuration ($S'$ moves at velocity $v$ along the positive $x$-axis of $S$), the unique transformations that preserve the light-cone and reduce to the identity when $v=0$ are
+    </p>
+    <div class="eq-block">
+      $$
+      \begin{aligned}
+      ct' &= \gamma\bigl(ct - \beta x\bigr),\\
+      x'  &= \gamma\bigl(x - \beta ct\bigr),\\
+      y'  &= y,\\
+      z'  &= z,
+      \end{aligned}
+      \qquad
+      \gamma = \frac{1}{\sqrt{1-\beta^2}},\quad
+      \beta = \frac{v}{c}.
+      $$
+    </div>
+    <p>The inverse transformations are obtained by $v\to -v$ (or $\beta\to -\beta$).</p>
+
+    <h3>5.2 Matrix form</h3>
+    <p>In four-vector notation the boost is represented by the matrix</p>
+    <div class="eq-block">
+      $$
+      \Lambda^\mu{}_\nu =
+      \begin{pmatrix}
+      \gamma & -\gamma\beta & 0 & 0 \\
+      -\gamma\beta & \gamma & 0 & 0 \\
+      0 & 0 & 1 & 0 \\
+      0 & 0 & 0 & 1
+      \end{pmatrix}.
+      $$
+    </div>
+
+    <h3>5.3 Interactive Lorentz transformation visualiser</h3>
+    <div class="figure">
+      <canvas id="lorentz-canvas" width="700" height="420"></canvas>
+      <div class="controls">
+        <label>$\beta = v/c$: <span id="beta-val">0.60</span></label>
+        <input type="range" id="beta-slider" min="0" max="0.99" step="0.01" value="0.60">
+        <button onclick="resetLorentz()">Reset</button>
+      </div>
+      <p class="figure-caption">World-lines of the light-cone (yellow) and a few events (coloured dots) as seen in $S$ (solid) and $S'$ (dashed). Drag the slider to change the relative velocity.</p>
+    </div>
+  </section>
+
+  <!-- 6. LENGTH CONTRACTION -->
+  <section id="contraction">
+    <h2>6. Lorentz (Length) Contraction</h2>
+    <p>
+      Consider a rod at rest in $S'$ with proper length $L_0 = x'_2 - x'_1$ (measured at equal times $t'$). In frame $S$ the length is the difference of the simultaneous ($t=\mathrm{const}$) coordinates of the ends:
+    </p>
+    <div class="eq-block">
+      $$
+      L = x_2 - x_1 = \frac{L_0}{\gamma} = L_0\sqrt{1-\beta^2}.
+      $$
+    </div>
+    <p>
+      The rod appears shorter when it is moving. Only the dimension parallel to the boost is contracted; transverse dimensions are unchanged.
+    </p>
+    <div class="card note">
+      <div class="card-title">Important caveat</div>
+      Length contraction is not a dynamical compression of the rod; it is a consequence of the relativity of simultaneity. The two ends of the rod are located at different times in the rest frame when they are measured simultaneously in the laboratory.
+    </div>
+  </section>
+
+  <!-- 7. TIME DILATION -->
+  <section id="dilation">
+    <h2>7. Time Dilation</h2>
+    <p>
+      A clock at rest in $S'$ ticks with proper time interval $\Delta\tau = \Delta t'$. In the laboratory frame $S$ the same two ticks occur at the same location $x'=\mathrm{const}$, so
+    </p>
+    <div class="eq-block">
+      $$
+      \Delta t = \gamma\Delta\tau = \frac{\Delta\tau}{\sqrt{1-\beta^2}}.
+      $$
+    </div>
+    <p>
+      Moving clocks run slow. This has been verified to high precision with atomic clocks on aircraft, muons in the atmosphere and in storage rings, and GPS satellite clocks.
+    </p>
+  </section>
+
+  <!-- 8. TWIN PARADOX -->
+  <section id="twin">
+    <h2>8. The Twin Paradox</h2>
+    <p>
+      Twin A stays on Earth; twin B travels at high speed to a distant star and returns. Upon reunion B is younger than A. The apparent paradox (“each sees the other’s clock running slow”) is resolved by noting that the situations are not symmetric: B undergoes acceleration (or equivalently changes inertial frames) while A remains inertial throughout.
+    </p>
+    <p>
+      The proper time along a world-line is
+    </p>
+    <div class="eq-block">
+      $$
+      \tau = \int\sqrt{1-\beta(t)^2}\,dt.
+      $$
+    </div>
+    <p>
+      The inertial path maximises the proper time between two events; any accelerated path yields a smaller $\tau$. Hence the travelling twin ages less.
+    </p>
+    <div class="card important">
+      <div class="card-title">Resolution</div>
+      There is no paradox once the asymmetry of the world-lines is recognised. The result is a direct consequence of the geometry of Minkowski spacetime.
+    </div>
+  </section>
+
+  <!-- 9. PROPER TIME & LENGTH -->
+  <section id="proper">
+    <h2>9. Proper Time and Proper Length</h2>
+    <h3>9.1 Proper time</h3>
+    <p>
+      The proper time $\tau$ between two events on a timelike world-line is the time measured by a clock that travels along that world-line:
+    </p>
+    <div class="eq-block">
+      $$
+      d\tau = \frac{ds}{c} = dt\sqrt{1-\beta^2}.
+      $$
+    </div>
+    <p>It is a Lorentz scalar and is therefore the same for all observers.</p>
+
+    <h3>9.2 Proper length</h3>
+    <p>
+      The proper length of an object is its length measured in the inertial frame in which the object is at rest. It is the maximum length that any observer will attribute to the object.
+    </p>
+  </section>
+
+  <!-- 10. VELOCITY & FREQUENCY TRANSFORMATION -->
+  <section id="vel-trans">
+    <h2>10. Relativistic Transformation of Velocity and Frequency</h2>
+    <h3>10.1 Velocity transformation</h3>
+    <p>
+      If a particle has velocity $\mathbf{u}=(u_x,u_y,u_z)$ in $S$, its velocity $\mathbf{u}'$ in $S'$ is
+    </p>
+    <div class="eq-block">
+      $$
+      \begin{aligned}
+      u'_x &= \frac{u_x-v}{1-u_xv/c^2},\\
+      u'_y &= \frac{u_y}{\gamma(1-u_xv/c^2)},\\
+      u'_z &= \frac{u_z}{\gamma(1-u_xv/c^2)}.
+      \end{aligned}
+      $$
+    </div>
+
+    <h3>10.2 Frequency transformation (preview of Doppler effect)</h3>
+    <p>
+      The four-wave-vector $k^\mu=(\omega/c,\mathbf{k})$ transforms as a four-vector. Consequently the observed frequency depends on both the relative velocity and the angle of observation (full treatment in §22–23).
+    </p>
+  </section>
+
+  <!-- 11. INTERVALS & CAUSALITY -->
+  <section id="intervals">
+    <h2>11. Timelike, Spacelike and Lightlike Intervals; Causality</h2>
+    <p>The invariant interval $(\Delta s)^2$ classifies the separation of any two events:</p>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Condition</th><th>Causal relation</th><th>Frame dependence of order</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Timelike</td>
+          <td>$(\Delta s)^2 > 0$</td>
+          <td>Can be connected by a subluminal signal</td>
+          <td>Order absolute</td>
+        </tr>
+        <tr>
+          <td>Lightlike (null)</td>
+          <td>$(\Delta s)^2 = 0$</td>
+          <td>Connected by a light signal</td>
+          <td>Order absolute</td>
+        </tr>
+        <tr>
+          <td>Spacelike</td>
+          <td>$(\Delta s)^2 < 0$</td>
+          <td>Cannot be causally connected</td>
+          <td>Order can be reversed</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      The light-cone of an event divides spacetime into its absolute future, absolute past, and the elsewhere (spacelike region). Causality is preserved because physical influences propagate only inside or on the light-cone.
+    </p>
+  </section>
+
+  <!-- 12. ADDITION OF VELOCITIES -->
+  <section id="vel-add">
+    <h2>12. Addition of Velocities and Lorentz Transformations</h2>
+    <p>
+      The relativistic velocity addition law follows directly from the Lorentz transformation of differentials. For collinear velocities
+    </p>
+    <div class="eq-block">
+      $$
+      w = \frac{u+v}{1+uv/c^2}.
+      $$
+    </div>
+    <p>
+      If $|u|<c$ and $|v|<c$ then $|w|<c$. The speed of light is an unattainable upper bound.
+    </p>
+
+    <h3>Interactive velocity addition</h3>
+    <div class="figure">
+      <canvas id="velAddChart" width="700" height="380"></canvas>
+      <div class="controls">
+        <label>$v/c$: <span id="v1-val">0.6</span></label>
+        <input type="range" id="v1-slider" min="0" max="0.99" step="0.01" value="0.6">
+        <label>$u/c$: <span id="v2-val">0.6</span></label>
+        <input type="range" id="v2-slider" min="0" max="0.99" step="0.01" value="0.6">
+      </div>
+      <p class="figure-caption">Comparison of classical ($u+v$) and relativistic velocity addition. The relativistic sum never exceeds $c$.</p>
+    </div>
+  </section>
+
+  <!-- 13. MASS VARIATION -->
+  <section id="mass-vel">
+    <h2>13. Variation of Mass with Velocity</h2>
+    <p>
+      In older literature one defines a velocity-dependent relativistic mass
+    </p>
+    <div class="eq-block">
+      $$
+      m(v) = \gamma m_0 = \frac{m_0}{\sqrt{1-v^2/c^2}}.
+      $$
+    </div>
+    <p>
+      Modern practice prefers to keep mass as the Lorentz-invariant rest mass $m_0$ and to write the energy and momentum as
+    </p>
+    <div class="eq-block">
+      $$
+      E = \gamma m_0 c^2,\qquad
+      \mathbf{p} = \gamma m_0\mathbf{v}.
+      $$
+    </div>
+    <p>
+      Both descriptions are mathematically equivalent; the invariant-mass language is cleaner when four-vectors are used.
+    </p>
+  </section>
+
+  <!-- 14. MASS-ENERGY -->
+  <section id="mass-energy">
+    <h2>14. Massless Particles and Mass–Energy Equivalence</h2>
+    <h3>14.1 Rest energy</h3>
+    <p>
+      Even a particle at rest possesses energy
+    </p>
+    <div class="eq-block">
+      $$
+      E_0 = m_0 c^2.
+      $$
+    </div>
+    <p>
+      This is the most famous relation of special relativity. Any change in the internal energy of a system (chemical, nuclear, thermal, \ldots) changes its rest mass by $\Delta m = \Delta E/c^2$.
+    </p>
+
+    <h3>14.2 Massless particles</h3>
+    <p>
+      For a particle with $m_0=0$ (photon, graviton, gluon in the perturbative regime) one has
+    </p>
+    <div class="eq-block">
+      $$
+      E = |\mathbf{p}|c,\qquad
+      v = c.
+      $$
+    </div>
+    <p>
+      The energy–momentum relation for a general particle reads
+    </p>
+    <div class="eq-block">
+      $$
+      E^2 = \mathbf{p}^2 c^2 + m_0^2 c^4.
+      $$
+    </div>
+  </section>
+
+  <!-- 15. FOUR-VECTOR FORMALISM -->
+  <section id="fourvec">
+    <h2>15. Four-Vector Formalism</h2>
+    <p>
+      A four-vector $A^\mu$ transforms under a Lorentz transformation exactly as the coordinate differentials $dx^\mu$:
+    </p>
+    <div class="eq-block">
+      $$
+      A'^\mu = \Lambda^\mu{}_\nu A^\nu.
+      $$
+    </div>
+    <p>
+      The Minkowski inner product
+    </p>
+    <div class="eq-block">
+      $$
+      A\cdot B = A^\mu B_\mu = A^0 B^0 - \mathbf{A}\cdot\mathbf{B}
+      $$
+    </div>
+    <p>
+      is a Lorentz scalar. Important four-vectors include:
+    </p>
+    <ul>
+      <li>Position four-vector $x^\mu = (ct,\mathbf{x})$</li>
+      <li>Four-momentum $p^\mu = (E/c,\mathbf{p})$</li>
+      <li>Four-wave-vector $k^\mu = (\omega/c,\mathbf{k})$</li>
+      <li>Four-current $j^\mu = (c\rho,\mathbf{j})$</li>
+    </ul>
+  </section>
+
+  <!-- 16. MINKOWSKI DIAGRAM -->
+  <section id="minkowski">
+    <h2>16. Minkowski Diagram</h2>
+    <p>
+      A Minkowski diagram is a spacetime diagram in which the vertical axis is $ct$ and the horizontal axis is $x$. Light-rays travel at $45^\circ$. A Lorentz boost tilts the $ct'$ and $x'$ axes toward the light-cone by the same angle $\theta$ with $\tanh\theta=\beta$.
+    </p>
+    <div class="figure">
+      <div id="minkowski-container" style="width:100%;height:480px;position:relative;">
+        <canvas id="minkowski-canvas" width="700" height="480"></canvas>
+      </div>
+      <div class="controls">
+        <label>Boost $\beta$: <span id="mink-beta-val">0.50</span></label>
+        <input type="range" id="mink-beta" min="0" max="0.95" step="0.01" value="0.50">
+        <button onclick="resetMinkowski()">Reset</button>
+      </div>
+      <p class="figure-caption">Interactive Minkowski diagram. Yellow lines = light-cone; blue = $S$ axes; magenta = $S'$ axes; green dots = sample events. The unit hyperbolae (proper time / proper length) are also shown.</p>
+    </div>
+  </section>
+
+  <!-- 17. FOUR-VELOCITY -->
+  <section id="fourvel">
+    <h2>17. The Four-Velocity</h2>
+    <p>
+      The four-velocity of a particle is the derivative of its position four-vector with respect to proper time:
+    </p>
+    <div class="eq-block">
+      $$
+      u^\mu = \frac{dx^\mu}{d\tau} = \gamma(c,\mathbf{v}).
+      $$
+    </div>
+    <p>
+      It is normalised:
+    </p>
+    <div class="eq-block">
+      $$
+      u^\mu u_\mu = c^2.
+      $$
+    </div>
+  </section>
+
+  <!-- 18. FOUR-ACCELERATION -->
+  <section id="fouracc">
+    <h2>18. Four-Acceleration</h2>
+    <p>
+      The four-acceleration is
+    </p>
+    <div class="eq-block">
+      $$
+      a^\mu = \frac{du^\mu}{d\tau}.
+      $$
+    </div>
+    <p>
+      Because $u\cdot u = c^2$ is constant, one has the orthogonality relation
+    </p>
+    <div class="eq-block">
+      $$
+      a^\mu u_\mu = 0.
+      $$
+    </div>
+    <p>
+      In the instantaneous rest frame $a^\mu = (0,\mathbf{a}_{\mathrm{proper}})$.
+    </p>
+  </section>
+
+  <!-- 19. FOUR-FORCE / FOUR-MOMENTUM -->
+  <section id="fourforce">
+    <h2>19. Four-Force and Four-Momentum</h2>
+    <p>
+      The four-momentum is
+    </p>
+    <div class="eq-block">
+      $$
+      p^\mu = m_0 u^\mu = \bigl(E/c,\mathbf{p}\bigr).
+      $$
+    </div>
+    <p>
+      The four-force is defined by
+    </p>
+    <div class="eq-block">
+      $$
+      f^\mu = \frac{dp^\mu}{d\tau} = m_0 a^\mu
+      $$
+      (for constant rest mass). Its components are related to the ordinary three-force $\mathbf{F}$ by
+    </p>
+    <div class="eq-block">
+      $$
+      f^\mu = \gamma\bigl(\mathbf{F}\cdot\mathbf{v}/c,\mathbf{F}\bigr).
+      $$
+    </div>
+  </section>
+
+  <!-- 20. CONSERVATION OF FOUR-MOMENTUM -->
+  <section id="cons-mom">
+    <h2>20. Conservation of Four-Momentum</h2>
+    <p>
+      In any collision or decay process that occurs in isolation, the total four-momentum is conserved:
+    </p>
+    <div class="eq-block">
+      $$
+      \sum_{\mathrm{in}} p^\mu_i = \sum_{\mathrm{out}} p^\mu_f.
+      $$
+    </div>
+    <p>
+      This single four-vector equation encodes both energy conservation and three-momentum conservation, and is valid in every inertial frame.
+    </p>
+  </section>
+
+  <!-- 21. ENERGY CONSERVATION -->
+  <section id="energy-cons">
+    <h2>21. Energy Conservation</h2>
+    <p>
+      The zeroth component of four-momentum conservation is the relativistic energy conservation law
+    </p>
+    <div class="eq-block">
+      $$
+      \sum_i \gamma_i m_i c^2 = \sum_f \gamma_f m_f c^2
+      $$
+      (including possible rest-mass changes). In nuclear and particle physics the conversion of rest energy into kinetic energy (or vice versa) is routinely observed.
+    </p>
+  </section>
+
+  <!-- 22. DOPPLER -->
+  <section id="doppler">
+    <h2>22. Relativistic Doppler Effect</h2>
+    <p>
+      The relativistic Doppler formula for a source moving at velocity $\mathbf{v}$ relative to the observer, with angle $\theta$ between the velocity and the line of sight (in the observer’s frame), is
+    </p>
+    <div class="eq-block">
+      $$
+      \omega = \omega_0\frac{\sqrt{1-\beta^2}}{1-\beta\cos\theta}.
+      $$
+    </div>
+    <p>
+      When the source approaches ($\theta=0$) one obtains a blueshift; when it recedes ($\theta=\pi$) a redshift. Even at $\theta=\pi/2$ a residual redshift remains (transverse Doppler effect).
+    </p>
+  </section>
+
+  <!-- 23. LONGITUDINAL / TRANSVERSE & ABERRATION -->
+  <section id="aberration">
+    <h2>23. Longitudinal & Transverse Doppler Effect and Aberration</h2>
+    <h3>23.1 Longitudinal Doppler effect</h3>
+    <div class="eq-block">
+      $$
+      \frac{\omega}{\omega_0} = \sqrt{\frac{1\pm\beta}{1\mp\beta}}
+      \quad\text{(approach / recession)}.
+      $$
+    </div>
+
+    <h3>23.2 Transverse Doppler effect</h3>
+    <div class="eq-block">
+      $$
+      \frac{\omega}{\omega_0} = \sqrt{1-\beta^2} = \frac{1}{\gamma}
+      \quad(\theta=\pi/2).
+      $$
+    </div>
+    <p>This pure time-dilation redshift was first measured by Ives & Stilwell (1938).</p>
+
+    <h3>23.3 Aberration of light</h3>
+    <p>
+      The angle of a light ray transforms as
+    </p>
+    <div class="eq-block">
+      $$
+      \cos\theta' = \frac{\cos\theta-\beta}{1-\beta\cos\theta}.
+      $$
+    </div>
+    <p>
+      Consequently a source that emits isotropically in its rest frame appears strongly forward-beamed in the laboratory when $\gamma\gg 1$ (relativistic beaming / headlight effect).
+    </p>
+
+    <h3>Interactive Doppler calculator</h3>
+    <div class="figure">
+      <canvas id="dopplerChart" width="700" height="360"></canvas>
+      <div class="controls">
+        <label>$\beta$: <span id="dop-beta-val">0.5</span></label>
+        <input type="range" id="dop-beta" min="0" max="0.99" step="0.01" value="0.5">
+      </div>
+      <p class="figure-caption">Frequency ratio $\omega/\omega_0$ versus observation angle $\theta$ for the selected $\beta$. The transverse value ($\theta=90^\circ$) is marked.</p>
+    </div>
+  </section>
+
+  <!-- 24. DECAY -->
+  <section id="decay">
+    <h2>24. Decay Processes</h2>
+    <p>
+      Consider the two-body decay of a particle of rest mass $M$ into two particles of rest masses $m_1$ and $m_2$. In the rest frame of $M$ energy-momentum conservation fixes the energies:
+    </p>
+    <div class="eq-block">
+      $$
+      E_1 = \frac{M^2 + m_1^2 - m_2^2}{2M}c^2,\qquad
+      E_2 = \frac{M^2 + m_2^2 - m_1^2}{2M}c^2.
+      $$
+    </div>
+    <p>
+      The decay products emerge with equal and opposite three-momenta. Boosting to the laboratory frame yields the characteristic anisotropic angular distribution and energy spectrum observed in particle physics.
+    </p>
+  </section>
+
+  <!-- 25. E & B TRANSFORMATION -->
+  <section id="eb-fields">
+    <h2>25. Transformation of $\mathbf{E}$ and $\mathbf{B}$ Fields</h2>
+    <p>
+      The electromagnetic field-strength tensor $F^{\mu\nu}$ transforms as a rank-2 tensor. For a boost in the $x$-direction the field components mix as follows:
+    </p>
+    <div class="eq-block">
+      $$
+      \begin{aligned}
+      E'_x &= E_x,\\
+      E'_y &= \gamma(E_y - v B_z),\\
+      E'_z &= \gamma(E_z + v B_y),\\[0.6em]
+      B'_x &= B_x,\\
+      B'_y &= \gamma(B_y + \tfrac{v}{c^2} E_z),\\
+      B'_z &= \gamma(B_z - \tfrac{v}{c^2} E_y).
+      \end{aligned}
+      $$
+    </div>
+    <p>
+      A pure electric field in one frame acquires a magnetic component in another, and vice versa. This is the relativistic origin of magnetism.
+    </p>
+  </section>
+
+  <!-- 26. MAXWELL INVARIANCE -->
+  <section id="maxwell">
+    <h2>26. Invariance of Maxwell’s Equations</h2>
+    <p>
+      Maxwell’s equations can be written in manifestly covariant form:
+    </p>
+    <div class="eq-block">
+      $$
+      \partial_\mu F^{\mu\nu} = \mu_0 j^\nu,
+      \qquad
+      \partial_\lambda F_{\mu\nu} + \partial_\mu F_{\nu\lambda} + \partial_\nu F_{\lambda\mu} = 0.
+      $$
+    </div>
+    <p>
+      Because both $F^{\mu\nu}$ and $j^\nu$ transform as tensors, the equations retain exactly the same form in every inertial frame. This is the relativistic invariance of classical electrodynamics and was one of the principal motivations for Einstein’s 1905 paper.
+    </p>
+    <div class="card important">
+      <div class="card-title">Historical remark</div>
+      Lorentz, Poincaré and others already knew that Maxwell’s equations are invariant under the transformations that now bear Lorentz’s name. Einstein’s decisive step was to elevate the invariance to a universal principle that applies to all of physics, not merely to electromagnetism.
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section id="summary">
+    <h2>Summary of Key Formulae</h2>
+    <table>
+      <thead>
+        <tr><th>Quantity</th><th>Expression</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Lorentz factor</td><td>$\gamma=(1-\beta^2)^{-1/2}$</td></tr>
+        <tr><td>Time dilation</td><td>$\Delta t=\gamma\Delta\tau$</td></tr>
+        <tr><td>Length contraction</td><td>$L=L_0/\gamma$</td></tr>
+        <tr><td>Velocity addition (collinear)</td><td>$w=(u+v)/(1+uv/c^2)$</td></tr>
+        <tr><td>Energy–momentum</td><td>$E^2=p^2c^2+m^2c^4$</td></tr>
+        <tr><td>Rest energy</td><td>$E_0=mc^2$</td></tr>
+        <tr><td>Four-velocity</td><td>$u^\mu=\gamma(c,\mathbf{v})$</td></tr>
+        <tr><td>Doppler shift</td><td>$\omega/\omega_0=\sqrt{1-\beta^2}/(1-\beta\cos\theta)$</td></tr>
+        <tr><td>Invariant interval</td><td>$ds^2=c^2dt^2-d\mathbf{x}^2$</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- REFERENCES -->
+  <section id="references">
+    <h2>References & Further Reading</h2>
+    <ul>
+      <li>Einstein, A. (1905). “Zur Elektrodynamik bewegter Körper.” <em>Annalen der Physik</em>.</li>
+      <li>Rindler, W. <em>Introduction to Special Relativity</em> (2nd ed.). Oxford University Press.</li>
+      <li>French, A.P. <em>Special Relativity</em>. MIT Introductory Physics Series.</li>
+      <li>Taylor, E.F. & Wheeler, J.A. <em>Spacetime Physics</em> (2nd ed.).</li>
+      <li>Jackson, J.D. <em>Classical Electrodynamics</em> (Ch. 11–12).</li>
+      <li>Misner, Thorne & Wheeler. <em>Gravitation</em> (selected chapters on special relativity).</li>
+    </ul>
+    <p style="margin-top:2rem;color:var(--muted);font-size:0.9rem;">
+      Document generated for educational purposes. All interactive diagrams are rendered client-side with Chart.js and Canvas/WebGL-compatible code. No external polyfills are used.
+    </p>
+  </section>
+</main>
+
+<script>
+// ========== Mobile menu ==========
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+menuBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
+document.querySelectorAll('.toc a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 960) sidebar.classList.remove('open');
+  });
+});
+
+// Active TOC highlight
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const id = entry.target.id;
+      const link = document.querySelector(`.toc a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ========== Lorentz transformation visualiser ==========
+const lorentzCanvas = document.getElementById('lorentz-canvas');
+const lctx = lorentzCanvas.getContext('2d');
+function drawLorentz(beta) {
+  const W = lorentzCanvas.width, H = lorentzCanvas.height;
+  const cx = W/2, cy = H/2, scale = 90;
+  lctx.fillStyle = '#0a0e17';
+  lctx.fillRect(0,0,W,H);
+
+  // grid
+  lctx.strokeStyle = '#1e2a3d';
+  lctx.lineWidth = 1;
+  for (let i = -4; i <= 4; i++) {
+    lctx.beginPath(); lctx.moveTo(cx+i*scale,0); lctx.lineTo(cx+i*scale,H); lctx.stroke();
+    lctx.beginPath(); lctx.moveTo(0,cy+i*scale); lctx.lineTo(W,cy+i*scale); lctx.stroke();
+  }
+
+  // light cone
+  lctx.strokeStyle = '#f5c542';
+  lctx.lineWidth = 2;
+  lctx.beginPath(); lctx.moveTo(cx-200,cy+200); lctx.lineTo(cx+200,cy-200); lctx.stroke();
+  lctx.beginPath(); lctx.moveTo(cx-200,cy-200); lctx.lineTo(cx+200,cy+200); lctx.stroke();
+
+  // S axes
+  lctx.strokeStyle = '#5b9cff';
+  lctx.lineWidth = 2.5;
+  lctx.beginPath(); lctx.moveTo(cx,0); lctx.lineTo(cx,H); lctx.stroke();
+  lctx.beginPath(); lctx.moveTo(0,cy); lctx.lineTo(W,cy); lctx.stroke();
+  lctx.fillStyle = '#5b9cff';
+  lctx.font = '14px Inter';
+  lctx.fillText('x', W-30, cy-8);
+  lctx.fillText('ct', cx+8, 20);
+
+  // S' axes
+  const gamma = 1/Math.sqrt(1-beta*beta);
+  const th = Math.atan(beta);
+  lctx.strokeStyle = '#c77dff';
+  lctx.setLineDash([6,4]);
+  lctx.lineWidth = 2;
+  // ct' axis (t direction in S': x=vt)
+  const len = 220;
+  lctx.beginPath();
+  lctx.moveTo(cx - len*Math.sin(th), cy + len*Math.cos(th));
+  lctx.lineTo(cx + len*Math.sin(th), cy - len*Math.cos(th));
+  lctx.stroke();
+  // x' axis
+  lctx.beginPath();
+  lctx.moveTo(cx - len*Math.cos(th), cy - len*Math.sin(th));
+  lctx.lineTo(cx + len*Math.cos(th), cy + len*Math.sin(th));
+  lctx.stroke();
+  lctx.setLineDash([]);
+  lctx.fillStyle = '#c77dff';
+  lctx.fillText("x'", cx + len*Math.cos(th)+5, cy + len*Math.sin(th)+5);
+  lctx.fillText("ct'", cx + len*Math.sin(th)+5, cy - len*Math.cos(th)-5);
+
+  // sample events
+  const events = [
+    {x:1.2, t:0.8, c:'#3dd68c'},
+    {x:-0.9, t:1.1, c:'#f31260'},
+    {x:0.5, t:1.5, c:'#f5a524'},
+    {x:1.8, t:0.3, c:'#5b9cff'}
+  ];
+  events.forEach(e => {
+    const X = cx + e.x*scale;
+    const Y = cy - e.t*scale;
+    lctx.beginPath();
+    lctx.arc(X,Y,6,0,Math.PI*2);
+    lctx.fillStyle = e.c;
+    lctx.fill();
+    // transformed
+    const tp = gamma*(e.t - beta*e.x);
+    const xp = gamma*(e.x - beta*e.t);
+    const Xp = cx + xp*scale;
+    const Yp = cy - tp*scale;
+    lctx.beginPath();
+    lctx.arc(Xp,Yp,4,0,Math.PI*2);
+    lctx.strokeStyle = e.c;
+    lctx.lineWidth = 2;
+    lctx.stroke();
+  });
+}
+document.getElementById('beta-slider').addEventListener('input', e => {
+  const b = parseFloat(e.target.value);
+  document.getElementById('beta-val').textContent = b.toFixed(2);
+  drawLorentz(b);
+});
+function resetLorentz() {
+  document.getElementById('beta-slider').value = 0.6;
+  document.getElementById('beta-val').textContent = '0.60';
+  drawLorentz(0.6);
+}
+drawLorentz(0.6);
+
+// ========== Velocity addition chart ==========
+const velCtx = document.getElementById('velAddChart').getContext('2d');
+let velChart;
+function updateVelChart(v1, v2) {
+  const classical = Math.min(v1+v2, 1.5);
+  const rel = (v1+v2)/(1+v1*v2);
+  if (velChart) velChart.destroy();
+  velChart = new Chart(velCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Classical sum', 'Relativistic sum', 'Speed of light'],
+      datasets: [{
+        label: 'v/c',
+        data: [classical, rel, 1],
+        backgroundColor: ['#f5a52488','#5b9cff','#3dd68c'],
+        borderColor: ['#f5a524','#5b9cff','#3dd68c'],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: `u/c=${v2.toFixed(2)}, v/c=${v1.toFixed(2)} → w/c=${rel.toFixed(4)}`, color: '#e8eef7' }
+      },
+      scales: {
+        y: { min: 0, max: 1.6, ticks: { color: '#9aa8bc' }, grid: { color: '#2a3548' } },
+        x: { ticks: { color: '#9aa8bc' }, grid: { display: false } }
+      }
+    }
+  });
+}
+document.getElementById('v1-slider').addEventListener('input', e => {
+  const v1 = parseFloat(e.target.value);
+  document.getElementById('v1-val').textContent = v1.toFixed(2);
+  updateVelChart(v1, parseFloat(document.getElementById('v2-slider').value));
+});
+document.getElementById('v2-slider').addEventListener('input', e => {
+  const v2 = parseFloat(e.target.value);
+  document.getElementById('v2-val').textContent = v2.toFixed(2);
+  updateVelChart(parseFloat(document.getElementById('v1-slider').value), v2);
+});
+updateVelChart(0.6, 0.6);
+
+// ========== Minkowski diagram ==========
+const minkCanvas = document.getElementById('minkowski-canvas');
+const mctx = minkCanvas.getContext('2d');
+function drawMinkowski(beta) {
+  const W = minkCanvas.width, H = minkCanvas.height;
+  const cx = W/2, cy = H/2, scale = 100;
+  mctx.fillStyle = '#0a0e17';
+  mctx.fillRect(0,0,W,H);
+
+  // unit hyperbolae
+  mctx.strokeStyle = '#2a3a50';
+  mctx.lineWidth = 1.5;
+  for (const s of [1, -1]) {
+    mctx.beginPath();
+    for (let x = -3; x <= 3; x += 0.05) {
+      const t = s * Math.sqrt(1 + x*x);
+      const X = cx + x*scale, Y = cy - t*scale;
+      if (x === -3) mctx.moveTo(X,Y); else mctx.lineTo(X,Y);
+    }
+    mctx.stroke();
+  }
+  // spacelike hyperbola
+  mctx.beginPath();
+  for (let t = -2.5; t <= 2.5; t += 0.05) {
+    const x = Math.sqrt(1 + t*t);
+    mctx.lineTo(cx + x*scale, cy - t*scale);
+  }
+  mctx.stroke();
+  mctx.beginPath();
+  for (let t = -2.5; t <= 2.5; t += 0.05) {
+    const x = -Math.sqrt(1 + t*t);
+    mctx.lineTo(cx + x*scale, cy - t*scale);
+  }
+  mctx.stroke();
+
+  // light cone
+  mctx.strokeStyle = '#f5c542';
+  mctx.lineWidth = 2;
+  mctx.beginPath(); mctx.moveTo(cx-250,cy+250); mctx.lineTo(cx+250,cy-250); mctx.stroke();
+  mctx.beginPath(); mctx.moveTo(cx-250,cy-250); mctx.lineTo(cx+250,cy+250); mctx.stroke();
+
+  // S axes
+  mctx.strokeStyle = '#5b9cff';
+  mctx.lineWidth = 2.5;
+  mctx.beginPath(); mctx.moveTo(cx,20); mctx.lineTo(cx,H-20); mctx.stroke();
+  mctx.beginPath(); mctx.moveTo(20,cy); mctx.lineTo(W-20,cy); mctx.stroke();
+  mctx.fillStyle = '#5b9cff';
+  mctx.font = '13px Inter';
+  mctx.fillText('x', W-28, cy-10);
+  mctx.fillText('ct', cx+10, 28);
+
+  // S' axes
+  const th = Math.atan(beta);
+  const len = 240;
+  mctx.strokeStyle = '#e879f9';
+  mctx.lineWidth = 2.5;
+  mctx.beginPath();
+  mctx.moveTo(cx - len*Math.sin(th), cy + len*Math.cos(th));
+  mctx.lineTo(cx + len*Math.sin(th), cy - len*Math.cos(th));
+  mctx.stroke();
+  mctx.beginPath();
+  mctx.moveTo(cx - len*Math.cos(th), cy - len*Math.sin(th));
+  mctx.lineTo(cx + len*Math.cos(th), cy + len*Math.sin(th));
+  mctx.stroke();
+  mctx.fillStyle = '#e879f9';
+  mctx.fillText("ct'", cx + len*Math.sin(th)+8, cy - len*Math.cos(th));
+  mctx.fillText("x'", cx + len*Math.cos(th)+8, cy + len*Math.sin(th)+4);
+
+  // events
+  const evs = [{x:0.8,t:1.2},{x:-1.1,t:0.7},{x:1.5,t:0.4}];
+  evs.forEach((e,i) => {
+    mctx.beginPath();
+    mctx.arc(cx+e.x*scale, cy-e.t*scale, 7, 0, Math.PI*2);
+    mctx.fillStyle = ['#3dd68c','#f31260','#f5a524'][i];
+    mctx.fill();
+  });
+}
+document.getElementById('mink-beta').addEventListener('input', e => {
+  const b = parseFloat(e.target.value);
+  document.getElementById('mink-beta-val').textContent = b.toFixed(2);
+  drawMinkowski(b);
+});
+function resetMinkowski() {
+  document.getElementById('mink-beta').value = 0.5;
+  document.getElementById('mink-beta-val').textContent = '0.50';
+  drawMinkowski(0.5);
+}
+drawMinkowski(0.5);
+
+// ========== Doppler chart ==========
+const dopCtx = document.getElementById('dopplerChart').getContext('2d');
+let dopChart;
+function updateDoppler(beta) {
+  const angles = [];
+  const ratios = [];
+  for (let th = 0; th <= 180; th += 2) {
+    const rad = th * Math.PI/180;
+    const r = Math.sqrt(1-beta*beta) / (1 - beta*Math.cos(rad));
+    angles.push(th);
+    ratios.push(r);
+  }
+  if (dopChart) dopChart.destroy();
+  dopChart = new Chart(dopCtx, {
+    type: 'line',
+    data: {
+      labels: angles,
+      datasets: [{
+        label: 'ω/ω₀',
+        data: ratios,
+        borderColor: '#5b9cff',
+        backgroundColor: 'rgba(91,156,255,0.1)',
+        fill: true,
+        tension: 0.2,
+        pointRadius: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: `β = ${beta.toFixed(2)}  |  transverse (90°) = ${(Math.sqrt(1-beta*beta)).toFixed(4)}`, color: '#e8eef7' }
+      },
+      scales: {
+        x: { title: { display: true, text: 'θ (degrees)', color: '#9aa8bc' }, ticks: { color: '#9aa8bc' }, grid: { color: '#2a3548' } },
+        y: { title: { display: true, text: 'ω/ω₀', color: '#9aa8bc' }, ticks: { color: '#9aa8bc' }, grid: { color: '#2a3548' } }
+      }
+    }
+  });
+}
+document.getElementById('dop-beta').addEventListener('input', e => {
+  const b = parseFloat(e.target.value);
+  document.getElementById('dop-beta-val').textContent = b.toFixed(2);
+  updateDoppler(b);
+});
+updateDoppler(0.5);
+</script>
+</body>
+<footer style="color: #f7f4dc; text-align:center;">🄯 Copyleft 2026 by Soumyajit Roy under The Unlicense with Grok</footer>
+</html>
