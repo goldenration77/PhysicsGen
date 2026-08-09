@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploring Lagrangian Mechanics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #7f8c8d;
+            --card-bg: #ffffff;
+            --math-bg: #f8f9fa;
+            --border-radius: 8px;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: Comfortaa, Anton, system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            overflow-x: hidden;
+        }
+
+        h1 { font-size: clamp(1.75rem, 5vw, 2.75rem); }
+        h2 { font-size: clamp(1.4rem, 3.5vw, 1.85rem); }
+        h3 { font-size: clamp(1.15rem, 2.5vw, 1.4rem); }
+        p, li { font-size: clamp(0.95rem, 2vw, 1.05rem); }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: clamp(1.5rem, 4vw, 2.5rem) 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        header h1 {
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            opacity: 0.92;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        nav {
+            background-color: var(--dark-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            gap: 0.5rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 0.4rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            gap: 0.15rem;
+            margin: 0;
+            padding: 0.4rem 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.4rem 0.7rem;
+            border-radius: 4px;
+            transition: background-color 0.2s, transform 0.15s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            display: block;
+        }
+
+        nav ul li a:hover,
+        nav ul li a:focus {
+            background-color: var(--secondary-color);
+            outline: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        section {
+            margin-bottom: 2rem;
+            padding: clamp(1.25rem, 3vw, 1.75rem);
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.25s;
+        }
+
+        section:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-weight: 650;
+        }
+
+        section h3 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        ul, ol {
+            margin: 0.75rem 0 1rem 1.4rem;
+        }
+
+        li { margin-bottom: 0.4rem; }
+
+        .math {
+            font-family: 'Cambria Math', 'Times New Roman', 'Latin Modern Math', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+            background-color: var(--math-bg);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: block;
+            margin: 1rem 0;
+            text-align: center;
+            overflow-x: auto;
+            line-height: 1.5;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .math-inline {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            background-color: var(--math-bg);
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: clamp(280px, 45vw, 400px);
+            margin: 1.5rem 0;
+            width: 100%;
+        }
+
+        .chart-wrapper {
+            background: #fafbfc;
+            border-radius: var(--border-radius);
+            padding: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .threejs-container {
+            height: clamp(320px, 55vw, 480px);
+            margin: 1.5rem 0;
+            border: 1px solid #dde1e6;
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+            background: #0a0e14;
+        }
+
+        .threejs-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .viz-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: -0.75rem;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+
+        .example {
+            background-color: #f8f9fa;
+            padding: 1.1rem 1.25rem;
+            border-left: 4px solid var(--secondary-color);
+            margin: 1.25rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .example h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .advantages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .advantage-card {
+            background-color: #f8f9fa;
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .advantage-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .advantage-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout {
+            background: linear-gradient(135deg, rgba(52,152,219,0.08), rgba(46,204,113,0.06));
+            border: 1px solid rgba(52,152,219,0.25);
+            border-radius: var(--border-radius);
+            padding: 1.1rem 1.25rem;
+            margin: 1.25rem 0;
+        }
+
+        .callout strong {
+            color: var(--primary-color);
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            margin-top: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .toggle-dark-mode {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+            font-size: 0.9rem;
+            transition: background-color 0.2s, transform 0.15s;
+        }
+
+        .toggle-dark-mode:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .dark-mode {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #1a252f;
+            --dark-color: #0f161c;
+            --text-color: #ecf0f1;
+            --text-light: #bdc3c7;
+            --card-bg: #243447;
+            --math-bg: #1a252f;
+        }
+
+        .dark-mode body {
+            background-color: var(--light-color);
+        }
+
+        .dark-mode section {
+            background-color: var(--card-bg);
+        }
+
+        .dark-mode .math {
+            background-color: var(--math-bg);
+            color: #ecf0f1;
+            border-left-color: var(--primary-color);
+        }
+
+        .dark-mode .example,
+        .dark-mode .advantage-card {
+            background-color: #1e2a38;
+        }
+
+        .dark-mode .chart-wrapper {
+            background: #1e2a38;
+        }
+
+        .dark-mode .callout {
+            background: linear-gradient(135deg, rgba(52,152,219,0.15), rgba(46,204,113,0.1));
+            border-color: rgba(52,152,219,0.35);
+        }
+
+        .dark-mode .viz-caption {
+            color: #95a5a6;
+        }
+
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 0.5rem 0 0.75rem;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+
+            nav ul.open {
+                display: flex;
+            }
+
+            nav ul li {
+                width: 100%;
+            }
+
+            nav ul li a {
+                padding: 0.65rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .nav-inner {
+                flex-wrap: wrap;
+            }
+
+            .container {
+                padding: 0.85rem;
+            }
+
+            section {
+                padding: 1.1rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .advantages {
+                grid-template-columns: 1fr;
+            }
+
+            .threejs-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1.25rem 0.75rem;
+            }
+
+            .math {
+                padding: 0.6rem 0.7rem;
+                font-size: 0.9rem;
+            }
+
+            .toggle-dark-mode {
+                bottom: 0.85rem;
+                right: 0.85rem;
+                padding: 0.55rem 0.9rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        @media print {
+            nav, .toggle-dark-mode, .threejs-container {
+                display: none !important;
+            }
+            section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Exploring Lagrangian Mechanics</h1>
+        <p>With In-Depth Discussions, Logical Reasoning and Practical Applications</p>
+    </header>
+
+    <nav>
+        <div class="nav-inner">
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">Menu</button>
+            <ul id="navMenu">
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#constraints">Constraints</a></li>
+                <li><a href="#newtonian-limitations">Newtonian Limits</a></li>
+                <li><a href="#virtual-work">Virtual Work</a></li>
+                <li><a href="#dalembert">D'Alembert</a></li>
+                <li><a href="#generalized-coordinates">Coordinates</a></li>
+                <li><a href="#lagrangian-function">Lagrangian</a></li>
+                <li><a href="#lagrange-equations">Lagrange Eqs</a></li>
+                <li><a href="#advantages">Advantages</a></li>
+                <li><a href="#cyclic-coordinates">Cyclic Coords</a></li>
+                <li><a href="#hamilton-principle">Hamilton</a></li>
+                <li><a href="#applications">Applications</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="introduction">
+            <h2>1. Introduction to Lagrangian Mechanics</h2>
+            <p>
+                Lagrangian mechanics is a reformulation of classical mechanics introduced by Joseph-Louis Lagrange in 1788.
+                It provides a powerful and elegant framework for analyzing the dynamics of systems, especially those with
+                constraints. Unlike Newtonian mechanics, which focuses on forces and accelerations, Lagrangian mechanics
+                is based on energy principles, making it particularly useful for complex systems.
+            </p>
+            <p>
+                The core idea is to describe the state of a system using <strong>generalized coordinates</strong> and derive the
+                equations of motion from a single scalar function: the <strong>Lagrangian</strong>. This approach simplifies
+                the analysis of systems with multiple degrees of freedom and constraints.
+            </p>
+            <p>
+                This whitepaper explores the foundational principles of Lagrangian mechanics, its advantages over Newtonian
+                mechanics, and its applications to simple and complex systems. We examine constraints, the principle of
+                virtual work, D'Alembert's principle, Hamilton's variational principle, and the deep connection between
+                symmetries and conservation laws.
+            </p>
+            <div class="callout">
+                <strong>Key insight:</strong> By working with a scalar energy function rather than vector forces, the
+                Lagrangian formalism automatically incorporates constraints (when expressed in independent generalized
+                coordinates) and yields equations that are covariant under coordinate transformations.
+            </div>
+        </section>
+
+        <section id="constraints">
+            <h2>2. Constraints and Their Classifications</h2>
+            <p>
+                Constraints are conditions that restrict the motion of a system. They reduce the number of independent
+                degrees of freedom and can be classified according to their mathematical form and time dependence.
+            </p>
+
+            <h3>2.1 Types of Constraints</h3>
+            <div class="example">
+                <h4>Holonomic Constraints</h4>
+                <p>
+                    Holonomic constraints can be expressed as equations involving only the coordinates and time
+                    (integrable relations). They reduce the configuration-space dimension.
+                </p>
+                <p><strong>Example:</strong> A bead sliding on a circular hoop of radius <em>R</em> in a vertical plane.</p>
+                <p class="math">x² + y² − R² = 0</p>
+            </div>
+
+            <div class="example">
+                <h4>Non-Holonomic Constraints</h4>
+                <p>
+                    Non-holonomic constraints cannot be written solely in terms of coordinates and time; they typically
+                    involve velocities and are non-integrable.
+                </p>
+                <p><strong>Example:</strong> A rolling wheel without slipping.</p>
+                <p class="math">v − Rω = 0</p>
+                <p>where <em>v</em> is the linear speed, <em>R</em> the radius, and <em>ω</em> the angular speed.</p>
+            </div>
+
+            <div class="two-col">
+                <div class="example">
+                    <h4>Scleronomic Constraints</h4>
+                    <p>
+                        Time-independent constraints. The constraint surface in configuration space is fixed.
+                    </p>
+                    <p><strong>Example:</strong> A particle constrained to the surface of a fixed sphere.</p>
+                </div>
+                <div class="example">
+                    <h4>Rheonomic Constraints</h4>
+                    <p>
+                        Explicitly time-dependent constraints. The allowed configuration changes with time.
+                    </p>
+                    <p><strong>Example:</strong> A bead on a wire that is itself rotating or translating.</p>
+                </div>
+            </div>
+
+            <h3>2.2 Classification Overview</h3>
+            <p>
+                The relative prevalence and practical importance of constraint types in typical mechanical systems can be
+                illustrated schematically. Holonomic constraints dominate textbook problems; non-holonomic constraints
+                appear in rolling contact, non-holonomic control systems, and certain rigid-body kinematics.
+            </p>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="constraintsChart" aria-label="Bar chart of constraint classifications"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Relative emphasis of constraint classes in classical mechanics literature and applications.</p>
+
+            <div class="callout">
+                <strong>Degrees of freedom:</strong> For a system of <em>N</em> particles in 3-D space subject to
+                <em>h</em> independent holonomic constraints, the number of degrees of freedom is
+                <span class="math-inline">n = 3N − h</span>. Non-holonomic constraints further restrict the allowable
+                velocities but do not reduce the dimension of configuration space in the same way.
+            </div>
+        </section>
+
+        <section id="newtonian-limitations">
+            <h2>3. Inconvenience of Newtonian Formulation in Practice</h2>
+            <p>
+                Newtonian mechanics is intuitive and remains indispensable, yet it becomes cumbersome for constrained,
+                multi-body, or non-Cartesian systems:
+            </p>
+
+            <div class="advantages">
+                <div class="advantage-card">
+                    <h4>Complexity in Multi-Body Systems</h4>
+                    <p>
+                        Each body requires its own set of Newton–Euler equations. Constraint forces must be retained
+                        (or eliminated by additional algebraic steps), rapidly increasing the size of the system.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Difficulty with Constraints</h4>
+                    <p>
+                        Constraint forces are a priori unknown. Introducing them enlarges the equation set; eliminating
+                        them often requires clever projections or Lagrange multipliers after the fact.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Non-Inertial Frames</h4>
+                    <p>
+                        Accelerating frames demand fictitious forces (Coriolis, centrifugal, Euler). These terms must be
+                        derived carefully and can obscure the underlying physics.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Coordinate Dependence</h4>
+                    <p>
+                        Cartesian components are natural for Newton’s laws. In polar, spherical, or generalized
+                        coordinates the force and acceleration expressions become lengthy and error-prone.
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                Lagrangian mechanics addresses these difficulties by shifting attention from vector forces to a scalar
+                energy function and by working directly with independent generalized coordinates that already
+                incorporate the holonomic constraints.
+            </p>
+        </section>
+
+        <section id="virtual-work">
+            <h2>4. The Principle of Virtual Work</h2>
+            <p>
+                For a system in static equilibrium the virtual work of all applied forces vanishes for every virtual
+                displacement consistent with the constraints:
+            </p>
+            <p class="math">δW = Σ <strong>F</strong><sub>i</sub> · δ<strong>r</strong><sub>i</sub> = 0</p>
+            <p>
+                Virtual displacements δ<strong>r</strong> are infinitesimal, instantaneous, and compatible with the
+                instantaneous constraints; they need not correspond to any actual motion that the system ever executes.
+            </p>
+
+            <h3>4.1 Why Virtual Displacements?</h3>
+            <p>
+                Because constraint forces do no virtual work (they are orthogonal to the allowed displacements), they
+                drop out of the principle automatically. Equilibrium conditions can therefore be written solely in terms
+                of the applied forces and the geometry of the constraints.
+            </p>
+
+            <div class="threejs-container" id="virtualWorkAnimation" role="img" aria-label="Interactive 3D illustration of forces and virtual displacement on a particle"></div>
+            <p class="viz-caption">Red particle under two applied forces (green, blue). Drag to rotate; the oscillating motion suggests a virtual displacement consistent with constraints.</p>
+        </section>
+
+        <section id="dalembert">
+            <h2>5. D'Alembert's Principle</h2>
+            <p>
+                D'Alembert’s principle extends the principle of virtual work to dynamics by introducing inertial forces
+                −m<strong>a</strong>. The virtual work of the effective forces vanishes:
+            </p>
+            <p class="math">Σ (<strong>F</strong><sub>i</sub> − m<sub>i</sub><strong>a</strong><sub>i</sub>) · δ<strong>r</strong><sub>i</sub> = 0</p>
+            <p>
+                The system is thereby treated as if it were in equilibrium under the combined action of applied and
+                inertial forces. This is the conceptual bridge from statics to the Lagrangian equations of motion.
+            </p>
+
+            <div class="example">
+                <h4>Example: Simple Pendulum</h4>
+                <p>
+                    Gravity and tension act on the bob. Tension is a constraint force and does no virtual work for a
+                    displacement along the arc. D’Alembert’s principle immediately yields the torque equation
+                    that becomes the familiar pendulum equation after projection onto the tangential direction.
+                </p>
+            </div>
+
+            <div class="callout">
+                <strong>From D’Alembert to Lagrange:</strong> Expressing the virtual displacements in terms of independent
+                variations δq<sub>i</sub> of the generalized coordinates converts the principle into a set of n scalar
+                equations—the Lagrange equations—without ever writing the constraint forces.
+            </div>
+        </section>
+
+        <section id="generalized-coordinates">
+            <h2>6. Generalized Coordinates and Momenta</h2>
+            <p>
+                Generalized coordinates {q<sub>i</sub>} are any set of independent parameters that uniquely specify the
+                configuration of the system. They need not be Cartesian lengths; angles, arc lengths, or more abstract
+                parameters are admissible.
+            </p>
+
+            <h3>6.1 Motivation</h3>
+            <ul>
+                <li><strong>Polar / spherical coordinates</strong> — natural for central-force problems.</li>
+                <li><strong>Angular coordinates</strong> — natural for rigid-body rotations and linkages.</li>
+                <li><strong>Constraint elimination</strong> — choosing coordinates that already satisfy the holonomic
+                    constraints removes the need to carry Lagrange multipliers for those constraints.</li>
+            </ul>
+
+            <h3>6.2 Generalized Momenta</h3>
+            <p>
+                The momentum conjugate to q<sub>i</sub> is defined by
+            </p>
+            <p class="math">p<sub>i</sub> = ∂L / ∂q̇<sub>i</sub></p>
+            <p>
+                These momenta become the fundamental variables of Hamiltonian mechanics and appear in the quantum
+                commutation relations after canonical quantization.
+            </p>
+
+            <div class="example">
+                <h4>Example: Polar Coordinates</h4>
+                <p>For a free particle in the plane:</p>
+                <p class="math">p<sub>r</sub> = mṙ , &nbsp;&nbsp; p<sub>θ</sub> = m r² θ̇</p>
+                <p>
+                    The angular momentum p<sub>θ</sub> is conserved when the potential is central—an immediate
+                    consequence of the cyclic nature of θ.
+                </p>
+            </div>
+        </section>
+
+        <section id="lagrangian-function">
+            <h2>7. The Lagrangian Function</h2>
+            <p>
+                The Lagrangian is the scalar
+            </p>
+            <p class="math">L(q, q̇, t) = T − V</p>
+            <p>
+                where T is the kinetic energy and V the potential energy. For standard mechanical systems T is quadratic
+                in the velocities; V depends only on the coordinates (and possibly time).
+            </p>
+
+            <h3>7.1 Kinetic and Potential Energies</h3>
+            <p class="math">T = Σ<sub>i</sub> ½ m<sub>i</sub> v<sub>i</sub>²</p>
+            <p>
+                Potential energy is defined only for conservative forces; non-conservative generalized forces can be
+                added later on the right-hand side of Lagrange’s equations.
+            </p>
+
+            <div class="example">
+                <h4>Simple Harmonic Oscillator</h4>
+                <p class="math">T = ½ m ẋ² , &nbsp;&nbsp; V = ½ k x²</p>
+                <p class="math">L = ½ m ẋ² − ½ k x²</p>
+            </div>
+
+            <div class="threejs-container" id="lagrangianAnimation" role="img" aria-label="Animated spring-mass system illustrating kinetic and potential energy exchange"></div>
+            <p class="viz-caption">Mass-spring oscillator. Kinetic energy peaks at the equilibrium position; potential energy peaks at the extremes.</p>
+
+            <h3>7.2 Energy Exchange Visualization</h3>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="energyChart" aria-label="Line chart of kinetic, potential and total energy versus time for a harmonic oscillator"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Time histories of T, V and total energy E = T + V for an undamped harmonic oscillator (E is conserved).</p>
+        </section>
+
+        <section id="lagrange-equations">
+            <h2>8. Lagrange's Equations of Motion</h2>
+            <p>
+                For each independent generalized coordinate the Euler–Lagrange equation holds:
+            </p>
+            <p class="math">d/dt (∂L / ∂q̇<sub>i</sub>) − ∂L / ∂q<sub>i</sub> = 0</p>
+            <p>
+                (or = Q<sub>i</sub> if non-conservative generalized forces are present).
+            </p>
+
+            <h3>8.1 Derivation Sketch</h3>
+            <ol>
+                <li>Form L = T − V in terms of the chosen generalized coordinates.</li>
+                <li>Compute the partial derivatives ∂L/∂q<sub>i</sub> and ∂L/∂q̇<sub>i</sub>.</li>
+                <li>Differentiate the latter with respect to time and assemble the Euler–Lagrange equation.</li>
+            </ol>
+            <p>
+                The same equations follow from Hamilton’s principle by requiring that the first variation of the action
+                vanish for fixed endpoints.
+            </p>
+
+            <h3>8.2 Worked Example: Simple Pendulum</h3>
+            <p>
+                Generalized coordinate θ (angle from the downward vertical). Length ℓ, mass m:
+            </p>
+            <p class="math">T = ½ m ℓ² θ̇² , &nbsp;&nbsp; V = −m g ℓ cos θ</p>
+            <p class="math">L = ½ m ℓ² θ̇² + m g ℓ cos θ</p>
+            <p>
+                Application of the Euler–Lagrange equation immediately produces
+            </p>
+            <p class="math">θ̈ + (g/ℓ) sin θ = 0</p>
+            <p>
+                For small angles sin θ ≈ θ and the motion becomes simple harmonic with angular frequency √(g/ℓ).
+            </p>
+        </section>
+
+        <section id="advantages">
+            <h2>9. Advantages of the Lagrangian Formulation</h2>
+            <div class="advantages">
+                <div class="advantage-card">
+                    <h4>Coordinate Independence</h4>
+                    <p>
+                        The form of the equations is the same in every coordinate system. One simply rewrites T and V
+                        in the new variables.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Automatic Constraint Handling</h4>
+                    <p>
+                        When generalized coordinates already satisfy the holonomic constraints, the constraint forces
+                        never appear.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Scalability to Complex Systems</h4>
+                    <p>
+                        Multi-body mechanisms, robots, and continuum systems are routinely treated by writing a single
+                        Lagrangian and applying the same formal steps.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Direct Link to Conservation Laws</h4>
+                    <p>
+                        Noether’s theorem associates continuous symmetries of L with conserved quantities (energy,
+                        momentum, angular momentum, \ldots).
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Pathway to Quantum &amp; Field Theory</h4>
+                    <p>
+                        The Lagrangian density is the starting point of the path-integral formulation and of classical
+                        field theories.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Energy-Based Intuition</h4>
+                    <p>
+                        Because L is built from energies, qualitative reasoning about stability, boundedness, and
+                        resonances becomes more transparent.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="cyclic-coordinates">
+            <h2>10. Cyclic Coordinates</h2>
+            <p>
+                A coordinate q<sub>i</sub> that does not appear explicitly in L (only its velocity does) is called cyclic
+                or ignorable. Lagrange’s equation then reduces to
+            </p>
+            <p class="math">d/dt (∂L / ∂q̇<sub>i</sub>) = 0 &nbsp;⇒&nbsp; p<sub>i</sub> = const</p>
+            <p>
+                The conjugate momentum is a constant of the motion.
+            </p>
+
+            <h3>10.1 Central-Force Motion</h3>
+            <p>
+                In polar coordinates the Lagrangian of a particle in a central potential V(r) is independent of θ:
+            </p>
+            <p class="math">L = ½ m (ṙ² + r² θ̇²) − V(r)</p>
+            <p class="math">p<sub>θ</sub> = m r² θ̇ = ℓ &nbsp;(constant angular momentum)</p>
+            <p>
+                Angular momentum conservation follows at once from the cyclic character of the azimuthal angle—an
+                instance of Noether’s theorem for rotational invariance.
+            </p>
+        </section>
+
+        <section id="hamilton-principle">
+            <h2>11. Hamilton's Variational Principle</h2>
+            <p>
+                The actual trajectory of a system between two fixed configurations at times t<sub>1</sub> and t<sub>2</sub>
+                renders the action stationary:
+            </p>
+            <p class="math">S[q] = ∫<sub>t₁</sub><sup>t₂</sup> L(q, q̇, t) dt , &nbsp;&nbsp; δS = 0</p>
+            <p>
+                The stationary-path condition is precisely the set of Euler–Lagrange equations. Hamilton’s principle
+                therefore elevates the entire content of classical mechanics to a single variational statement.
+            </p>
+
+            <div class="example">
+                <h4>Free Particle</h4>
+                <p>
+                    L = ½ m v². The action is proportional to the integral of kinetic energy. The path that minimizes
+                    (or stationaryizes) S is uniform rectilinear motion—Newton’s first law recovered from a variational
+                    principle.
+                </p>
+            </div>
+
+            <div class="threejs-container" id="hamiltonPrincipleAnimation" role="img" aria-label="Illustration of true path versus varied paths in configuration space"></div>
+            <p class="viz-caption">Green: true (stationary) path. Colored curves: varied paths with the same endpoints. Only the true path extremizes the action.</p>
+        </section>
+
+        <section id="applications">
+            <h2>12. Applications to Simple Systems</h2>
+            <p>
+                The following classic systems illustrate the economy of the Lagrangian method.
+            </p>
+
+            <div class="example">
+                <h4>12.1 Simple Pendulum</h4>
+                <p class="math">θ̈ + (g/ℓ) sin θ = 0</p>
+                <p>Nonlinear; reduces to simple harmonic motion for small amplitudes.</p>
+            </div>
+
+            <div class="example">
+                <h4>12.2 Double Pendulum</h4>
+                <p>
+                    Two angles θ<sub>1</sub>, θ<sub>2</sub> yield a four-dimensional phase space. The Lagrangian is
+                </p>
+                <p class="math">
+                    L = ½ (m₁ + m₂) ℓ₁² θ̇₁² + ½ m₂ ℓ₂² θ̇₂² + m₂ ℓ₁ ℓ₂ θ̇₁ θ̇₂ cos(θ₁ − θ₂)
+                    − (m₁ + m₂) g ℓ₁ cos θ₁ − m₂ g ℓ₂ cos θ₂
+                </p>
+                <p>
+                    The resulting equations are strongly nonlinear and exhibit chaotic behavior for a wide range of
+                    initial conditions—an iconic example of deterministic chaos in a low-dimensional mechanical system.
+                </p>
+            </div>
+
+            <div class="threejs-container" id="doublePendulumAnimation" role="img" aria-label="Real-time simulation of a double pendulum showing chaotic motion"></div>
+            <p class="viz-caption">Interactive double-pendulum simulation. Chaos is visible in the sensitive dependence on initial angles and velocities.</p>
+
+            <div class="example">
+                <h4>12.3 Spring–Mass System</h4>
+                <p class="math">L = ½ m ẋ² − ½ k x² &nbsp;⇒&nbsp; mẍ + kx = 0</p>
+            </div>
+
+            <div class="example">
+                <h4>12.4 Central-Force Problem</h4>
+                <p class="math">L = ½ m (ṙ² + r² θ̇²) − V(r)</p>
+                <p>
+                    Conservation of angular momentum reduces the radial motion to an effective one-dimensional problem
+                    with potential V<sub>eff</sub>(r) = V(r) + ℓ²/(2m r²).
+                </p>
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>13. Conclusion</h2>
+            <p>
+                Lagrangian mechanics replaces the vectorial, force-centric language of Newton with a scalar, energy-based
+                variational framework. The advantages are decisive for constrained systems, multi-body dynamics, and any
+                setting in which generalized coordinates are natural.
+            </p>
+            <p>
+                The development proceeds systematically:
+            </p>
+            <ul>
+                <li>Constraints and their classification;</li>
+                <li>Limitations of a purely Newtonian approach;</li>
+                <li>Virtual work and D’Alembert’s principle;</li>
+                <li>Generalized coordinates and conjugate momenta;</li>
+                <li>The Lagrangian L = T − V and the Euler–Lagrange equations;</li>
+                <li>Cyclic coordinates and Noether’s theorem;</li>
+                <li>Hamilton’s principle as the variational foundation;</li>
+                <li>Illustrative applications ranging from the simple pendulum to the chaotic double pendulum.</li>
+            </ul>
+            <p>
+                Beyond classical mechanics the same ideas reappear in Hamiltonian mechanics, quantum mechanics (path
+                integrals), and classical field theory. Mastery of the Lagrangian formalism is therefore both a practical
+                tool and a conceptual gateway to modern theoretical physics.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <p>The page is 🄯 Copyleft 2026 Assembled by Soumyajit Roy with Grok and Mistral Le Chat</p>
+    </footer>
+
+    <button class="toggle-dark-mode" onclick="toggleDarkMode()" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        navToggle.addEventListener('click', () => {
+            const open = navMenu.classList.toggle('open');
+            navToggle.setAttribute('aria-expanded', open);
+        });
+        navMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                navMenu.classList.remove('open');
+                navToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('constraintsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Holonomic', 'Non-Holonomic', 'Scleronomic', 'Rheonomic'],
+                    datasets: [{
+                        label: 'Relative emphasis in literature & applications',
+                        data: [45, 25, 55, 18],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.75)',
+                            'rgba(231, 76, 60, 0.75)',
+                            'rgba(46, 204, 113, 0.75)',
+                            'rgba(155, 89, 182, 0.75)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(155, 89, 182, 1)'
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Classification of Constraints in Mechanical Systems',
+                            font: { size: 15, weight: '600' },
+                            color: '#2c3e50'
+                        },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `Emphasis index: ${ctx.raw}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 70,
+                            title: {
+                                display: true,
+                                text: 'Relative frequency / importance'
+                            },
+                            grid: { color: 'rgba(0,0,0,0.06)' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            const energyCtx = document.getElementById('energyChart').getContext('2d');
+            const t = [];
+            const T = [];
+            const V = [];
+            const E = [];
+            const omega = 2 * Math.PI;
+            const A = 1, m = 1, k = m * omega * omega;
+            for (let i = 0; i <= 200; i++) {
+                const ti = i / 200;
+                t.push(ti);
+                const x = A * Math.cos(omega * ti);
+                const v = -A * omega * Math.sin(omega * ti);
+                const kin = 0.5 * m * v * v;
+                const pot = 0.5 * k * x * x;
+                T.push(kin);
+                V.push(pot);
+                E.push(kin + pot);
+            }
+            new Chart(energyCtx, {
+                type: 'line',
+                data: {
+                    labels: t.map(v => v.toFixed(2)),
+                    datasets: [
+                        {
+                            label: 'Kinetic T',
+                            data: T,
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            backgroundColor: 'rgba(52, 152, 219, 0.15)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Potential V',
+                            data: V,
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            backgroundColor: 'rgba(231, 76, 60, 0.15)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Total E = T+V',
+                            data: E,
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 2,
+                            borderDash: [6, 3],
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Energy Partition in a Harmonic Oscillator',
+                            font: { size: 15, weight: '600' },
+                            color: '#2c3e50'
+                        },
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Time (periods)' },
+                            ticks: { maxTicksLimit: 8 }
+                        },
+                        y: {
+                            title: { display: true, text: 'Energy' },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+
+        function makeRenderer(container) {
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            return renderer;
+        }
+
+        function handleResize(container, camera, renderer) {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        }
+
+        (function () {
+            const container = document.getElementById('virtualWorkAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.08;
+
+            const grid = new THREE.GridHelper(6, 12, 0x333333, 0x222222);
+            scene.add(grid);
+
+            const particle = new THREE.Mesh(
+                new THREE.SphereGeometry(0.18, 32, 32),
+                new THREE.MeshStandardMaterial({ color: 0xe74c3c, metalness: 0.3, roughness: 0.4 })
+            );
+            scene.add(particle);
+
+            const light = new THREE.DirectionalLight(0xffffff, 1.1);
+            light.position.set(3, 5, 4);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404060, 0.6));
+
+            const arrow1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0.2, 0).normalize(), new THREE.Vector3(), 1.4, 0x2ecc71, 0.25, 0.15);
+            const arrow2 = new THREE.ArrowHelper(new THREE.Vector3(-0.3, 1, 0).normalize(), new THREE.Vector3(), 1.2, 0x3498db, 0.25, 0.15);
+            scene.add(arrow1);
+            scene.add(arrow2);
+
+            const trailMat = new THREE.LineBasicMaterial({ color: 0xf1c40f, transparent: true, opacity: 0.7 });
+            const trailPts = [];
+            for (let i = 0; i < 20; i++) trailPts.push(new THREE.Vector3());
+            const trailGeo = new THREE.BufferGeometry().setFromPoints(trailPts);
+            const trail = new THREE.Line(trailGeo, trailMat);
+            scene.add(trail);
+
+            camera.position.set(3.2, 2.4, 4.5);
+            controls.target.set(0, 0, 0);
+
+            let t = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                t += 0.016;
+                const x = Math.sin(t * 0.7) * 1.6;
+                const y = Math.cos(t * 0.5) * 0.9;
+                particle.position.set(x, y, 0);
+                arrow1.position.copy(particle.position);
+                arrow2.position.copy(particle.position);
+
+                const positions = trail.geometry.attributes.position.array;
+                for (let i = 19; i > 0; i--) {
+                    positions[i * 3] = positions[(i - 1) * 3];
+                    positions[i * 3 + 1] = positions[(i - 1) * 3 + 1];
+                    positions[i * 3 + 2] = positions[(i - 1) * 3 + 2];
+                }
+                positions[0] = x; positions[1] = y; positions[2] = 0;
+                trail.geometry.attributes.position.needsUpdate = true;
+
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('lagrangianAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(2, 4, 3);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404060, 0.7));
+
+            const wall = new THREE.Mesh(
+                new THREE.BoxGeometry(0.3, 2.2, 1),
+                new THREE.MeshStandardMaterial({ color: 0x7f8c8d, metalness: 0.2, roughness: 0.7 })
+            );
+            wall.position.set(-2.2, 0, 0);
+            scene.add(wall);
+
+            const mass = new THREE.Mesh(
+                new THREE.BoxGeometry(0.55, 0.55, 0.55),
+                new THREE.MeshStandardMaterial({ color: 0xe74c3c, metalness: 0.35, roughness: 0.35 })
+            );
+            scene.add(mass);
+
+            const springMat = new THREE.LineBasicMaterial({ color: 0x2ecc71 });
+            const springGeo = new THREE.BufferGeometry();
+            const spring = new THREE.Line(springGeo, springMat);
+            scene.add(spring);
+
+            function updateSpring(x) {
+                const pts = [];
+                const turns = 12;
+                const start = -2.05;
+                const end = x - 0.3;
+                const len = end - start;
+                for (let i = 0; i <= turns * 8; i++) {
+                    const t = i / (turns * 8);
+                    const px = start + t * len;
+                    const py = 0.18 * Math.sin(t * turns * Math.PI * 2);
+                    const pz = 0.18 * Math.cos(t * turns * Math.PI * 2);
+                    pts.push(new THREE.Vector3(px, py, pz));
+                }
+                spring.geometry.setFromPoints(pts);
+            }
+
+            const floor = new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints([
+                    new THREE.Vector3(-3, -0.9, 0),
+                    new THREE.Vector3(2.5, -0.9, 0)
+                ]),
+                new THREE.LineBasicMaterial({ color: 0x555555 })
+            );
+            scene.add(floor);
+
+            camera.position.set(0.5, 1.2, 5.5);
+            camera.lookAt(0, 0, 0);
+
+            let t = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                t += 0.018;
+                const x = Math.sin(t) * 1.1;
+                mass.position.set(x, 0, 0);
+                updateSpring(x);
+                renderer.render(scene, camera);
+            }
+            animate();
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('hamiltonPrincipleAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            const truePts = [];
+            for (let i = 0; i <= 40; i++) {
+                const s = i / 40;
+                truePts.push(new THREE.Vector3(-2.5 + 5 * s, 0, 0));
+            }
+            const truePath = new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(truePts),
+                new THREE.LineBasicMaterial({ color: 0x2ecc71, linewidth: 2 })
+            );
+            scene.add(truePath);
+
+            function makeVaried(amp, color) {
+                const pts = [];
+                for (let i = 0; i <= 40; i++) {
+                    const s = i / 40;
+                    const y = amp * Math.sin(Math.PI * s);
+                    pts.push(new THREE.Vector3(-2.5 + 5 * s, y, 0));
+                }
+                return new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints(pts),
+                    new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.7 })
+                );
+            }
+            scene.add(makeVaried(0.9, 0xe74c3c));
+            scene.add(makeVaried(-0.7, 0xe67e22));
+            scene.add(makeVaried(0.45, 0x9b59b6));
+
+            const endMat = new THREE.MeshBasicMaterial({ color: 0xecf0f1 });
+            const startSphere = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), endMat);
+            startSphere.position.set(-2.5, 0, 0);
+            const endSphere = startSphere.clone();
+            endSphere.position.set(2.5, 0, 0);
+            scene.add(startSphere, endSphere);
+
+            camera.position.set(0, 1.8, 5);
+            controls.target.set(0, 0, 0);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('doublePendulumAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(2, 5, 3);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404060, 0.65));
+
+            const pivot = new THREE.Mesh(
+                new THREE.SphereGeometry(0.09, 20, 20),
+                new THREE.MeshStandardMaterial({ color: 0xbdc3c7 })
+            );
+            scene.add(pivot);
+
+            const mass1 = new THREE.Mesh(
+                new THREE.SphereGeometry(0.18, 24, 24),
+                new THREE.MeshStandardMaterial({ color: 0xe74c3c, metalness: 0.3, roughness: 0.4 })
+            );
+            const mass2 = new THREE.Mesh(
+                new THREE.SphereGeometry(0.18, 24, 24),
+                new THREE.MeshStandardMaterial({ color: 0x3498db, metalness: 0.3, roughness: 0.4 })
+            );
+            scene.add(mass1, mass2);
+
+            const rodMat = new THREE.LineBasicMaterial({ color: 0xecf0f1 });
+            const rod1 = new THREE.Line(new THREE.BufferGeometry(), rodMat);
+            const rod2 = new THREE.Line(new THREE.BufferGeometry(), rodMat);
+            scene.add(rod1, rod2);
+
+            const trailLen = 120;
+            const trailPositions = new Float32Array(trailLen * 3);
+            const trailGeo = new THREE.BufferGeometry();
+            trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+            const trail = new THREE.Line(
+                trailGeo,
+                new THREE.LineBasicMaterial({ color: 0xf1c40f, transparent: true, opacity: 0.55 })
+            );
+            scene.add(trail);
+            let trailIdx = 0;
+
+            camera.position.set(0, -0.6, 5.5);
+            camera.lookAt(0, -1.2, 0);
+
+            let a1 = Math.PI / 2.2;
+            let a2 = Math.PI / 1.7;
+            let v1 = 0, v2 = 0;
+            const g = 9.81, L1 = 1.1, L2 = 1.1, m1 = 1, m2 = 1;
+            const dt = 0.012;
+
+            function step() {
+                const den = 2 * m1 + m2 - m2 * Math.cos(2 * a1 - 2 * a2);
+                const a1acc = (
+                    -g * (2 * m1 + m2) * Math.sin(a1)
+                    - m2 * g * Math.sin(a1 - 2 * a2)
+                    - 2 * Math.sin(a1 - a2) * m2 * (v2 * v2 * L2 + v1 * v1 * L1 * Math.cos(a1 - a2))
+                ) / (L1 * den);
+
+                const a2acc = (
+                    2 * Math.sin(a1 - a2) * (
+                        v1 * v1 * L1 * (m1 + m2)
+                        + g * (m1 + m2) * Math.cos(a1)
+                        + v2 * v2 * L2 * m2 * Math.cos(a1 - a2)
+                    )
+                ) / (L2 * den);
+
+                v1 += a1acc * dt;
+                v2 += a2acc * dt;
+                a1 += v1 * dt;
+                a2 += v2 * dt;
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                step();
+
+                const x1 = L1 * Math.sin(a1);
+                const y1 = -L1 * Math.cos(a1);
+                const x2 = x1 + L2 * Math.sin(a2);
+                const y2 = y1 - L2 * Math.cos(a2);
+
+                mass1.position.set(x1, y1, 0);
+                mass2.position.set(x2, y2, 0);
+
+                rod1.geometry.setFromPoints([
+                    new THREE.Vector3(0, 0, 0),
+                    new THREE.Vector3(x1, y1, 0)
+                ]);
+                rod2.geometry.setFromPoints([
+                    new THREE.Vector3(x1, y1, 0),
+                    new THREE.Vector3(x2, y2, 0)
+                ]);
+
+                trailPositions[trailIdx * 3] = x2;
+                trailPositions[trailIdx * 3 + 1] = y2;
+                trailPositions[trailIdx * 3 + 2] = 0;
+                trailIdx = (trailIdx + 1) % trailLen;
+                trail.geometry.attributes.position.needsUpdate = true;
+
+                renderer.render(scene, camera);
+            }
+            animate();
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+    </script>
+</body>
+</html>
