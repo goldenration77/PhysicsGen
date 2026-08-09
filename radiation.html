@@ -47,11 +47,13 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 20vw;
+            height: 20vh;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.85; /* stronger so motion is obvious in margins & between cards */
+            opacity: 0.80;
+            transform: scale(2);
+            transform-origin: 0 0;/* stronger so motion is obvious in margins & between cards */
         }
 
         h1 {
@@ -452,7 +454,7 @@
 
     <div class="page-wrap">
     <h1>Thermal Radiation: A Documentation on Blackbody Radiation and Related Laws</h1>
-    <h2>Made with Mistral Vibe and enchanced with Grok by Soumyajit Roy</h2>
+    <h2>Made with Mistral Vibe and enhanced with Grok by Soumyajit Roy</h2>
 
     <nav class="nav-bar" aria-label="Section navigation">
         <div class="nav-header">
@@ -1710,11 +1712,11 @@
                     vec2 uv = gl_FragCoord.xy / u_resolution.xy;
                     uv.x *= u_resolution.x / u_resolution.y;
 
-                    float t = u_time * 0.35;
+                    float t = u_time * 0.9;
                     // flowing energy field — faster drift so motion is obvious
-                    float n1 = fbm(uv * 2.8 + vec2(t * 0.55, t * 0.32));
-                    float n2 = fbm(uv * 4.2 - vec2(t * 0.42, -t * 0.48));
-                    float n3 = fbm(uv * 1.6 + vec2(-t * 0.2, t * 0.6));
+                    float n1 = fbm(uv * 2.8 + vec2(t * 0.6, t * 0.5));
+                    float n2 = fbm(uv * 4.2 - vec2(t * 0.55, -t * 0.5));
+                    float n3 = fbm(uv * 1.6 + vec2(-t * 0.3, t * 0.6));
                     float field = (n1 * 0.45 + n2 * 0.35 + n3 * 0.2);
 
                     // warm radiation tones matching page palette (#bb4451, purple, magenta)
