@@ -47,7 +47,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 20vw;
+            width: 100vw;
             height: 20vh;
             z-index: 0;
             pointer-events: none;
@@ -1714,9 +1714,9 @@
 
                     float t = u_time * 0.9;
                     // flowing energy field — faster drift so motion is obvious
-                    float n1 = fbm(uv * 2.8 + vec2(t * 0.6, t * 0.5));
-                    float n2 = fbm(uv * 4.2 - vec2(t * 0.55, -t * 0.5));
-                    float n3 = fbm(uv * 1.6 + vec2(-t * 0.3, t * 0.6));
+                    float n1 = fbm(uv * 2.8 + vec2(t * 0.1, t * 0.4));
+                    float n2 = fbm(uv * 4.2 - vec2(t * 0.5, -t * 0.3));
+                    float n3 = fbm(uv * 1.6 + vec2(-t * 0.2, t * 0.6));
                     float field = (n1 * 0.45 + n2 * 0.35 + n3 * 0.2);
 
                     // warm radiation tones matching page palette (#bb4451, purple, magenta)
