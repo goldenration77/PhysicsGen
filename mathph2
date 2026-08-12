@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Mathematical Physics II for Undergraduates Documentation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@500;600&display=swap');
+        
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            /* Dark sticky-note palette — soft, low-glare, humane */
+            --bg-deep: #882852;
+            --bg-mid: #000000;
+            --note: #5b9494;
+            --note-edge: #2e2924;
+            --note-soft: #2a2520;
+            --ink: #e8e0d5;
+            --ink-muted: #e2e2bb;
+            --ink-faint: #e2e2bb;
+            --accent: #faff99;
+            --accent-soft: #ee37ff;
+            --accent-glow: rgba(196, 165, 116, 0.25);
+            --warm: #d4a574;
+            --cool: #7a9e9f;
+            --success: #7d9b76;
+            --warning: #c9a06a;
+            --danger: #b87a6e;
+            --purple-soft: #a0559a;
+            --shadow-note: 0 4px 12px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-lift: 0 8px 24px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.35);
+            --radius-note: 4px 12px 8px 6px;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-deep);
+            background-image: 
+                radial-gradient(ellipse at 20% 0%, rgba(60,50,40,0.35) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(40,45,50,0.25) 0%, transparent 45%);
+            min-height: 100vh;
+            color: var(--ink);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+            padding-bottom: calc(72px + var(--safe-bottom));
+        }
+        
+        /* ===== Sticky-note card ===== */
+        .note {
+            background: var(--note);
+            border: 1px solid var(--note-edge);
+            border-radius: var(--radius-note);
+            box-shadow: var(--shadow-note);
+            position: relative;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+        
+        .note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 8%;
+            right: 8%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-soft), transparent);
+            opacity: 0.35;
+            border-radius: 2px;
+        }
+        
+        .note:hover {
+            box-shadow: var(--shadow-lift);
+        }
+        
+        .note-warm {
+            background: linear-gradient(145deg, #2a241e 0%, #231f1b 100%);
+        }
+        
+        .note-cool {
+            background: linear-gradient(145deg, #1e2224 0%, #1a1d1f 100%);
+            border-color: #2a3034;
+        }
+        
+        /* ===== Layout ===== */
+        .header-bar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(18, 16, 14, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(46, 41, 36, 0.8);
+            padding: 0.65rem 1rem;
+            padding-top: max(0.65rem, env(safe-area-inset-top));
+        }
+        
+        .header-content {
+            max-width: 52rem;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            min-width: 0;
+        }
+        
+        .logo-box {
+            width: 2.35rem;
+            height: 2.35rem;
+            border-radius: 10px;
+            background: linear-gradient(145deg, var(--accent-soft), #6b5344);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+        }
+        
+        .logo-box i { color: #f5efe6; font-size: 1rem; }
+        
+        .header-title {
+            font-size: 1.05rem;
+            font-weight: 650;
+            color: var(--ink);
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .header-sub {
+            font-size: 0.7rem;
+            color: var(--ink-faint);
+            margin-top: 0.1rem;
+        }
+        
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+        
+        .score-badge {
+            background: linear-gradient(135deg, #5c4a38, #4a3c30);
+            border: 1px solid var(--accent-soft);
+            padding: 0.28rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+        
+        .progress-mini {
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            display: none;
+        }
+        
+        @media (min-width: 480px) {
+            .progress-mini { display: inline; }
+        }
+        
+        /* Main content */
+        .content-wrap {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 1.1rem 0.9rem 2rem;
+        }
+        
+        .main-content {
+            width: 100%;
+        }
+        
+        .section {
+            display: none;
+            animation: softIn 0.35s ease;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes softIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Typography helpers */
+        h2 {
+            font-size: clamp(1.35rem, 4vw, 1.6rem);
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 0.4rem;
+        }
+        
+        h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-top: 1.4rem;
+            margin-bottom: 0.6rem;
+            color: #feffc4;
+        }
+        
+        .text-muted { color: var(--ink-muted); }
+        .text-faint { color: var(--ink-faint); }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        
+        /* Note padding */
+        .note-pad { padding: 1.15rem 1.2rem; }
+        .note-pad-lg { padding: 1.35rem 1.35rem; }
+        
+        @media (min-width: 640px) {
+            .note-pad { padding: 1.35rem 1.5rem; }
+            .note-pad-lg { padding: 1.5rem 1.7rem; }
+        }
+        
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-5 { margin-bottom: 1.25rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        
+        /* Unit badge */
+        .unit-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            padding: 0.22rem 0.55rem;
+            border-radius: 4px;
+            color: #f5efe6;
+            background: #4a3c30;
+            border: 1px solid var(--accent-soft);
+        }
+        
+        .unit-badge.blue { background: #3a4550; border-color: #5a6a78; }
+        .unit-badge.purple { background: #463a4a; border-color: #6a5a72; }
+        .unit-badge.green { background: #3a463c; border-color: #5a6a58; }
+        .unit-badge.amber { background: #4a4030; border-color: #6a5a40; }
+        .unit-badge.rose { background: #4a3838; border-color: #6a5050; }
+        .unit-badge.cyan { background: #344048; border-color: #4a6068; }
+        
+        /* Theorem / example / warning boxes — sticky-note style */
+        .theorem, .example, .warning-box {
+            border-radius: 6px 10px 8px 6px;
+            padding: 0.9rem 1.05rem;
+            margin: 0.9rem 0;
+            border-left-width: 3px;
+            border-left-style: solid;
+            background: var(--note-soft);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        }
+        
+        .theorem {
+            border-left-color: var(--purple-soft);
+            background: linear-gradient(135deg, rgba(60,50,65,0.9), var(--note-soft));
+        }
+        
+        .example {
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, rgba(45,55,45,0.5), var(--note-soft));
+        }
+        
+        .warning-box {
+            border-left-color: var(--warning);
+            background: linear-gradient(135deg, rgba(55,48,35,0.55), var(--note-soft));
+        }
+        
+        /* Math block */
+        .math-block {
+            background: rgba(12, 10, 9, 0.75);
+            border: 1px solid rgba(70, 60, 50, 0.5);
+            border-radius: 8px;
+            padding: 1rem 1.1rem;
+            margin: 0.85rem 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .math-block::-webkit-scrollbar { height: 4px; }
+        .math-block::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 2px; }
+        
+        /* Two-col responsive */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+        
+        @media (min-width: 560px) {
+            .two-col { grid-template-columns: 1fr 1fr; }
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.65rem;
+            margin-bottom: 1.2rem;
+        }
+        
+        .stat-card {
+            background: var(--note-soft);
+            border: 1px solid var(--note-edge);
+            border-radius: 8px;
+            padding: 0.85rem 0.5rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .stat-card .num {
+            font-size: clamp(1.4rem, 5vw, 1.75rem);
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.1;
+        }
+        
+        .stat-card .lbl {
+            font-size: 0.7rem;
+            color: var(--ink-faint);
+            margin-top: 0.25rem;
+        }
+        
+        .unit-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: var(--note-soft);
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .unit-row:hover {
+            border-color: var(--note-edge);
+        }
+        
+        /* Buttons */
+        .btn {
+            background: linear-gradient(145deg, #5c4a38, #4a3c30);
+            color: #f5efe6;
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent-soft);
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+        }
+        
+        .btn:active { transform: translateY(0); }
+        
+        .btn-secondary {
+            background: var(--note-soft);
+            border-color: var(--note-edge);
+            color: var(--ink-muted);
+        }
+        
+        .btn-success {
+            background: linear-gradient(145deg, #3d5240, #324438);
+            border-color: #5a6a58;
+        }
+        
+        /* Tabs */
+        .tab-btn {
+            padding: 0.45rem 0.85rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: var(--note-soft);
+            color: var(--ink-muted);
+            transition: all 0.2s;
+        }
+        
+        .tab-btn.active {
+            background: #4a3c30;
+            color: var(--accent);
+            border-color: var(--accent-soft);
+        }
+        
+        .tab-btn:not(.active):hover {
+            background: var(--note-edge);
+            color: var(--ink);
+        }
+        
+        /* Inputs */
+        input[type="range"] {
+            accent-color: var(--accent);
+            width: 100%;
+            height: 6px;
+        }
+        
+        input[type="number"] {
+            background: rgba(12,10,9,0.7);
+            border: 1px solid var(--note-edge);
+            border-radius: 8px;
+            padding: 0.5rem 0.7rem;
+            color: var(--ink);
+            font-size: 0.875rem;
+            width: 100%;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-soft);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            margin-bottom: 0.3rem;
+        }
+        
+        /* Canvas */
+        .canvas-container {
+            background: rgba(10, 9, 8, 0.85);
+            border-radius: 10px;
+            border: 1px solid var(--note-edge);
+            overflow: hidden;
+        }
+        
+        /* Puzzle box */
+        .puzzle-box {
+            background: linear-gradient(160deg, #2a241e, #1e1b17);
+            border: 1px solid rgba(139, 115, 85, 0.35);
+            border-radius: 10px 14px 12px 8px;
+            padding: 1.2rem 1.25rem;
+            position: relative;
+            box-shadow: var(--shadow-note);
+            overflow: hidden;
+        }
+        
+        .puzzle-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-soft), var(--warm), var(--cool));
+            opacity: 0.7;
+        }
+        
+        /* Quiz options */
+        .quiz-option {
+            background: var(--note-soft);
+            border: 1.5px solid transparent;
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 0.45rem;
+            color: var(--ink);
+            font-size: 0.9rem;
+        }
+        
+        .quiz-option:hover {
+            border-color: var(--accent-soft);
+            background: rgba(60, 50, 40, 0.6);
+        }
+        
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(50, 70, 55, 0.4);
+        }
+        
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: rgba(80, 50, 45, 0.35);
+        }
+        
+        /* Lists */
+        ul.list-disc { list-style-type: disc; padding-left: 1.25rem; }
+        .list-inside { list-style-position: inside; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-3 > * + * { margin-top: 0.75rem; }
+        
+        .flex { display: flex; }
+        .flex-wrap { flex-wrap: wrap; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-3 { gap: 0.75rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
+        .hidden { display: none !important; }
+        
+        /* Progress bar */
+        .progress-bar {
+            height: 5px;
+            background: rgba(40, 35, 30, 0.9);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-soft), var(--warm));
+            transition: width 0.45s ease;
+            border-radius: 3px;
+        }
+        
+        #three-container {
+            width: 100%;
+            height: 320px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #0c0b0a;
+        }
+        
+        @media (min-width: 640px) {
+            #three-container { height: 400px; }
+        }
+        
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--note-edge);
+            margin-top: 2rem;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--ink-faint);
+        }
+        
+        /* ========== BOTTOM NAV ========== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: rgba(22, 19, 16, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(55, 48, 40, 0.7);
+            padding: 0.45rem 0.5rem;
+            padding-bottom: calc(0.45rem + var(--safe-bottom));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 0.25rem;
+            max-width: 100%;
+        }
+        
+        .bnav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.15rem;
+            padding: 0.35rem 0.2rem;
+            border-radius: 10px;
+            background: transparent;
+            border: none;
+            color: var(--ink-faint);
+            cursor: pointer;
+            transition: color 0.2s, background 0.2s;
+            font-size: 0.65rem;
+            font-weight: 500;
+            min-width: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .bnav-item i {
+            font-size: 1.15rem;
+            margin-bottom: 0.05rem;
+        }
+        
+        .bnav-item span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        
+        .bnav-item:hover,
+        .bnav-item.active {
+            color: var(--accent);
+            background: rgba(80, 65, 50, 0.35);
+        }
+        
+        .bnav-item.active i {
+            transform: scale(1.08);
+        }
+        
+        /* ========== EXPANDING CIRCLE MENU ========== */
+        .fab-wrap {
+            position: fixed;
+            bottom: calc(72px + var(--safe-bottom) + 12px);
+            right: 1rem;
+            z-index: 55;
+        }
+        
+        .fab-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #6b5344, #4a3c30);
+            border: 2px solid var(--accent-soft);
+            color: #f5efe6;
+            font-size: 1.35rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 0 0 0 var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1), box-shadow 0.3s, background 0.25s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .fab-btn:hover {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.55), 0 0 20px var(--accent-glow);
+        }
+        
+        .fab-btn.open {
+            transform: rotate(45deg) scale(1.05);
+            background: linear-gradient(145deg, #5a4840, #3d342c);
+        }
+        
+        /* Overlay */
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 7, 6, 0.55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 52;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Expanding menu panel */
+        .topic-menu {
+            position: fixed;
+            bottom: calc(72px + var(--safe-bottom) + 80px);
+            right: 1rem;
+            z-index: 54;
+            width: min(280px, calc(100vw - 2rem));
+            max-height: min(420px, calc(100vh - 180px));
+            background: rgba(30, 26, 22, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(100, 85, 65, 0.4);
+            border-radius: 16px 18px 14px 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.55);
+            overflow: hidden;
+            transform-origin: bottom right;
+            transform: scale(0.4) translateY(20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.32s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.28s, visibility 0.28s;
+        }
+        
+        .topic-menu.open {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .topic-menu-header {
+            padding: 0.85rem 1rem 0.6rem;
+            border-bottom: 1px solid rgba(70, 60, 50, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .topic-menu-header h4 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        
+        .topic-menu-list {
+            overflow-y: auto;
+            max-height: 340px;
+            padding: 0.4rem 0.5rem 0.7rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .topic-link {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.7rem 0.75rem;
+            border-radius: 10px;
+            color: var(--ink);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .topic-link:hover,
+        .topic-link.active {
+            background: rgba(80, 65, 50, 0.45);
+            color: var(--accent);
+        }
+        
+        .topic-link .t-icon {
+            width: 1.8rem;
+            height: 1.8rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            background: var(--note-soft);
+            color: var(--ink-muted);
+        }
+        
+        .topic-link.active .t-icon,
+        .topic-link:hover .t-icon {
+            background: #4a3c30;
+            color: var(--accent);
+        }
+        
+        .topic-link .t-hours {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: var(--ink-faint);
+            font-weight: 400;
+        }
+        
+        .topic-link.challenge .t-icon {
+            background: rgba(90, 70, 50, 0.6);
+            color: var(--warm);
+        }
+        
+        /* Desktop: slightly larger content, still no classic sidebar */
+        @media (min-width: 900px) {
+            .content-wrap {
+                padding: 1.5rem 1.5rem 2.5rem;
+            }
+            .fab-wrap {
+                right: calc(50% - 26rem + 1rem);
+            }
+            .topic-menu {
+                right: calc(50% - 26rem + 1rem);
+            }
+        }
+        
+        /* Reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Print-friendly-ish */
+        @media print {
+            .bottom-nav, .fab-wrap, .menu-overlay, .topic-menu, .header-bar { display: none !important; }
+            body { padding-bottom: 0; background: white; color: black; }
+            .section { display: block !important; }
+            .note { box-shadow: none; border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header-bar">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-box">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <div style="min-width:0;">
+                    <div class="header-title">Mathematical Physics II</div>
+                    <div class="header-sub">60 Hours · Interactive Notes</div>
+                </div>
+            </div>
+            <div class="header-stats">
+                <span class="score-badge" id="global-score">Score: 0</span>
+                <span class="progress-mini">Progress: <span id="progress-pct">0%</span></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-wrap">
+        <main class="main-content">
+            
+            <!-- ========== INTRODUCTION ========== -->
+            <section id="intro" class="section active">
+                <div class="note note-pad-lg mb-5">
+                    <h2>Mathematical Physics II</h2>
+                    <p class="text-muted mb-4" style="font-size:0.95rem;">An interactive, puzzle-driven journey through the core mathematical methods of modern physics.</p>
+                    
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <div class="num">60</div>
+                            <div class="lbl">Theory Hours</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="num">6</div>
+                            <div class="lbl">Major Units</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="num">∞</div>
+                            <div class="lbl">Interactives</div>
+                        </div>
+                    </div>
+                    
+                    <div class="theorem">
+                        <p style="font-weight:600;color:#bc0f94;margin-bottom:0.3rem;"><i class="fas fa-lightbulb" style="margin-right:0.4rem;"></i>Learning Philosophy</p>
+                        <p class="text-sm text-muted">This documentation is designed so that <strong style="color:var(--ink);">you learn by doing</strong>. Theory is interleaved with interactive visualizers, coefficient-matching puzzles, series-summing challenges, and physical simulations. Complete the minigames to unlock deeper insights. Click the three wave button for all chapters</p>
+                    </div>
+                </div>
+
+                <div class="note note-pad mb-5">
+                    <h3 style="margin-top:0;color:var(--accent);">Syllabus Roadmap</h3>
+                    <div class="space-y-2" style="margin-top:0.9rem;">
+                        <div class="unit-row">
+                            <span class="unit-badge blue">12h</span>
+                            <div>
+                                <p style="font-weight:550;color:var(--ink);">Fourier Series</p>
+                                <p class="text-sm text-faint">Periodic functions, orthogonality, Dirichlet conditions, complex form, Parseval.</p>
+                            </div>
+                        </div>
+                        <div class="unit-row">
+                            <span class="unit-badge purple">14h</span>
+                            <div>
+                                <p style="font-weight:550;color:var(--ink);">Frobenius & Special Functions</p>
+                                <p class="text-sm text-faint">Legendre, Bessel, Hermite, Laguerre · Rodrigues, generating functions.</p>
+                            </div>
+                        </div>
+                        <div class="unit-row">
+                            <span class="unit-badge green">2h</span>
+                            <div>
+                                <p style="font-weight:550;color:var(--ink);">Dirac Delta Function</p>
+                                <p class="text-sm text-faint">Definition, representations, fundamental properties.</p>
+                            </div>
+                        </div>
+                        <div class="unit-row">
+                            <span class="unit-badge amber">4h</span>
+                            <div>
+                                <p style="font-weight:550;color:var(--ink);">Special Integrals</p>
+                                <p class="text-sm text-faint">Beta & Gamma functions, Error function.</p>
+                            </div>
+                        </div>
+                        <div class="unit-row">
+                            <span class="unit-badge rose">2h</span>
+                            <div>
+                                <p style="font-weight:550;color:var(--ink);">Theory of Errors</p>
+                                <p class="text-sm text-faint">Systematic vs random, propagation, normal law.</p>
+                            </div>
+                        </div>
+                        <div class="unit-row">
+                            <span class="unit-badge cyan">~26h</span>
+                            <div>
+                                <p style="font-weight:550;color:var(--ink);">Partial Differential Equations</p>
+                                <p class="text-sm text-faint">Laplace & Wave equations · separation of variables.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="puzzle-box">
+                    <h3 style="margin-top:0;font-size:1.05rem;color:var(--ink);"><i class="fas fa-gamepad" style="color:var(--warm);margin-right:0.4rem;"></i>Quick Start Challenge</h3>
+                    <p class="text-sm text-muted mb-4">Which of these functions can be expanded in a Fourier cosine series on \([0, \pi]\)?</p>
+                    <div id="intro-quiz" class="space-y-2">
+                        <div class="quiz-option" data-correct="true" onclick="checkIntroQuiz(this)">\( f(x) = x^2 \) (even extension possible)</div>
+                        <div class="quiz-option" data-correct="false" onclick="checkIntroQuiz(this)">Any discontinuous function without care for Dirichlet</div>
+                        <div class="quiz-option" data-correct="true" onclick="checkIntroQuiz(this)">\( f(x) = \cos(3x) \) itself</div>
+                        <div class="quiz-option" data-correct="false" onclick="checkIntroQuiz(this)">A function that grows faster than any polynomial at infinity</div>
+                    </div>
+                    <p id="intro-quiz-feedback" class="mt-3 text-sm hidden"></p>
+                </div>
+            </section>
+
+            <!-- ========== FOURIER SERIES ========== -->
+            <section id="fourier" class="section">
+                <div class="note note-pad-lg mb-5">
+                    <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.8rem;">
+                        <span class="unit-badge blue">Unit 1 · 12 Hours</span>
+                    </div>
+                    <h2>Fourier Series</h2>
+                    
+                    <h3>1.1 Periodic Functions & Orthogonality</h3>
+                    <p class="text-muted mb-3">A function \( f(x) \) is periodic with period \( T \) if \( f(x+T) = f(x) \) for all \( x \). The fundamental period is the smallest positive such \( T \).</p>
+                    
+                    <div class="theorem">
+                        <p style="font-weight:600;color:#bc0f94;margin-bottom:0.45rem;">Orthogonality of Sine and Cosine</p>
+                        <p class="text-sm text-muted mb-2">On \([-\pi, \pi]\):</p>
+                        <div class="math-block">
+                            \[
+                            \int_{-\pi}^{\pi} \sin(mx)\sin(nx)\,dx = \pi \delta_{mn} \quad (m,n \geq 1)
+                            \]
+                            \[
+                            \int_{-\pi}^{\pi} \cos(mx)\cos(nx)\,dx = \pi \delta_{mn} \quad (m,n \geq 1),\quad 2\pi \text{ if } m=n=0
+                            \]
+                            \[
+                            \int_{-\pi}^{\pi} \sin(mx)\cos(nx)\,dx = 0
+                            \]
+                        </div>
+                    </div>
+
+                    <h3>1.2 Dirichlet Conditions</h3>
+                    <div class="warning-box">
+                        <p class="text-sm text-muted">If \( f(x) \) is \( 2\pi \)-periodic and in one period is absolutely integrable, has finitely many extrema and jump discontinuities, then the Fourier series converges to \( f(x) \) at continuity points and to the average of left/right limits at jumps.</p>
+                    </div>
+
+                    <h3>1.3 Fourier Coefficients</h3>
+                    <div class="math-block">
+                        \[
+                        f(x) \sim \frac{a_0}{2} + \sum_{n=1}^{\infty} \bigl( a_n \cos(nx) + b_n \sin(nx) \bigr)
+                        \]
+                        \[
+                        a_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\cos(nx)\,dx, \quad
+                        b_n = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\sin(nx)\,dx
+                        \]
+                    </div>
+
+                    <h3>1.4 Complex Form</h3>
+                    <div class="math-block">
+                        \[
+                        f(x) \sim \sum_{n=-\infty}^{\infty} c_n e^{inx}, \qquad
+                        c_n = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x)e^{-inx}\,dx
+                        \]
+                    </div>
+
+                    <h3>1.5 Even & Odd Functions</h3>
+                    <div class="two-col">
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.9rem;border:1px solid var(--note-edge);">
+                            <p style="font-weight:550;color:var(--success);">Even: \( f(-x)=f(x) \)</p>
+                            <p class="text-sm text-faint mt-1">Only cosine terms. \( b_n = 0 \).</p>
+                        </div>
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.9rem;border:1px solid var(--note-edge);">
+                            <p style="font-weight:550;color:var(--danger);">Odd: \( f(-x)=-f(x) \)</p>
+                            <p class="text-sm text-faint mt-1">Only sine terms. \( a_n = 0 \).</p>
+                        </div>
+                    </div>
+
+                    <h3>1.6 Parseval’s Identity</h3>
+                    <div class="math-block">
+                        \[
+                        \frac{1}{\pi}\int_{-\pi}^{\pi} [f(x)]^2\,dx = \frac{a_0^2}{2} + \sum_{n=1}^{\infty}(a_n^2 + b_n^2)
+                        \]
+                    </div>
+                </div>
+
+                <div class="note note-pad mb-5">
+                    <h3 style="margin-top:0;color:var(--ink);"><i class="fas fa-chart-line" style="color:var(--cool);margin-right:0.4rem;"></i>Interactive Fourier Visualizer</h3>
+                    <p class="text-sm text-faint mb-3">Choose a target and watch partial sums. Adjust \( N \).</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button class="tab-btn active" data-func="square" onclick="setFourierFunc('square')">Square</button>
+                        <button class="tab-btn" data-func="saw" onclick="setFourierFunc('saw')">Sawtooth</button>
+                        <button class="tab-btn" data-func="triangle" onclick="setFourierFunc('triangle')">Triangle</button>
+                        <button class="tab-btn" data-func="abs" onclick="setFourierFunc('abs')">|x|</button>
+                    </div>
+                    
+                    <div class="slider-label">
+                        <span>Harmonics \( N \)</span>
+                        <span id="N-display">5</span>
+                    </div>
+                    <input type="range" id="fourier-N" min="1" max="50" value="5" class="mb-3" oninput="updateFourierPlot()">
+                    
+                    <div class="canvas-container mb-3">
+                        <canvas id="fourier-chart" height="260"></canvas>
+                    </div>
+                    
+                    <div class="two-col text-sm">
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.7rem;border:1px solid var(--note-edge);">
+                            <p class="text-faint">Approx. \( L^2 \) error</p>
+                            <p style="font-size:1.15rem;font-family:'JetBrains Mono',monospace;color:var(--cool);" id="l2-error">—</p>
+                        </div>
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.7rem;border:1px solid var(--note-edge);">
+                            <p class="text-faint">Gibbs phenomenon?</p>
+                            <p style="font-size:1.15rem;font-family:'JetBrains Mono',monospace;color:var(--warning);" id="gibbs-flag">Yes (near jumps)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="puzzle-box mb-5">
+                    <div class="flex items-center justify-between mb-3" style="flex-wrap:wrap;gap:0.5rem;">
+                        <h3 style="margin:0;font-size:1.05rem;color:var(--ink);"><i class="fas fa-puzzle-piece" style="color:var(--warm);margin-right:0.4rem;"></i>Coefficient Detective</h3>
+                        <span class="score-badge" id="fourier-score">0 pts</span>
+                    </div>
+                    <p class="text-sm text-muted mb-3">Target: \( f(x) = x \) on \((-\pi,\pi)\) (odd). Match the coefficients.</p>
+                    
+                    <div class="two-col mb-3">
+                        <div>
+                            <label class="text-xs text-faint">\( a_0 \)</label>
+                            <input type="number" id="a0-guess" value="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="text-xs text-faint">\( a_1 \)</label>
+                            <input type="number" id="a1-guess" value="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="text-xs text-faint">\( b_1 \)</label>
+                            <input type="number" id="b1-guess" value="0" step="0.1">
+                        </div>
+                        <div>
+                            <label class="text-xs text-faint">\( b_2 \)</label>
+                            <input type="number" id="b2-guess" value="0" step="0.1">
+                        </div>
+                    </div>
+                    <button class="btn" onclick="checkCoeffPuzzle()">Check Answers</button>
+                    <p id="coeff-feedback" class="mt-3 text-sm hidden"></p>
+                </div>
+
+                <div class="puzzle-box">
+                    <h3 style="margin-top:0;font-size:1.05rem;color:var(--ink);"><i class="fas fa-sigma" style="color:var(--success);margin-right:0.4rem;"></i>Series via Parseval</h3>
+                    <p class="text-sm text-muted mb-2">From \( f(x)=x^2 \) one obtains \( \pi^2/6 = \sum 1/n^2 \). Compute partial sum:</p>
+                    <div class="flex items-center gap-2 mb-2" style="flex-wrap:wrap;">
+                        <input type="number" id="parseval-N" value="10" min="1" max="10000" style="width:5.5rem;">
+                        <button class="btn" onclick="computeParseval()">Compute \( S_N \)</button>
+                    </div>
+                    <p id="parseval-result" style="font-family:'JetBrains Mono',monospace;color:var(--cool);font-size:0.9rem;"></p>
+                </div>
+            </section>
+
+            <!-- ========== FROBENIUS ========== -->
+            <section id="frobenius" class="section">
+                <div class="note note-pad-lg mb-5">
+                    <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.8rem;">
+                        <span class="unit-badge purple">Unit 2 · 14 Hours</span>
+                    </div>
+                    <h2>Frobenius Method & Special Functions</h2>
+
+                    <h3>2.1 Singular Points</h3>
+                    <p class="text-muted mb-2">For \( y'' + P(x)y' + Q(x)y = 0 \), \( x_0 \) is ordinary if \( P,Q \) analytic there; otherwise singular. Regular singularity if \( (x-x_0)P \) and \( (x-x_0)^2 Q \) analytic.</p>
+
+                    <h3>2.2 Method of Frobenius</h3>
+                    <div class="math-block">
+                        \[
+                        y = x^r \sum_{n=0}^{\infty} a_n x^n, \quad a_0 \neq 0
+                        \]
+                    </div>
+                    <p class="text-sm text-muted">Indicial equation for \( r \), then recurrence for \( a_n \).</p>
+
+                    <h3>2.3 Legendre Equation</h3>
+                    <div class="math-block">
+                        \[
+                        (1-x^2)y'' - 2xy' + \ell(\ell+1)y = 0
+                        \]
+                    </div>
+                    <div class="theorem">
+                        <p style="font-weight:600;color:#bc0f94;margin-bottom:0.4rem;">Key Properties</p>
+                        <ul class="text-sm text-muted space-y-1 list-disc">
+                            <li><strong style="color:var(--ink);">Rodrigues:</strong> \( P_\ell(x) = \frac{1}{2^\ell \ell!} \frac{d^\ell}{dx^\ell}(x^2-1)^\ell \)</li>
+                            <li><strong style="color:var(--ink);">Generating fn:</strong> \( (1-2xt+t^2)^{-1/2} = \sum P_\ell(x) t^\ell \)</li>
+                            <li><strong style="color:var(--ink);">Orthogonality:</strong> \( \int_{-1}^{1} P_\ell P_m \,dx = \frac{2}{2\ell+1}\delta_{\ell m} \)</li>
+                        </ul>
+                    </div>
+
+                    <h3>2.4 Bessel Functions</h3>
+                    <div class="math-block">
+                        \[
+                        x^2 y'' + xy' + (x^2 - \nu^2)y = 0, \quad
+                        J_n(x) = \sum_{k=0}^{\infty} \frac{(-1)^k}{k!(k+n)!}\Bigl(\frac{x}{2}\Bigr)^{2k+n}
+                        \]
+                    </div>
+                    <p class="text-sm text-muted">Zeros of \( J_n \) crucial for cylindrical boundary-value problems.</p>
+                </div>
+
+                <div class="note note-pad mb-5">
+                    <h3 style="margin-top:0;"><i class="fas fa-wave-square" style="color:var(--purple-soft);margin-right:0.4rem;"></i>Legendre Polynomials</h3>
+                    <div class="slider-label">
+                        <span>Degree \( \ell \)</span>
+                        <span id="legendre-l-display">3</span>
+                    </div>
+                    <input type="range" id="legendre-l" min="0" max="10" value="3" class="mb-3" oninput="updateLegendrePlot()">
+                    <div class="canvas-container">
+                        <canvas id="legendre-chart" height="240"></canvas>
+                    </div>
+                </div>
+
+                <div class="puzzle-box">
+                    <h3 style="margin-top:0;font-size:1.05rem;"><i class="fas fa-calculator" style="color:var(--warm);margin-right:0.4rem;"></i>Indicial Equation Puzzle</h3>
+                    <p class="text-sm text-muted mb-3">For \( 2x^2 y'' + x(2x+1)y' - y = 0 \), the roots of the indicial equation are:</p>
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkIndicial(this, false)">\( r=0,1 \)</button>
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkIndicial(this, true)">\( r=1/2, -1 \)</button>
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkIndicial(this, false)">\( r=0, -1/2 \)</button>
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkIndicial(this, false)">\( r=2, -1 \)</button>
+                    </div>
+                    <p id="indicial-feedback" class="text-sm hidden"></p>
+                </div>
+            </section>
+
+            <!-- ========== DIRAC ========== -->
+            <section id="dirac" class="section">
+                <div class="note note-pad-lg mb-5">
+                    <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.8rem;">
+                        <span class="unit-badge green">Unit 3 · 2 Hours</span>
+                    </div>
+                    <h2>Dirac Delta Function</h2>
+
+                    <h3>3.1 Definition</h3>
+                    <div class="math-block">
+                        \[
+                        \int_{-\infty}^{\infty} f(x)\delta(x-a)\,dx = f(a)
+                        \]
+                    </div>
+
+                    <h3>3.2 Representations</h3>
+                    <div class="two-col">
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.9rem;border:1px solid var(--note-edge);">
+                            <p style="font-weight:550;margin-bottom:0.4rem;">Gaussian</p>
+                            <div class="math-block text-sm" style="margin:0;">
+                                \[
+                                \delta(x) = \lim_{\sigma\to 0^+} \frac{1}{\sigma\sqrt{2\pi}}e^{-x^2/(2\sigma^2)}
+                                \]
+                            </div>
+                        </div>
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.9rem;border:1px solid var(--note-edge);">
+                            <p style="font-weight:550;margin-bottom:0.4rem;">Rectangular</p>
+                            <div class="math-block text-sm" style="margin:0;">
+                                \[
+                                \delta(x) = \lim_{\varepsilon\to 0^+} \frac{1}{\varepsilon}\Pi\Bigl(\frac{x}{\varepsilon}\Bigr)
+                                \]
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>3.3 Properties</h3>
+                    <ul class="list-disc text-sm text-muted space-y-1">
+                        <li>\( \delta(-x) = \delta(x) \)</li>
+                        <li>\( x\delta(x) = 0 \)</li>
+                        <li>\( \delta(ax) = \frac{1}{|a|}\delta(x) \)</li>
+                        <li>\( \int f(x)\delta'(x)\,dx = -f'(0) \)</li>
+                    </ul>
+                </div>
+
+                <div class="note note-pad mb-5">
+                    <h3 style="margin-top:0;"><i class="fas fa-bolt" style="color:var(--success);margin-right:0.4rem;"></i>Watch the Delta Emerge</h3>
+                    <p class="text-sm text-faint mb-2">Decrease \( \sigma \) — area stays 1 while peak sharpens.</p>
+                    <div class="slider-label">
+                        <span>\( \sigma \)</span>
+                        <span id="sigma-display">0.5</span>
+                    </div>
+                    <input type="range" id="dirac-sigma" min="0.05" max="1.5" step="0.05" value="0.5" class="mb-3" oninput="updateDiracPlot()">
+                    <div class="canvas-container">
+                        <canvas id="dirac-chart" height="220"></canvas>
+                    </div>
+                </div>
+
+                <div class="puzzle-box">
+                    <h3 style="margin-top:0;font-size:1.05rem;"><i class="fas fa-question-circle" style="color:var(--success);margin-right:0.4rem;"></i>Quick Check</h3>
+                    <p class="text-sm text-muted mb-2">What is \( \int_{-\infty}^{\infty} (x^2+3)\delta(x-2)\,dx \)?</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkDiracQuiz(this, false)">0</button>
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkDiracQuiz(this, false)">3</button>
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkDiracQuiz(this, true)">7</button>
+                        <button class="quiz-option" style="padding:0.5rem 0.9rem;" onclick="checkDiracQuiz(this, false)">5</button>
+                    </div>
+                    <p id="dirac-quiz-feedback" class="mt-3 text-sm hidden"></p>
+                </div>
+            </section>
+
+            <!-- ========== SPECIAL INTEGRALS ========== -->
+            <section id="integrals" class="section">
+                <div class="note note-pad-lg mb-5">
+                    <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.8rem;">
+                        <span class="unit-badge amber">Unit 4 · 4 Hours</span>
+                    </div>
+                    <h2>Some Special Integrals</h2>
+
+                    <h3>4.1 Gamma Function</h3>
+                    <div class="math-block">
+                        \[
+                        \Gamma(z) = \int_0^{\infty} t^{z-1}e^{-t}\,dt, \quad \Re(z)>0
+                        \]
+                        \[
+                        \Gamma(z+1) = z\Gamma(z), \qquad \Gamma(n+1) = n!
+                        \]
+                    </div>
+
+                    <h3>4.2 Beta Function</h3>
+                    <div class="math-block">
+                        \[
+                        B(m,n) = \int_0^1 t^{m-1}(1-t)^{n-1}\,dt = \frac{\Gamma(m)\Gamma(n)}{\Gamma(m+n)}
+                        \]
+                    </div>
+
+                    <h3>4.3 Error Function</h3>
+                    <div class="math-block">
+                        \[
+                        \mathrm{erf}(x) = \frac{2}{\sqrt{\pi}}\int_0^x e^{-t^2}\,dt
+                        \]
+                    </div>
+                </div>
+
+                <div class="note note-pad">
+                    <h3 style="margin-top:0;"><i class="fas fa-calculator" style="color:var(--warning);margin-right:0.4rem;"></i>Gamma / Beta Explorer</h3>
+                    <div class="two-col mb-4">
+                        <div>
+                            <label class="text-sm text-faint">\( \Gamma(x) \) for x =</label>
+                            <div class="flex gap-2 mt-1">
+                                <input type="number" id="gamma-x" value="2.5" step="0.1" style="flex:1;">
+                                <button class="btn" onclick="computeGamma()">Go</button>
+                            </div>
+                            <p id="gamma-result" class="mt-2" style="font-family:'JetBrains Mono',monospace;color:var(--warning);"></p>
+                        </div>
+                        <div>
+                            <label class="text-sm text-faint">\( B(m,n) \)</label>
+                            <div class="flex gap-2 mt-1">
+                                <input type="number" id="beta-m" value="2" step="0.1" style="width:4.5rem;" placeholder="m">
+                                <input type="number" id="beta-n" value="3" step="0.1" style="width:4.5rem;" placeholder="n">
+                                <button class="btn" onclick="computeBeta()">Go</button>
+                            </div>
+                            <p id="beta-result" class="mt-2" style="font-family:'JetBrains Mono',monospace;color:var(--warning);"></p>
+                        </div>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="erf-chart" height="200"></canvas>
+                    </div>
+                    <p class="text-xs text-faint mt-2" style="text-align:center;">Error function \( \mathrm{erf}(x) \)</p>
+                </div>
+            </section>
+
+            <!-- ========== THEORY OF ERRORS ========== -->
+            <section id="errors" class="section">
+                <div class="note note-pad-lg mb-5">
+                    <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.8rem;">
+                        <span class="unit-badge rose">Unit 5 · 2 Hours</span>
+                    </div>
+                    <h2>Theory of Errors</h2>
+
+                    <h3>5.1 Systematic vs Random</h3>
+                    <div class="two-col">
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.9rem;border:1px solid var(--note-edge);">
+                            <p style="font-weight:550;color:var(--danger);">Systematic</p>
+                            <p class="text-sm text-faint mt-1">Reproducible biases. Often correctable.</p>
+                        </div>
+                        <div style="background:var(--note-soft);border-radius:8px;padding:0.9rem;border:1px solid var(--note-edge);">
+                            <p style="font-weight:550;color:var(--cool);">Random</p>
+                            <p class="text-sm text-faint mt-1">Fluctuations. Reduced by averaging.</p>
+                        </div>
+                    </div>
+
+                    <h3>5.2 Propagation</h3>
+                    <div class="math-block">
+                        \[
+                        \sigma_q^2 \approx \Bigl(\frac{\partial f}{\partial x}\Bigr)^2\sigma_x^2 + \Bigl(\frac{\partial f}{\partial y}\Bigr)^2\sigma_y^2 + \cdots
+                        \]
+                    </div>
+
+                    <h3>5.3 Normal Law</h3>
+                    <div class="math-block">
+                        \[
+                        P(x)\,dx = \frac{1}{\sigma\sqrt{2\pi}}e^{-(x-\mu)^2/(2\sigma^2)}\,dx
+                        \]
+                    </div>
+                    <p class="text-sm text-muted">Standard error of mean: \( \sigma/\sqrt{N} \). Probable error ≈ \( 0.6745\,\sigma \).</p>
+                </div>
+
+                <div class="note note-pad">
+                    <h3 style="margin-top:0;"><i class="fas fa-random" style="color:var(--danger);margin-right:0.4rem;"></i>Error Propagation Simulator</h3>
+                    <p class="text-sm text-faint mb-3">\( q = xy \) with noisy \( x,y \).</p>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button class="btn" onclick="runErrorSim()">Run (N=2000)</button>
+                        <span id="error-sim-status" class="text-sm text-faint" style="align-self:center;"></span>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="error-chart" height="220"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== PDEs ========== -->
+            <section id="pde" class="section">
+                <div class="note note-pad-lg mb-5">
+                    <div class="flex items-center gap-3" style="flex-wrap:wrap;margin-bottom:0.8rem;">
+                        <span class="unit-badge cyan">Unit 6</span>
+                    </div>
+                    <h2>Partial Differential Equations</h2>
+
+                    <h3>6.1 Separation of Variables</h3>
+                    <p class="text-muted mb-3">Assume product solution; PDE → ODEs linked by separation constant. Boundary conditions quantize eigenvalues.</p>
+
+                    <h3>6.2 Laplace’s Equation</h3>
+                    <div class="math-block">\[ \nabla^2 u = 0 \]</div>
+                    <p class="text-sm text-muted mb-2"><strong style="color:var(--ink);">Rectangular:</strong> sine/cosine eigenfunctions.</p>
+                    <p class="text-sm text-muted mb-2"><strong style="color:var(--ink);">Cylindrical:</strong> Bessel in radial direction.</p>
+                    <p class="text-sm text-muted mb-3"><strong style="color:var(--ink);">Spherical:</strong> Legendre / spherical harmonics; radial \( r^\ell \), \( r^{-(\ell+1)} \).</p>
+
+                    <h3>6.3 Wave Equation</h3>
+                    <div class="math-block">\[ \frac{\partial^2 u}{\partial t^2} = c^2 \nabla^2 u \]</div>
+                    <p class="text-sm text-muted">String, rectangular membrane (double Fourier), circular membrane (Bessel zeros).</p>
+                </div>
+
+                <div class="note note-pad mb-5">
+                    <h3 style="margin-top:0;"><i class="fas fa-water" style="color:var(--cool);margin-right:0.4rem;"></i>Vibrating String</h3>
+                    <p class="text-sm text-faint mb-2">Toggle modes and watch the standing-wave pattern.</p>
+                    <div class="flex flex-wrap gap-2 mb-3" id="mode-toggles"></div>
+                    <div class="canvas-container">
+                        <canvas id="string-canvas" width="700" height="260" style="width:100%;display:block;"></canvas>
+                    </div>
+                    <div class="flex gap-2 mt-3" style="flex-wrap:wrap;">
+                        <button class="btn" onclick="toggleStringAnim()">Play / Pause</button>
+                        <button class="btn btn-secondary" onclick="resetString()">Reset</button>
+                    </div>
+                </div>
+
+                <div class="note note-pad">
+                    <h3 style="margin-top:0;"><i class="fas fa-cube" style="color:var(--cool);margin-right:0.4rem;"></i>Circular Membrane (3D)</h3>
+                    <p class="text-sm text-faint mb-2">Bessel modes on a drumhead.</p>
+                    <div id="three-container"></div>
+                    <div class="flex gap-2 mt-3" style="flex-wrap:wrap;">
+                        <button class="tab-btn active" onclick="setMembraneMode(0)">Mode (0,1)</button>
+                        <button class="tab-btn" onclick="setMembraneMode(1)">Mode (1,1)</button>
+                        <button class="tab-btn" onclick="setMembraneMode(2)">Mode (2,1)</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== CHALLENGES ========== -->
+            <section id="challenges" class="section">
+                <div class="note note-pad-lg mb-5">
+                    <h2>🏆 Challenges & Minigames</h2>
+                    <p class="text-muted mb-4">Consolidate understanding through active problem-solving. Points update your global score.</p>
+                    
+                    <div class="two-col">
+                        <div class="puzzle-box" style="margin:0;">
+                            <h3 style="margin:0 0 0.4rem;font-size:0.95rem;">Fourier Mastery</h3>
+                            <p class="text-sm text-faint mb-2">Coefficient detective + series summation.</p>
+                            <span class="text-xs" style="color:var(--warm);">Up to 40 pts</span>
+                        </div>
+                        <div class="puzzle-box" style="margin:0;">
+                            <h3 style="margin:0 0 0.4rem;font-size:0.95rem;">Indicial Roots</h3>
+                            <p class="text-sm text-faint mb-2">Identify Frobenius roots correctly.</p>
+                            <span class="text-xs" style="color:var(--warm);">15 pts</span>
+                        </div>
+                        <div class="puzzle-box" style="margin:0;">
+                            <h3 style="margin:0 0 0.4rem;font-size:0.95rem;">Delta Sifting</h3>
+                            <p class="text-sm text-faint mb-2">Evaluate the δ-integral.</p>
+                            <span class="text-xs" style="color:var(--warm);">10 pts</span>
+                        </div>
+                        <div class="puzzle-box" style="margin:0;">
+                            <h3 style="margin:0 0 0.4rem;font-size:0.95rem;">Error Insight</h3>
+                            <p class="text-sm text-faint mb-2">Run the propagation simulator.</p>
+                            <span class="text-xs" style="color:var(--warm);">Exploration</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="note note-pad">
+                    <h3 style="margin-top:0;">Final Comprehensive Quiz</h3>
+                    <div id="final-quiz" class="space-y-3 mt-3">
+                        <div>
+                            <p class="text-muted mb-2 text-sm">1. Parseval’s identity relates the integral of \( [f(x)]^2 \) to…</p>
+                            <div class="quiz-option" data-q="1" data-correct="true" onclick="finalQuiz(this)">the sum of squares of the Fourier coefficients</div>
+                            <div class="quiz-option" data-q="1" data-correct="false" onclick="finalQuiz(this)">the product of the first two coefficients</div>
+                            <div class="quiz-option" data-q="1" data-correct="false" onclick="finalQuiz(this)">the value of \( f \) at zero only</div>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-2 text-sm">2. The Rodrigues formula generates which family?</p>
+                            <div class="quiz-option" data-q="2" data-correct="false" onclick="finalQuiz(this)">Bessel functions</div>
+                            <div class="quiz-option" data-q="2" data-correct="true" onclick="finalQuiz(this)">Legendre polynomials</div>
+                            <div class="quiz-option" data-q="2" data-correct="false" onclick="finalQuiz(this)">Hermite functions of the second kind</div>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-2 text-sm">3. Radial eigenfunctions for a circular membrane are…</p>
+                            <div class="quiz-option" data-q="3" data-correct="false" onclick="finalQuiz(this)">Legendre polynomials</div>
+                            <div class="quiz-option" data-q="3" data-correct="true" onclick="finalQuiz(this)">Bessel functions \( J_m \)</div>
+                            <div class="quiz-option" data-q="3" data-correct="false" onclick="finalQuiz(this)">Chebyshev polynomials</div>
+                        </div>
+                    </div>
+                    <p id="final-quiz-score" class="mt-4" style="font-weight:600;font-size:1.05rem;color:var(--cool);display:none;"></p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>The page is 🄯 Copyleft 2026 Assembled by Soumyajit Roy with Grok</p>
+        <p style="margin-top:0.2rem;">MathJax · Chart.js · Three.js</p>
+    </footer>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" aria-label="Primary">
+        <button class="bnav-item active" data-section="intro" onclick="navTo('intro')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <!---
+        <button class="bnav-item" data-section="fourier" onclick="navTo('fourier')">
+            <i class="fas fa-wave-square"></i>
+            <span>Fourier</span>
+        </button>
+        <button class="bnav-item" data-section="frobenius" onclick="navTo('frobenius')">
+            <i class="fas fa-superscript"></i>
+            <span>Special</span>
+        </button>
+        <button class="bnav-item" data-section="dirac" onclick="navTo('dirac')">
+                <i class="fas fa-bolt"></i>
+                <span>Dirac Delta</span>
+        </button>
+        <button class="bnav-item" data-section="integrals" onclick="navTo('integrals')">
+                <i class="fas fa-integral"></i>
+                <span>Special Integrals</span>
+        </button>
+        <button class="bnav-item" data-section="errors" onclick="navTo('errors'); closeTopicMenu();">
+                <i class="fas fa-chart-bar"></i>
+                <span>Theory of Errors</span>
+        </button>
+        <button class="bnav-item" data-section="pde" onclick="navTo('pde')">
+            <i class="fas fa-water"></i>
+            <span>PDEs</span>
+        </button>
+        -->
+        <button class="bnav-item" data-section="challenges" onclick="navTo('challenges')">
+            <i class="fas fa-trophy"></i>
+            <span>Quiz</span>
+        </button>
+    </nav>
+
+    <!-- Expanding Circle FAB + Menu -->
+    <div class="menu-overlay" id="menu-overlay" onclick="closeTopicMenu()"></div>
+    
+    <div class="topic-menu" id="topic-menu" role="dialog" aria-label="Topics menu">
+        <div class="topic-menu-header">
+            <h4>All Topics</h4>
+            <span class="text-xs text-faint" id="menu-progress">0/7</span>
+        </div>
+        <div class="topic-menu-list">
+            <button class="topic-link active" data-section="intro" onclick="navTo('intro'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-book-open"></i></span>
+                Introduction
+            </button>
+            <button class="topic-link" data-section="fourier" onclick="navTo('fourier'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-wave-square"></i></span>
+                Fourier Series
+                <span class="t-hours">12h</span>
+            </button>
+            <button class="topic-link" data-section="frobenius" onclick="navTo('frobenius'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-function"></i></span>
+                Frobenius & Special
+                <span class="t-hours">14h</span>
+            </button>
+            <button class="topic-link" data-section="dirac" onclick="navTo('dirac'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-bolt"></i></span>
+                Dirac Delta
+                <span class="t-hours">2h</span>
+            </button>
+            <button class="topic-link" data-section="integrals" onclick="navTo('integrals'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-integral"></i></span>
+                Special Integrals
+                <span class="t-hours">4h</span>
+            </button>
+            <button class="topic-link" data-section="errors" onclick="navTo('errors'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-chart-bar"></i></span>
+                Theory of Errors
+                <span class="t-hours">2h</span>
+            </button>
+            <button class="topic-link" data-section="pde" onclick="navTo('pde'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-water"></i></span>
+                PDEs
+                <span class="t-hours">~26h</span>
+            </button>
+            <button class="topic-link challenge" data-section="challenges" onclick="navTo('challenges'); closeTopicMenu();">
+                <span class="t-icon"><i class="fas fa-trophy"></i></span>
+                Challenges & Quiz
+            </button>
+        </div>
+    </div>
+
+    <div class="fab-wrap">
+        <button class="fab-btn" id="fab-btn" aria-label="Open topics menu" onclick="toggleTopicMenu()">
+            <i class="fas fa-bars" id="fab-icon"></i>
+        </button>
+    </div>
+
+    <script>
+        // ========== GLOBAL STATE ==========
+        let globalScore = 0;
+        let sectionsVisited = new Set(['intro']);
+        let fourierChart, legendreChart, diracChart, erfChart, errorChart;
+        let currentFourierFunc = 'square';
+        let stringAnimId = null;
+        let stringTime = 0;
+        let stringModes = [1, 0, 0, 0, 0];
+        let membraneMode = 0;
+        let threeScene, threeCamera, threeRenderer, membraneMesh;
+        let finalAnswers = {};
+        let menuOpen = false;
+
+        // ========== NAVIGATION ==========
+        function navTo(id) {
+            showSection(id);
+            // Update bottom nav
+            document.querySelectorAll('.bnav-item').forEach(b => {
+                b.classList.toggle('active', b.dataset.section === id);
+            });
+            // Update topic menu links
+            document.querySelectorAll('.topic-link').forEach(l => {
+                l.classList.toggle('active', l.dataset.section === id);
+            });
+            // Scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const el = document.getElementById(id);
+            if (el) el.classList.add('active');
+            sectionsVisited.add(id);
+            updateProgress();
+            if (id === 'fourier' && !fourierChart) initFourierChart();
+            if (id === 'frobenius' && !legendreChart) initLegendreChart();
+            if (id === 'dirac' && !diracChart) initDiracChart();
+            if (id === 'integrals' && !erfChart) initErfChart();
+            if (id === 'errors' && !errorChart) initErrorChart();
+            if (id === 'pde') {
+                initStringCanvas();
+                if (!threeRenderer) initThreeMembrane();
+            }
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function updateProgress() {
+            const pct = Math.round((sectionsVisited.size / 7) * 100);
+            document.getElementById('progress-pct').textContent = pct + '%';
+            const menuProg = document.getElementById('menu-progress');
+            if (menuProg) menuProg.textContent = sectionsVisited.size + '/7';
+        }
+
+        function addScore(pts) {
+            globalScore += pts;
+            document.getElementById('global-score').textContent = `Score: ${globalScore}`;
+        }
+
+        // ========== TOPIC MENU ==========
+        function toggleTopicMenu() {
+            menuOpen = !menuOpen;
+            document.getElementById('topic-menu').classList.toggle('open', menuOpen);
+            document.getElementById('menu-overlay').classList.toggle('open', menuOpen);
+            document.getElementById('fab-btn').classList.toggle('open', menuOpen);
+            const icon = document.getElementById('fab-icon');
+            icon.className = menuOpen ? 'fas fa-times' : 'fas fa-bars';
+        }
+
+        function closeTopicMenu() {
+            if (!menuOpen) return;
+            menuOpen = false;
+            document.getElementById('topic-menu').classList.remove('open');
+            document.getElementById('menu-overlay').classList.remove('open');
+            document.getElementById('fab-btn').classList.remove('open');
+            document.getElementById('fab-icon').className = 'fas fa-bars';
+        }
+
+        // ========== INTRO QUIZ ==========
+        function checkIntroQuiz(el) {
+            const correct = el.dataset.correct === 'true';
+            document.querySelectorAll('#intro-quiz .quiz-option').forEach(o => {
+                o.style.pointerEvents = 'none';
+                if (o.dataset.correct === 'true') o.classList.add('correct');
+                else if (o === el && !correct) o.classList.add('incorrect');
+            });
+            const fb = document.getElementById('intro-quiz-feedback');
+            fb.classList.remove('hidden');
+            if (correct) {
+                fb.textContent = 'Correct! Even functions (or even extensions) admit pure cosine series. Dirichlet conditions still required.';
+                fb.style.color = 'var(--success)';
+                addScore(5);
+            } else {
+                fb.textContent = 'Not quite. Review even/odd extensions and Dirichlet conditions.';
+                fb.style.color = 'var(--danger)';
+            }
+        }
+
+        // ========== FOURIER ==========
+        function fourierTarget(x, type) {
+            if (type === 'square') return x > 0 ? 1 : -1;
+            if (type === 'saw') return x;
+            if (type === 'triangle') return Math.abs(x);
+            if (type === 'abs') return Math.abs(x);
+            return 0;
+        }
+
+        function fourierPartial(x, N, type) {
+            let sum = 0;
+            if (type === 'square') {
+                for (let n = 1; n <= N; n += 2) {
+                    sum += (4 / (n * Math.PI)) * Math.sin(n * x);
+                }
+            } else if (type === 'saw') {
+                for (let n = 1; n <= N; n++) {
+                    sum += (2 * Math.pow(-1, n + 1) / n) * Math.sin(n * x);
+                }
+            } else if (type === 'triangle' || type === 'abs') {
+                sum = Math.PI / 2;
+                for (let n = 1; n <= N; n++) {
+                    if (n % 2 === 1) {
+                        sum += -4 / (Math.PI * n * n) * Math.cos(n * x);
+                    }
+                }
+            }
+            return sum;
+        }
+
+        function initFourierChart() {
+            const ctx = document.getElementById('fourier-chart').getContext('2d');
+            const xs = [];
+            for (let i = 0; i <= 200; i++) xs.push(-Math.PI + (2 * Math.PI * i) / 200);
+            
+            fourierChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xs.map(x => x.toFixed(2)),
+                    datasets: [
+                        {
+                            label: 'Target',
+                            data: xs.map(x => fourierTarget(x, currentFourierFunc)),
+                            borderColor: '#6b635a',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            borderDash: [4, 4]
+                        },
+                        {
+                            label: 'Partial Sum',
+                            data: xs.map(x => fourierPartial(x, 5, currentFourierFunc)),
+                            borderColor: '#c4a574',
+                            borderWidth: 2,
+                            pointRadius: 0,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: { duration: 280 },
+                    scales: {
+                        x: { display: false },
+                        y: { 
+                            grid: { color: 'rgba(100,90,80,0.15)' },
+                            ticks: { color: '#a89f92' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#e8e0d5' } }
+                    }
+                }
+            });
+            updateFourierPlot();
+        }
+
+        function setFourierFunc(type) {
+            currentFourierFunc = type;
+            document.querySelectorAll('[data-func]').forEach(b => {
+                b.classList.toggle('active', b.dataset.func === type);
+            });
+            updateFourierPlot();
+        }
+
+        function updateFourierPlot() {
+            if (!fourierChart) return;
+            const N = parseInt(document.getElementById('fourier-N').value);
+            document.getElementById('N-display').textContent = N;
+            const xs = fourierChart.data.labels.map(Number);
+            fourierChart.data.datasets[0].data = xs.map(x => fourierTarget(x, currentFourierFunc));
+            fourierChart.data.datasets[1].data = xs.map(x => fourierPartial(x, N, currentFourierFunc));
+            fourierChart.update();
+
+            let err = 0;
+            xs.forEach((x) => {
+                const d = fourierTarget(x, currentFourierFunc) - fourierPartial(x, N, currentFourierFunc);
+                err += d * d;
+            });
+            err = Math.sqrt(err / xs.length);
+            document.getElementById('l2-error').textContent = err.toFixed(4);
+            document.getElementById('gibbs-flag').textContent = (currentFourierFunc === 'square' || currentFourierFunc === 'saw') && N < 30 ? 'Yes (near jumps)' : 'Mild / None';
+        }
+
+        function checkCoeffPuzzle() {
+            const a0 = parseFloat(document.getElementById('a0-guess').value);
+            const a1 = parseFloat(document.getElementById('a1-guess').value);
+            const b1 = parseFloat(document.getElementById('b1-guess').value);
+            const b2 = parseFloat(document.getElementById('b2-guess').value);
+            const fb = document.getElementById('coeff-feedback');
+            fb.classList.remove('hidden');
+            
+            const ok = Math.abs(a0) < 0.01 && Math.abs(a1) < 0.01 && Math.abs(b1 - 2) < 0.05 && Math.abs(b2 + 1) < 0.05;
+            if (ok) {
+                fb.textContent = 'Perfect! Odd function → only sine terms. b_n = 2(-1)^{n+1}/n ⇒ b1=2, b2=-1.';
+                fb.style.color = 'var(--success)';
+                addScore(20);
+                document.getElementById('fourier-score').textContent = '20 pts';
+            } else {
+                fb.textContent = 'Not yet. Hint: f(x)=x is odd ⇒ only sine. b1 = (1/π)∫ x sin(x) dx = 2.';
+                fb.style.color = 'var(--danger)';
+            }
+        }
+
+        function computeParseval() {
+            const N = parseInt(document.getElementById('parseval-N').value) || 10;
+            let s = 0;
+            for (let n = 1; n <= N; n++) s += 1 / (n * n);
+            const target = Math.PI * Math.PI / 6;
+            document.getElementById('parseval-result').innerHTML = 
+                `S<sub>${N}</sub> = ${s.toFixed(8)} &nbsp; π²/6 ≈ ${target.toFixed(8)} &nbsp; |err| = ${Math.abs(s - target).toFixed(8)}`;
+            if (N >= 100) addScore(10);
+        }
+
+        // ========== LEGENDRE ==========
+        function legendreP(l, x) {
+            if (l === 0) return 1;
+            if (l === 1) return x;
+            let p0 = 1, p1 = x, p;
+            for (let n = 2; n <= l; n++) {
+                p = ((2 * n - 1) * x * p1 - (n - 1) * p0) / n;
+                p0 = p1;
+                p1 = p;
+            }
+            return p1;
+        }
+
+        function initLegendreChart() {
+            const ctx = document.getElementById('legendre-chart').getContext('2d');
+            const xs = [];
+            for (let i = 0; i <= 200; i++) xs.push(-1 + 2 * i / 200);
+            legendreChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xs.map(x => x.toFixed(2)),
+                    datasets: [{
+                        label: 'P_ℓ(x)',
+                        data: xs.map(x => legendreP(3, x)),
+                        borderColor: '#9b8aa0',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { display: true, grid: { color: 'rgba(100,90,80,0.12)' }, ticks: { color: '#a89f92', maxTicksLimit: 8 } },
+                        y: { grid: { color: 'rgba(100,90,80,0.12)' }, ticks: { color: '#a89f92' } }
+                    },
+                    plugins: { legend: { labels: { color: '#e8e0d5' } } }
+                }
+            });
+        }
+
+        function updateLegendrePlot() {
+            if (!legendreChart) return;
+            const l = parseInt(document.getElementById('legendre-l').value);
+            document.getElementById('legendre-l-display').textContent = l;
+            const xs = legendreChart.data.labels.map(Number);
+            legendreChart.data.datasets[0].data = xs.map(x => legendreP(l, x));
+            legendreChart.data.datasets[0].label = `P_${l}(x)`;
+            legendreChart.update();
+        }
+
+        function checkIndicial(el, correct) {
+            document.querySelectorAll('#frobenius .quiz-option').forEach(o => o.style.pointerEvents = 'none');
+            if (correct) {
+                el.classList.add('correct');
+                document.getElementById('indicial-feedback').textContent = 'Correct! Indicial roots are r = 1/2 and r = -1.';
+                document.getElementById('indicial-feedback').style.color = 'var(--success)';
+                addScore(15);
+            } else {
+                el.classList.add('incorrect');
+                document.getElementById('indicial-feedback').textContent = 'Incorrect. Derive the indicial equation from the lowest power of x.';
+                document.getElementById('indicial-feedback').style.color = 'var(--danger)';
+            }
+            document.getElementById('indicial-feedback').classList.remove('hidden');
+        }
+
+        // ========== DIRAC ==========
+        function initDiracChart() {
+            const ctx = document.getElementById('dirac-chart').getContext('2d');
+            const xs = [];
+            for (let i = 0; i <= 300; i++) xs.push(-3 + 6 * i / 300);
+            diracChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xs.map(x => x.toFixed(2)),
+                    datasets: [{
+                        label: 'Gaussian approx',
+                        data: xs.map(x => gaussian(x, 0.5)),
+                        borderColor: '#7d9b76',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: { target: 'origin', above: 'rgba(125, 155, 118, 0.12)' }
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { display: true, grid: { color: 'rgba(100,90,80,0.12)' }, ticks: { color: '#a89f92', maxTicksLimit: 7 } },
+                        y: { grid: { color: 'rgba(100,90,80,0.12)' }, ticks: { color: '#a89f92' } }
+                    },
+                    plugins: { legend: { labels: { color: '#e8e0d5' } } }
+                }
+            });
+        }
+
+        function gaussian(x, sigma) {
+            return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-x * x / (2 * sigma * sigma));
+        }
+
+        function updateDiracPlot() {
+            if (!diracChart) return;
+            const sigma = parseFloat(document.getElementById('dirac-sigma').value);
+            document.getElementById('sigma-display').textContent = sigma.toFixed(2);
+            const xs = diracChart.data.labels.map(Number);
+            diracChart.data.datasets[0].data = xs.map(x => gaussian(x, sigma));
+            diracChart.update();
+        }
+
+        function checkDiracQuiz(el, correct) {
+            document.querySelectorAll('#dirac .quiz-option').forEach(o => o.style.pointerEvents = 'none');
+            if (correct) {
+                el.classList.add('correct');
+                document.getElementById('dirac-quiz-feedback').textContent = 'Yes! Sifting property → f(2) = 4 + 3 = 7.';
+                document.getElementById('dirac-quiz-feedback').style.color = 'var(--success)';
+                addScore(10);
+            } else {
+                el.classList.add('incorrect');
+                document.getElementById('dirac-quiz-feedback').textContent = 'Recall ∫ f(x) δ(x-a) dx = f(a).';
+                document.getElementById('dirac-quiz-feedback').style.color = 'var(--danger)';
+            }
+            document.getElementById('dirac-quiz-feedback').classList.remove('hidden');
+        }
+
+        // ========== GAMMA / BETA / ERF ==========
+        function gammaLanczos(z) {
+            if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gammaLanczos(1 - z));
+            z -= 1;
+            const g = 7;
+            const c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+                771.32342877765313, -176.61502916214059, 12.507343278686905,
+                -0.13857109526572012, 9.9843696540789e-6, 1.5056327351493116e-7];
+            let x = c[0];
+            for (let i = 1; i < g + 2; i++) x += c[i] / (z + i);
+            const t = z + g + 0.5;
+            return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+        }
+
+        function computeGamma() {
+            const x = parseFloat(document.getElementById('gamma-x').value);
+            if (x <= 0) {
+                document.getElementById('gamma-result').textContent = 'Enter x > 0';
+                return;
+            }
+            const g = gammaLanczos(x);
+            document.getElementById('gamma-result').textContent = `Γ(${x}) ≈ ${g.toPrecision(8)}`;
+        }
+
+        function computeBeta() {
+            const m = parseFloat(document.getElementById('beta-m').value);
+            const n = parseFloat(document.getElementById('beta-n').value);
+            if (m <= 0 || n <= 0) {
+                document.getElementById('beta-result').textContent = 'm, n > 0 required';
+                return;
+            }
+            const b = gammaLanczos(m) * gammaLanczos(n) / gammaLanczos(m + n);
+            document.getElementById('beta-result').textContent = `B(${m},${n}) ≈ ${b.toPrecision(8)}`;
+        }
+
+        function erf(x) {
+            const sign = x < 0 ? -1 : 1;
+            x = Math.abs(x);
+            const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+            const t = 1 / (1 + p * x);
+            const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            return sign * y;
+        }
+
+        function initErfChart() {
+            const ctx = document.getElementById('erf-chart').getContext('2d');
+            const xs = [];
+            for (let i = 0; i <= 200; i++) xs.push(-3 + 6 * i / 200);
+            erfChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xs.map(x => x.toFixed(2)),
+                    datasets: [{
+                        label: 'erf(x)',
+                        data: xs.map(x => erf(x)),
+                        borderColor: '#c9a06a',
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { grid: { color: 'rgba(100,90,80,0.12)' }, ticks: { color: '#a89f92', maxTicksLimit: 7 } },
+                        y: { grid: { color: 'rgba(100,90,80,0.12)' }, ticks: { color: '#a89f92' }, min: -1.1, max: 1.1 }
+                    },
+                    plugins: { legend: { labels: { color: '#e8e0d5' } } }
+                }
+            });
+        }
+
+        // ========== ERROR SIM ==========
+        function initErrorChart() {
+            const ctx = document.getElementById('error-chart').getContext('2d');
+            errorChart = new Chart(ctx, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'q = x·y', data: [], backgroundColor: 'rgba(184, 122, 110, 0.55)' }] },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { color: 'rgba(100,90,80,0.12)' }, ticks: { color: '#a89f92' } }
+                    },
+                    plugins: { legend: { labels: { color: '#e8e0d5' } } }
+                }
+            });
+        }
+
+        function runErrorSim() {
+            const N = 2000;
+            const muX = 10, sigmaX = 0.5;
+            const muY = 5, sigmaY = 0.3;
+            const qs = [];
+            for (let i = 0; i < N; i++) {
+                const x = muX + sigmaX * randn();
+                const y = muY + sigmaY * randn();
+                qs.push(x * y);
+            }
+            const min = Math.min(...qs), max = Math.max(...qs);
+            const bins = 30;
+            const hist = new Array(bins).fill(0);
+            const width = (max - min) / bins;
+            qs.forEach(q => {
+                let idx = Math.floor((q - min) / width);
+                if (idx >= bins) idx = bins - 1;
+                hist[idx]++;
+            });
+            errorChart.data.labels = hist.map((_, i) => (min + (i + 0.5) * width).toFixed(1));
+            errorChart.data.datasets[0].data = hist;
+            errorChart.update();
+            document.getElementById('error-sim-status').textContent = `Mean(q) ≈ ${(qs.reduce((a,b)=>a+b)/N).toFixed(2)} (expected ~50)`;
+        }
+
+        function randn() {
+            let u = 0, v = 0;
+            while (u === 0) u = Math.random();
+            while (v === 0) v = Math.random();
+            return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+        }
+
+        // ========== STRING SIMULATION ==========
+        function initStringCanvas() {
+            const container = document.getElementById('mode-toggles');
+            if (container.children.length > 0) return;
+            for (let n = 1; n <= 5; n++) {
+                const btn = document.createElement('button');
+                btn.className = 'tab-btn' + (n === 1 ? ' active' : '');
+                btn.textContent = `Mode ${n}`;
+                btn.onclick = () => {
+                    stringModes[n - 1] = stringModes[n - 1] ? 0 : 1;
+                    btn.classList.toggle('active', stringModes[n - 1] > 0);
+                };
+                container.appendChild(btn);
+            }
+            drawString();
+        }
+
+        function drawString() {
+            const canvas = document.getElementById('string-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width, H = canvas.height;
+            ctx.fillStyle = '#0c0b0a';
+            ctx.fillRect(0, 0, W, H);
+            ctx.strokeStyle = 'rgba(100,90,80,0.25)';
+            ctx.beginPath();
+            ctx.moveTo(0, H / 2);
+            ctx.lineTo(W, H / 2);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#7a9e9f';
+            ctx.lineWidth = 2.5;
+            for (let i = 0; i <= 200; i++) {
+                const x = i / 200;
+                let y = 0;
+                for (let n = 1; n <= 5; n++) {
+                    if (stringModes[n - 1]) {
+                        y += stringModes[n - 1] * Math.sin(n * Math.PI * x) * Math.cos(n * stringTime);
+                    }
+                }
+                const px = x * W;
+                const py = H / 2 - y * (H * 0.35);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+        }
+
+        function animateString() {
+            stringTime += 0.04;
+            drawString();
+            stringAnimId = requestAnimationFrame(animateString);
+        }
+
+        function toggleStringAnim() {
+            if (stringAnimId) {
+                cancelAnimationFrame(stringAnimId);
+                stringAnimId = null;
+            } else {
+                animateString();
+            }
+        }
+
+        function resetString() {
+            stringTime = 0;
+            drawString();
+        }
+
+        // ========== THREE.JS MEMBRANE ==========
+        function initThreeMembrane() {
+            const container = document.getElementById('three-container');
+            threeScene = new THREE.Scene();
+            threeScene.background = new THREE.Color(0x0c0b0a);
+            threeCamera = new THREE.PerspectiveCamera(45, container.clientWidth / (container.clientHeight || 320), 0.1, 100);
+            threeCamera.position.set(0, 2.2, 3.2);
+            threeCamera.lookAt(0, 0, 0);
+            threeRenderer = new THREE.WebGLRenderer({ antialias: true });
+            threeRenderer.setSize(container.clientWidth, container.clientHeight || 320);
+            container.appendChild(threeRenderer.domElement);
+
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(2, 3, 2);
+            threeScene.add(light);
+            threeScene.add(new THREE.AmbientLight(0x404050));
+
+            const geometry = new THREE.CircleGeometry(1.2, 64);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x5a6a78,
+                side: THREE.DoubleSide,
+                flatShading: false,
+                shininess: 50
+            });
+            membraneMesh = new THREE.Mesh(geometry, material);
+            membraneMesh.rotation.x = -Math.PI / 2.5;
+            threeScene.add(membraneMesh);
+
+            const wire = new THREE.LineSegments(
+                new THREE.WireframeGeometry(geometry),
+                new THREE.LineBasicMaterial({ color: 0x7a9e9f, transparent: true, opacity: 0.3 })
+            );
+            membraneMesh.add(wire);
+
+            animateMembrane();
+            window.addEventListener('resize', () => {
+                if (!threeRenderer) return;
+                const h = container.clientHeight || 320;
+                threeCamera.aspect = container.clientWidth / h;
+                threeCamera.updateProjectionMatrix();
+                threeRenderer.setSize(container.clientWidth, h);
+            });
+        }
+
+        const besselModes = [
+            { m: 0, j: 2.4048, fn: (r, theta, t) => Math.cos(t) * besselJ0(r * 2.4048) },
+            { m: 1, j: 3.8317, fn: (r, theta, t) => Math.cos(t) * Math.cos(theta) * besselJ1(r * 3.8317) },
+            { m: 2, j: 5.1356, fn: (r, theta, t) => Math.cos(t) * Math.cos(2 * theta) * besselJ1(r * 5.1356) * 0.8 }
+        ];
+
+        function besselJ0(x) {
+            let sum = 1, term = 1;
+            for (let k = 1; k < 12; k++) {
+                term *= -x * x / (4 * k * k);
+                sum += term;
+            }
+            return sum;
+        }
+        function besselJ1(x) {
+            let sum = x / 2, term = x / 2;
+            for (let k = 1; k < 12; k++) {
+                term *= -x * x / (4 * k * (k + 1));
+                sum += term;
+            }
+            return sum;
+        }
+
+        let membraneTime = 0;
+        function animateMembrane() {
+            if (!membraneMesh) return;
+            membraneTime += 0.03;
+            const pos = membraneMesh.geometry.attributes.position;
+            const mode = besselModes[membraneMode];
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i);
+                const y = pos.getY(i);
+                const r = Math.sqrt(x * x + y * y);
+                const theta = Math.atan2(y, x);
+                const z = 0.25 * mode.fn(Math.min(r / 1.2, 1), theta, membraneTime);
+                pos.setZ(i, z);
+            }
+            pos.needsUpdate = true;
+            membraneMesh.geometry.computeVertexNormals();
+            threeRenderer.render(threeScene, threeCamera);
+            requestAnimationFrame(animateMembrane);
+        }
+
+        function setMembraneMode(idx) {
+            membraneMode = idx;
+            document.querySelectorAll('#pde .tab-btn').forEach((b, i) => {
+                // optional visual update
+            });
+        }
+
+        // ========== FINAL QUIZ ==========
+        function finalQuiz(el) {
+            const q = el.dataset.q;
+            if (finalAnswers[q] !== undefined) return;
+            finalAnswers[q] = el.dataset.correct === 'true';
+            document.querySelectorAll(`[data-q="${q}"]`).forEach(o => {
+                o.style.pointerEvents = 'none';
+                if (o.dataset.correct === 'true') o.classList.add('correct');
+                else if (o === el) o.classList.add('incorrect');
+            });
+            if (Object.keys(finalAnswers).length === 3) {
+                const score = Object.values(finalAnswers).filter(Boolean).length;
+                const elScore = document.getElementById('final-quiz-score');
+                elScore.style.display = 'block';
+                elScore.textContent = `You scored ${score}/3. ${score === 3 ? 'Outstanding mastery!' : 'Review the corresponding sections.'}`;
+                addScore(score * 10);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            if (window.MathJax) MathJax.typesetPromise();
+        });
+
+        // Close menu on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeTopicMenu();
+        });
+    </script>
+</body>
+</html>
