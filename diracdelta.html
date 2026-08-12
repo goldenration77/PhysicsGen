@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dirac Delta Function: A Short Overview</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: Comfortaa, Oswald, Georgia, 'Noto Sans', cursive, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1, h2, h3 {
+            color: #2d7a7a;
+        }
+        
+        .sticky-note {
+            background-color: #ffd1dc;
+            border: 2px solid #ffb3ba;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .sticky-note::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 20px;
+            width: 15px;
+            height: 15px;
+            background-color: #ff85a2;
+            transform: rotate(45deg);
+        }
+        
+        .sticky-note.teal {
+            background-color: #d1f2eb;
+            border: 2px solid #a3d9d0;
+        }
+        
+        .sticky-note.teal::before {
+            background-color: #7ab8b8;
+        }
+        
+        .sticky-note.rose {
+            background-color: #ffd1dc;
+            border: 2px solid #ffb3ba;
+        }
+        
+        .sticky-note.rose::before {
+            background-color: #ff85a2;
+        }
+        
+        .sticky-note.soft {
+            background-color: #f0e6ff;
+            border: 2px solid #d9c9ff;
+        }
+        
+        .sticky-note.soft::before {
+            background-color: #b8a9ff;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        .math {
+            font-size: 1.2em;
+        }
+        
+        .problem {
+            background-color: #fff;
+            border-left: 4px solid #ff85a2;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .solution {
+            background-color: #fff;
+            border-left: 4px solid #7ab8b8;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dirac Delta Function: A Short Overview</h1>
+        
+        <!-- Definition -->
+        <div class="sticky-note teal">
+            <h2>📌 Definition of the Dirac Delta Function</h2>
+            <p>
+                The <strong>Dirac Delta Function</strong>, denoted as \( \delta(x) \), is a generalized function that is <strong>infinite</strong> at \( x = 0 \) and <strong>zero</strong> everywhere else, with an integral of <strong>1</strong> over the entire real line.
+            </p>
+            <p class="math">
+                \[ 
+                \delta(x) = 
+                \begin{cases}
+                +\infty & \text{if } x = 0 \\ 
+                0 & \text{otherwise}
+                \end{cases} 
+                \]
+            </p>
+            <p class="math">
+                \[ 
+                \int_{-\infty}^{\infty} \delta(x) \, dx = 1 
+                \]
+            </p>
+            <p>
+                It is often used in physics and engineering to model an <strong>idealized point mass</strong> or <strong>impulse</strong>.
+            </p>
+        </div>
+        
+        <!-- Representation as a Limit -->
+        <div class="sticky-note rose">
+            <h2>📌 Representation as a Limit</h2>
+            <p>
+                The Dirac Delta Function can be represented as the limit of two common functions:
+            </p>
+            
+            <h3>1. Gaussian Function</h3>
+            <p>
+                Consider a Gaussian function centered at \( x = 0 \) with height \( \frac{1}{\sigma\sqrt{2\pi}} \) and standard deviation \( \sigma \):
+            </p>
+            <p class="math">
+                \[ 
+                f_\sigma(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}} 
+                \]
+            </p>
+            <p>
+                As \( \sigma \to 0 \), the Gaussian becomes infinitely tall and narrow, approaching the Dirac Delta Function:
+            </p>
+            <p class="math">
+                \[ 
+                \delta(x) = \lim_{\sigma \to 0} \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{x^2}{2\sigma^2}} 
+                \]
+            </p>
+            
+            <div class="chart-container">
+                <canvas id="gaussianChart"></canvas>
+            </div>
+            
+            <h3>2. Rectangular Function</h3>
+            <p>
+                Consider a rectangular function of height \( \frac{1}{\epsilon} \) and width \( \epsilon \) centered at \( x = 0 \):
+            </p>
+            <p class="math">
+                \[ 
+                f_\epsilon(x) = 
+                \begin{cases}
+                \frac{1}{\epsilon} & \text{if } |x| \leq \frac{\epsilon}{2} \\ 
+                0 & \text{otherwise}
+                \end{cases} 
+                \]
+            </p>
+            <p>
+                As \( \epsilon \to 0 \), the rectangular function becomes infinitely tall and narrow, approaching the Dirac Delta Function:
+            </p>
+            <p class="math">
+                \[ 
+                \delta(x) = \lim_{\epsilon \to 0} f_\epsilon(x) 
+                \]
+            </p>
+            
+            <div class="chart-container">
+                <canvas id="rectangularChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Properties -->
+        <div class="sticky-note soft">
+            <h2>📌 Properties of the Dirac Delta Function</h2>
+            <p>
+                The Dirac Delta Function has several important properties:
+            </p>
+            <ol>
+                <li>
+                    <strong>Sifting Property:</strong>
+                    <p class="math">
+                        \[ 
+                        \int_{-\infty}^{\infty} f(x) \delta(x - a) \, dx = f(a) 
+                        \]
+                    </p>
+                    <p>
+                        This is the most commonly used property, often used to extract the value of a function at a specific point.
+                    </p>
+                </li>
+                <li>
+                    <strong>Scaling Property:</strong>
+                    <p class="math">
+                        \[ 
+                        \delta(ax) = \frac{1}{|a|} \delta(x) 
+                        \]
+                    </p>
+                </li>
+                <li>
+                    <strong>Symmetry:</strong>
+                    <p class="math">
+                        \[ 
+                        \delta(-x) = \delta(x) 
+                        \]
+                    </p>
+                </li>
+                <li>
+                    <strong>Derivative of the Heaviside Step Function:</strong>
+                    <p class="math">
+                        \[ 
+                        \delta(x) = \frac{d}{dx} H(x) 
+                        \]
+                    </p>
+                    <p>
+                        where \( H(x) \) is the Heaviside step function.
+                    </p>
+                </li>
+                <li>
+                    <strong>Convolution with Delta Function:</strong>
+                    <p class="math">
+                        \[ 
+                        f(x) * \delta(x - a) = f(x - a) 
+                        \]
+                    </p>
+                </li>
+            </ol>
+        </div>
+        
+        <!-- Solved Problems -->
+        <div class="sticky-note teal">
+            <h2>📌 Solved Problems</h2>
+            
+            <div class="problem">
+                <h3>Problem 1: Sifting Property</h3>
+                <p>
+                    Evaluate the integral:
+                </p>
+                <p class="math">
+                    \[ 
+                    \int_{-\infty}^{\infty} (3x^2 + 2x + 1) \delta(x - 2) \, dx 
+                    \]
+                </p>
+            </div>
+            
+            <div class="solution">
+                <h3>Solution:</h3>
+                <p>
+                    Using the sifting property of the Dirac Delta Function:
+                </p>
+                <p class="math">
+                    \[ 
+                    \int_{-\infty}^{\infty} f(x) \delta(x - a) \, dx = f(a) 
+                    \]
+                </p>
+                <p>
+                    Here, \( f(x) = 3x^2 + 2x + 1 \) and \( a = 2 \).
+                </p>
+                <p class="math">
+                    \[ 
+                    f(2) = 3(2)^2 + 2(2) + 1 = 12 + 4 + 1 = 17 
+                    \]
+                </p>
+                <p>
+                    Therefore, the integral evaluates to <strong>17</strong>.
+                </p>
+            </div>
+            
+            <div class="problem">
+                <h3>Problem 2: Scaling Property</h3>
+                <p>
+                    Evaluate the integral:
+                </p>
+                <p class="math">
+                    \[ 
+                    \int_{-\infty}^{\infty} \delta(3x - 6) \, dx 
+                    \]
+                </p>
+            </div>
+            
+            <div class="solution">
+                <h3>Solution:</h3>
+                <p>
+                    Using the scaling property of the Dirac Delta Function:
+                </p>
+                <p class="math">
+                    \[ 
+                    \delta(ax) = \frac{1}{|a|} \delta(x) 
+                    \]
+                </p>
+                <p>
+                    Rewrite the argument of the delta function:
+                </p>
+                <p class="math">
+                    \[ 
+                    \delta(3x - 6) = \delta(3(x - 2)) = \frac{1}{3} \delta(x - 2) 
+                    \]
+                </p>
+                <p>
+                    Now, evaluate the integral:
+                </p>
+                <p class="math">
+                    \[ 
+                    \int_{-\infty}^{\infty} \frac{1}{3} \delta(x - 2) \, dx = \frac{1}{3} \int_{-\infty}^{\infty} \delta(x - 2) \, dx = \frac{1}{3} \cdot 1 = \frac{1}{3} 
+                    \]
+                </p>
+                <p>
+                    Therefore, the integral evaluates to <strong>1/3</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Gaussian Function Chart
+        const gaussianCtx = document.getElementById('gaussianChart').getContext('2d');
+        const gaussianChart = new Chart(gaussianCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 100 }, (_, i) => -5 + i * 0.1),
+                datasets: [
+                    {
+                        label: 'σ = 1',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                            const x = -5 + i * 0.1;
+                            return (1 / (1 * Math.sqrt(2 * Math.PI))) * Math.exp(-(x * x) / (2 * 1 * 1));
+                        }),
+                        borderColor: '#ff85a2',
+                        backgroundColor: 'rgba(255, 133, 162, 0.2)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'σ = 0.5',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                            const x = -5 + i * 0.1;
+                            return (1 / (0.5 * Math.sqrt(2 * Math.PI))) * Math.exp(-(x * x) / (2 * 0.5 * 0.5));
+                        }),
+                        borderColor: '#7ab8b8',
+                        backgroundColor: 'rgba(122, 184, 184, 0.2)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'σ = 0.1',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                            const x = -5 + i * 0.1;
+                            return (1 / (0.1 * Math.sqrt(2 * Math.PI))) * Math.exp(-(x * x) / (2 * 0.1 * 0.1));
+                        }),
+                        borderColor: '#b8a9ff',
+                        backgroundColor: 'rgba(184, 169, 255, 0.2)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Gaussian Function as σ → 0'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'x'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'f_σ(x)'
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Rectangular Function Chart
+        const rectangularCtx = document.getElementById('rectangularChart').getContext('2d');
+        const rectangularChart = new Chart(rectangularCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 100 }, (_, i) => -5 + i * 0.1),
+                datasets: [
+                    {
+                        label: 'ε = 2',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                            const x = -5 + i * 0.1;
+                            return Math.abs(x) <= 1 ? 0.5 : 0;
+                        }),
+                        borderColor: '#ff85a2',
+                        backgroundColor: 'rgba(255, 133, 162, 0.2)',
+                        borderWidth: 2,
+                        stepped: true
+                    },
+                    {
+                        label: 'ε = 1',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                            const x = -5 + i * 0.1;
+                            return Math.abs(x) <= 0.5 ? 1 : 0;
+                        }),
+                        borderColor: '#7ab8b8',
+                        backgroundColor: 'rgba(122, 184, 184, 0.2)',
+                        borderWidth: 2,
+                        stepped: true
+                    },
+                    {
+                        label: 'ε = 0.2',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                            const x = -5 + i * 0.1;
+                            return Math.abs(x) <= 0.1 ? 5 : 0;
+                        }),
+                        borderColor: '#b8a9ff',
+                        backgroundColor: 'rgba(184, 169, 255, 0.2)',
+                        borderWidth: 2,
+                        stepped: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Rectangular Function as ε → 0'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'x'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'f_ε(x)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+<footer>The page is 🄯 Copyleft 2026 Assembled by Soumyajit Roy with Mistral Vibe</footer>  
+</html>
