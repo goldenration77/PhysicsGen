@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partial Differential Equations</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <style>
+        body {
+            font-family: Comfortaa, Inter, 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #B78590;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2d7a7a;
+            margin: 0;
+        }
+        
+        h2 {
+            color: #e8748e;
+            border-bottom: 2px solid #e8748e;
+            padding-bottom: 10px;
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .sticky-note {
+            position: sticky;
+            top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .teal-note {
+            background-color: #a8e6e6;
+            border-left: 5px solid #2d7a7a;
+        }
+        
+        .rose-note {
+            background-color: #fce6f0;
+            border-left: 5px solid #e8748e;
+        }
+        
+        .soft-note {
+            background-color: #f0f8ff;
+            border-left: 5px solid #6b8cae;
+        }
+        
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        
+        .webgl-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+        }
+        
+        .problem {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 5px solid #6b8cae;
+        }
+        
+        .solution {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 5px solid #2d7a7a;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Partial Differential Equations</h1>
+            <p>Solutions using the Method of Separation of Variables</p>
+        </header>
+
+        <section class="section">
+            <h2>Introduction</h2>
+            <div class="sticky-note teal-note">
+                <p><strong>Partial Differential Equations (PDEs)</strong> are equations that involve partial derivatives of a function of several variables. They are fundamental in describing phenomena such as heat, sound, electrostatics, and quantum mechanics.</p>
+            </div>
+            <p>The <strong>method of separation of variables</strong> is a common technique used to solve PDEs. It assumes that the solution can be written as a product of functions, each depending on a single coordinate variable.</p>
+        </section>
+
+        <section class="section">
+            <h2>Laplace's Equation</h2>
+            <div class="sticky-note rose-note">
+                <p><strong>Laplace's Equation:</strong> \( \nabla^2 \phi = 0 \)</p>
+                <p>It describes steady-state heat distribution, electrostatic potential, and fluid flow.</p>
+            </div>
+            
+            <h3>Rectangular Symmetry</h3>
+            <p>In Cartesian coordinates, Laplace's equation is:</p>
+            <p>\( \frac{\partial^2 \phi}{\partial x^2} + \frac{\partial^2 \phi}{\partial y^2} + \frac{\partial^2 \phi}{\partial z^2} = 0 \)</p>
+            <p>Assuming \( \phi(x, y, z) = X(x)Y(y)Z(z) \), we can separate the equation into ODEs for \( X, Y, \) and \( Z \).</p>
+            
+            <div class="chart-container">
+                <canvas id="rectangularLaplaceChart"></canvas>
+            </div>
+            
+            <script>
+                const ctxRectangular = document.getElementById('rectangularLaplaceChart').getContext('2d');
+                const rectangularLaplaceChart = new Chart(ctxRectangular, {
+                    type: 'line',
+                    data: {
+                        labels: ['0', '1', '2', '3', '4', '5'],
+                        datasets: [{
+                            label: 'Solution for X(x)',
+                            data: [0, 0.5, 0.8, 0.3, -0.2, -0.5],
+                            borderColor: '#2d7a7a',
+                            backgroundColor: 'rgba(45, 122, 122, 0.2)',
+                            tension: 0.4
+                        }, {
+                            label: 'Solution for Y(y)',
+                            data: [0, 0.3, 0.6, 0.2, -0.1, -0.4],
+                            borderColor: '#e8748e',
+                            backgroundColor: 'rgba(232, 116, 142, 0.2)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Separated Solutions for Rectangular Symmetry'
+                            }
+                        }
+                    }
+                });
+            </script>
+
+            <h3>Cylindrical Symmetry</h3>
+            <p>In cylindrical coordinates, Laplace's equation is:</p>
+            <p>\( \frac{1}{r} \frac{\partial}{\partial r} \left( r \frac{\partial \phi}{\partial r} \right) + \frac{1}{r^2} \frac{\partial^2 \phi}{\partial \theta^2} + \frac{\partial^2 \phi}{\partial z^2} = 0 \)</p>
+            <p>Assuming \( \phi(r, \theta, z) = R(r)\Theta(\theta)Z(z) \), we can separate the equation into ODEs for \( R, \Theta, \) and \( Z \).</p>
+
+            <h3>Spherical Symmetry</h3>
+            <p>In spherical coordinates, Laplace's equation is:</p>
+            <p>\( \frac{1}{r^2} \frac{\partial}{\partial r} \left( r^2 \frac{\partial \phi}{\partial r} \right) + \frac{1}{r^2 \sin \theta} \frac{\partial}{\partial \theta} \left( \sin \theta \frac{\partial \phi}{\partial \theta} \right) + \frac{1}{r^2 \sin^2 \theta} \frac{\partial^2 \phi}{\partial \phi^2} = 0 \)</p>
+            <p>Assuming \( \phi(r, \theta, \phi) = R(r)\Theta(\theta)\Phi(\phi) \), we can separate the equation into ODEs for \( R, \Theta, \) and \( \Phi \).</p>
+        </section>
+
+        <section class="section">
+            <h2>Wave Equation</h2>
+            <div class="sticky-note soft-note">
+                <p><strong>Wave Equation:</strong> \( \frac{\partial^2 u}{\partial t^2} = c^2 \nabla^2 u \)</p>
+                <p>It describes the propagation of waves, such as vibrations in a string or oscillations in a membrane.</p>
+            </div>
+            
+            <h3>Vibration of a Stretched String</h3>
+            <p>The 1D wave equation for a stretched string is:</p>
+            <p>\( \frac{\partial^2 u}{\partial t^2} = c^2 \frac{\partial^2 u}{\partial x^2} \)</p>
+            <p>Assuming \( u(x, t) = X(x)T(t) \), we can separate the equation into ODEs for \( X \) and \( T \).</p>
+            
+            <div class="webgl-container" id="stringVibrationContainer"></div>
+            
+            <script>
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true });
+                renderer.setSize(800, 400);
+                document.getElementById('stringVibrationContainer').appendChild(renderer.domElement);
+
+                const geometry = new THREE.BufferGeometry();
+                const vertices = [];
+                for (let i = 0; i <= 100; i++) {
+                    vertices.push((i / 10) - 5, 0, 0);
+                }
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                const material = new THREE.LineBasicMaterial({ color: 0x2d7a7a });
+                const string = new THREE.Line(geometry, material);
+                scene.add(string);
+
+                camera.position.z = 10;
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    const positions = geometry.attributes.position.array;
+                    for (let i = 0; i <= 100; i++) {
+                        positions[i * 3 + 1] = 0.5 * Math.sin((i / 10) * Math.PI * 2 + Date.now() / 200);
+                    }
+                    geometry.attributes.position.needsUpdate = true;
+                    renderer.render(scene, camera);
+                }
+                animate();
+            </script>
+
+            <h3>Oscillations of Membranes</h3>
+            <p>The 2D wave equation for a rectangular membrane is:</p>
+            <p>\( \frac{\partial^2 u}{\partial t^2} = c^2 \left( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} \right) \)</p>
+            <p>Assuming \( u(x, y, t) = X(x)Y(y)T(t) \), we can separate the equation into ODEs for \( X, Y, \) and \( T \).</p>
+            
+            <p>The 2D wave equation for a circular membrane is:</p>
+            <p>\( \frac{\partial^2 u}{\partial t^2} = c^2 \left( \frac{\partial^2 u}{\partial r^2} + \frac{1}{r} \frac{\partial u}{\partial r} + \frac{1}{r^2} \frac{\partial^2 u}{\partial \theta^2} \right) \)</p>
+            <p>Assuming \( u(r, \theta, t) = R(r)\Theta(\theta)T(t) \), we can separate the equation into ODEs for \( R, \Theta, \) and \( T \).</p>
+        </section>
+
+        <section class="section">
+            <h2>Solved Problems</h2>
+            
+            <div class="problem">
+                <h3>Problem 1: Laplace's Equation in Rectangular Coordinates</h3>
+                <p><strong>Problem Statement:</strong> Solve Laplace's equation in a rectangle with the following boundary conditions:</p>
+                <ul>
+                    <li>\( \phi(0, y) = 0 \)</li>
+                    <li>\( \phi(a, y) = 0 \)</li>
+                    <li>\( \phi(x, 0) = 0 \)</li>
+                    <li>\( \phi(x, b) = \sin(\frac{\pi x}{a}) \)</li>
+                </ul>
+            </div>
+            
+            <div class="solution">
+                <h3>Solution:</h3>
+                <p>Using the method of separation of variables, we assume \( \phi(x, y) = X(x)Y(y) \).</p>
+                <p>The general solution is:</p>
+                <p>\( \phi(x, y) = \sum_{n=1}^{\infty} A_n \sin(\frac{n \pi x}{a}) \sinh(\frac{n \pi y}{a}) \)</p>
+                <p>Applying the boundary condition \( \phi(x, b) = \sin(\frac{\pi x}{a}) \), we find:</p>
+                <p>\( A_n = \frac{2}{a \sinh(\frac{n \pi b}{a})} \int_0^a \sin(\frac{\pi x}{a}) \sin(\frac{n \pi x}{a}) \, dx \)</p>
+                <p>For \( n = 1 \), \( A_1 = \frac{2}{a \sinh(\frac{\pi b}{a})} \cdot \frac{a}{2} = \frac{1}{\sinh(\frac{\pi b}{a})} \).</p>
+                <p>Thus, the solution is:</p>
+                <p>\( \phi(x, y) = \frac{\sin(\frac{\pi x}{a}) \sinh(\frac{\pi y}{a})}{\sinh(\frac{\pi b}{a})} \)</p>
+            </div>
+
+            <div class="problem">
+                <h3>Problem 2: Wave Equation for a Stretched String</h3>
+                <p><strong>Problem Statement:</strong> Solve the wave equation for a string of length \( L \) with fixed ends and initial conditions:</p>
+                <ul>
+                    <li>\( u(0, t) = 0 \)</li>
+                    <li>\( u(L, t) = 0 \)</li>
+                    <li>\( u(x, 0) = \sin(\frac{\pi x}{L}) \)</li>
+                    <li>\( \frac{\partial u}{\partial t}(x, 0) = 0 \)</li>
+                </ul>
+            </div>
+            
+            <div class="solution">
+                <h3>Solution:</h3>
+                <p>Using the method of separation of variables, we assume \( u(x, t) = X(x)T(t) \).</p>
+                <p>The general solution is:</p>
+                <p>\( u(x, t) = \sum_{n=1}^{\infty} \left( A_n \cos(\frac{n \pi c t}{L}) + B_n \sin(\frac{n \pi c t}{L}) \right) \sin(\frac{n \pi x}{L}) \)</p>
+                <p>Applying the initial conditions, we find \( B_n = 0 \) and \( A_n = 0 \) for \( n \neq 1 \). For \( n = 1 \), \( A_1 = 1 \).</p>
+                <p>Thus, the solution is:</p>
+                <p>\( u(x, t) = \cos(\frac{\pi c t}{L}) \sin(\frac{\pi x}{L}) \)</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2026 Partial Differential Equations Documentation. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

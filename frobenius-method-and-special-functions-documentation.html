@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frobenius Method and Special Functions</title>
+    
+    <!-- MathJax for mathematical notation -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Three.js for 3D visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    
+    <!-- WebGL for enhanced graphics -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    
+    <style>
+        body {
+            font-family: Comfortaa, Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #B78590;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        
+        .sticky-note {
+            background: linear-gradient(135deg, #a8e6cf, #ffd3a5, #fd9898);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+            border-left: 5px solid #2c3e50;
+        }
+        
+        .sticky-note.teal {
+            background: linear-gradient(135deg, #a8e6cf, #88d8a3);
+        }
+        
+        .sticky-note.rose {
+            background: linear-gradient(135deg, #fd9898, #ffb6c1);
+        }
+        
+        .sticky-note.soft {
+            background: linear-gradient(135deg, #ffd3a5, #f9e79f);
+        }
+        
+        .math-box {
+            background: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 3px solid #4682b4;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+        }
+        
+        .threejs-container {
+            width: 100%;
+            height: 500px;
+            margin: 20px 0;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .problem-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        
+        .solution-box {
+            background: #f0fff0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #90ee90;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Frobenius Method and Special Functions</h1>
+    
+    <!-- Introduction Section -->
+    <div class="sticky-note teal">
+        <h2>Introduction</h2>
+        <p>
+            This documentation explores the <strong>Frobenius Method</strong> and its applications to 
+            <strong>Special Functions</strong> in differential equations. We will rigorously derive and explain 
+            the solutions to <strong>Legendre, Bessel, Hermite, and Laguerre</strong> differential equations, 
+            along with their properties and applications.
+        </p>
+    </div>
+
+    ---
+
+    <!-- Section 1: Singular Points -->
+    <div class="sticky-note rose">
+        <h2>1. Singular Points of Second-Order Linear Equations</h2>
+    </div>
+    
+    <div class="math-box">
+        <h3>Definition</h3>
+        <p>
+            A second-order linear differential equation has the form:
+            $$ y'' + P(x)y' + Q(x)y = 0 $$
+            where <code>P(x)</code> and <code>Q(x)</code> are functions of <code>x</code>.
+        </p>
+        
+        <h3>Types of Singular Points</h3>
+        <ol>
+            <li><strong>Ordinary Point:</strong> A point <code>x = x₀</code> is ordinary if <code>P(x)</code> and <code>Q(x)</code> are analytic at <code>x₀</code>.</li>
+            <li><strong>Regular Singular Point:</strong> A point <code>x = x₀</code> is a regular singular point if:
+                <ul>
+                    <li><code>(x - x₀)P(x)</code> is analytic at <code>x₀</code>.</li>
+                    <li><code>(x - x₀)²Q(x)</code> is analytic at <code>x₀</code>.</li>
+                </ul>
+            </li>
+            <li><strong>Irregular Singular Point:</strong> A point <code>x = x₀</code> is irregular if it is not a regular singular point.</li>
+        </ol>
+        
+        <h3>Importance</h3>
+        <p>
+            Singular points are crucial because they determine the behavior of solutions near those points. 
+            The Frobenius method is particularly useful for finding solutions near <strong>regular singular points</strong>.
+        </p>
+    </div>
+
+    <div class="problem-box">
+        <h3>Problem 1: Identify Singular Points</h3>
+        <p>
+            Consider the differential equation:
+            $$ x^2 y'' + x(1 - x)y' + (x^2 - 2)y = 0 $$
+            Identify its singular points and classify them.
+        </p>
+    </div>
+    
+    <div class="solution-box">
+        <h3>Solution</h3>
+        <p>
+            Rewrite the equation in standard form:
+            $$ y'' + \frac{1 - x}{x} y' + \frac{x^2 - 2}{x^2} y = 0 $$
+            Here, <code>P(x) = (1 - x)/x</code> and <code>Q(x) = (x² - 2)/x²</code>.
+        </p>
+        <p>
+            <strong>Singular Points:</strong> <code>x = 0</code> is a singular point because <code>P(x)</code> and <code>Q(x)</code> are not analytic at <code>x = 0</code>.
+        </p>
+        <p>
+            <strong>Classification:</strong>
+            <ul>
+                <li><code>xP(x) = 1 - x</code> is analytic at <code>x = 0</code>.</li>
+                <li><code>x²Q(x) = x² - 2</code> is analytic at <code>x = 0</code>.</li>
+            </ul>
+            Thus, <code>x = 0</code> is a <strong>regular singular point</strong>.
+        </p>
+    </div>
+
+    ---
+
+    <!-- Section 2: Frobenius Method -->
+    <div class="sticky-note soft">
+        <h2>2. Frobenius Method</h2>
+    </div>
+    
+    <div class="math-box">
+        <h3>Overview</h3>
+        <p>
+            The Frobenius method is used to find solutions to differential equations near a <strong>regular singular point</strong>. 
+            It assumes a solution of the form:
+            $$ y(x) = \sum_{n=0}^{\infty} a_n (x - x_0)^{n + r} $$
+            where <code>r</code> is a constant to be determined.
+        </p>
+        
+        <h3>Steps</h3>
+        <ol>
+            <li>Assume a solution of the form:
+                $$ y(x) = \sum_{n=0}^{\infty} a_n x^{n + r} $$</li>
+            <li>Substitute into the differential equation and equate coefficients.</li>
+            <li>Find the <strong>indicial equation</strong> to determine <code>r</code>.</li>
+            <li>Solve for the coefficients <code>a_n</code> using recurrence relations.</li>
+        </ol>
+        
+        <h3>Applications</h3>
+        <p>
+            The Frobenius method is essential for solving differential equations with regular singular points, 
+            such as the <strong>Bessel equation</strong> and <strong>Legendre equation</strong>.
+        </p>
+    </div>
+
+    <div class="problem-box">
+        <h3>Problem 2: Apply Frobenius Method</h3>
+        <p>
+            Solve the differential equation:
+            $$ x^2 y'' + x y' + (x^2 - \nu^2) y = 0 $$
+            using the Frobenius method.
+        </p>
+    </div>
+    
+    <div class="solution-box">
+        <h3>Solution</h3>
+        <p>
+            This is the <strong>Bessel equation</strong>. Assume a solution:
+            $$ y(x) = \sum_{n=0}^{\infty} a_n x^{n + r} $$
+        </p>
+        <p>
+            Substitute into the equation and simplify to find the indicial equation:
+            $$ r^2 - \nu^2 = 0 \implies r = \pm \nu $$
+        </p>
+        <p>
+            The recurrence relation is:
+            $$ a_n = -\frac{a_{n-2}}{n(n + 2r)} $$
+            The solution is a linear combination of <strong>Bessel functions of the first kind</strong>:
+            $$ y(x) = C_1 J_\nu(x) + C_2 J_{-\nu}(x) $$
+        </p>
+    </div>
+
+    ---
+
+    <!-- Section 3: Legendre Differential Equation -->
+    <div class="sticky-note teal">
+        <h2>3. Legendre Differential Equation</h2>
+    </div>
+    
+    <div class="math-box">
+        <h3>Equation</h3>
+        <p>
+            The Legendre differential equation is:
+            $$ (1 - x^2) y'' - 2x y' + n(n + 1) y = 0 $$
+            where <code>n</code> is a constant.
+        </p>
+        
+        <h3>Solutions: Legendre Polynomials</h3>
+        <p>
+            The solutions to this equation are <strong>Legendre polynomials</strong> <code>P_n(x)</code>, which are defined on the interval <code>[-1, 1]</code>.
+        </p>
+    </div>
+
+    <div class="sticky-note rose">
+        <h3>Properties of Legendre Polynomials</h3>
+    </div>
+    
+    <div class="math-box">
+        <h4>Rodrigues Formula</h4>
+        <p>
+            The Rodrigues formula for Legendre polynomials is:
+            $$ P_n(x) = \frac{1}{2^n n!} \frac{d^n}{dx^n} \left[ (x^2 - 1)^n \right] $$
+        </p>
+        
+        <h4>Generating Function</h4>
+        <p>
+            The generating function for Legendre polynomials is:
+            $$ \frac{1}{\sqrt{1 - 2xt + t^2}} = \sum_{n=0}^{\infty} P_n(x) t^n $$
+        </p>
+        
+        <h4>Orthogonality</h4>
+        <p>
+            Legendre polynomials satisfy the orthogonality condition:
+            $$ \int_{-1}^{1} P_m(x) P_n(x) \, dx = \frac{2}{2n + 1} \delta_{mn} $$
+            where <code>\delta_{mn}</code> is the Kronecker delta.
+        </p>
+        
+        <h4>Recurrence Relations</h4>
+        <p>
+            Some useful recurrence relations are:
+            <ul>
+                <li>$$ (n + 1) P_{n+1}(x) = (2n + 1) x P_n(x) - n P_{n-1}(x) $$</li>
+                <li>$$ P_{n+1}'(x) = (n + 1) P_n(x) + x P_n'(x) $$</li>
+            </ul>
+        </p>
+        
+        <h4>Expansion of Functions</h4>
+        <p>
+            Any function <code>f(x)</code> defined on <code>[-1, 1]</code> can be expanded in a series of Legendre polynomials:
+            $$ f(x) = \sum_{n=0}^{\infty} c_n P_n(x) $$
+            where the coefficients <code>c_n</code> are given by:
+            $$ c_n = \frac{2n + 1}{2} \int_{-1}^{1} f(x) P_n(x) \, dx $$
+        </p>
+    </div>
+
+    <div class="problem-box">
+        <h3>Problem 3: Legendre Polynomials</h3>
+        <p>
+            Use the Rodrigues formula to find <code>P_2(x)</code>.
+        </p>
+    </div>
+    
+    <div class="solution-box">
+        <h3>Solution</h3>
+        <p>
+            Using the Rodrigues formula:
+            $$ P_2(x) = \frac{1}{2^2 2!} \frac{d^2}{dx^2} \left[ (x^2 - 1)^2 \right] $$
+        </p>
+        <p>
+            Compute the second derivative:
+            $$ \frac{d^2}{dx^2} \left[ (x^2 - 1)^2 \right] = \frac{d^2}{dx^2} (x^4 - 2x^2 + 1) = 12x^2 - 4 $$
+        </p>
+        <p>
+            Thus:
+            $$ P_2(x) = \frac{1}{8} (12x^2 - 4) = \frac{3x^2 - 1}{2} $$
+        </p>
+    </div>
+
+    ---
+
+    <!-- Section 4: Bessel Differential Equation -->
+    <div class="sticky-note soft">
+        <h2>4. Bessel Differential Equation</h2>
+    </div>
+    
+    <div class="math-box">
+        <h3>Equation</h3>
+        <p>
+            The Bessel differential equation is:
+            $$ x^2 y'' + x y' + (x^2 - \nu^2) y = 0 $$
+            where <code>\nu</code> is a constant.
+        </p>
+        
+        <h3>Solutions: Bessel Functions</h3>
+        <p>
+            The solutions to this equation are <strong>Bessel functions of the first kind</strong> <code>J_\nu(x)</code> and 
+            <strong>Bessel functions of the second kind</strong> <code>Y_\nu(x)</code>.
+        </p>
+    </div>
+
+    <div class="sticky-note rose">
+        <h3>Properties of Bessel Functions of the First Kind</h3>
+    </div>
+    
+    <div class="math-box">
+        <h4>Generating Function</h4>
+        <p>
+            The generating function for Bessel functions of the first kind is:
+            $$ e^{\frac{x}{2} \left( t - \frac{1}{t} \right)} = \sum_{n=-\infty}^{\infty} J_n(x) t^n $$
+        </p>
+        
+        <h4>Recurrence Relations</h4>
+        <p>
+            Some useful recurrence relations are:
+            <ul>
+                <li>$$ J_{\nu-1}(x) + J_{\nu+1}(x) = \frac{2\nu}{x} J_\nu(x) $$</li>
+                <li>$$ J_{\nu-1}(x) - J_{\nu+1}(x) = 2 J_\nu'(x) $$</li>
+            </ul>
+        </p>
+        
+        <h4>Zeros and Orthogonality</h4>
+        <p>
+            The zeros of <code>J_\nu(x)</code> are the values of <code>x</code> for which <code>J_\nu(x) = 0</code>.
+            Bessel functions satisfy the orthogonality condition:
+            $$ \int_0^a x J_\nu(\alpha_i x) J_\nu(\alpha_j x) \, dx = 0 \(i \neq j\) $$
+            where <code>\alpha_i</code> and <code>\alpha_j</code> are zeros of <code>J_\nu(x)</code>.
+        </p>
+    </div>
+
+    <div class="problem-box">
+        <h3>Problem 4: Bessel Function Recurrence</h3>
+        <p>
+            Use the recurrence relation to express <code>J_2(x)</code> in terms of <code>J_0(x)</code> and <code>J_1(x)</code>.
+        </p>
+    </div>
+    
+    <div class="solution-box">
+        <h3>Solution</h3>
+        <p>
+            Using the recurrence relation:
+            $$ J_{\nu-1}(x) + J_{\nu+1}(x) = \frac{2\nu}{x} J_\nu(x) $$
+            For <code>\nu = 1</code>:
+            $$ J_0(x) + J_2(x) = \frac{2}{x} J_1(x) $$
+            Thus:
+            $$ J_2(x) = \frac{2}{x} J_1(x) - J_0(x) $$
+        </p>
+    </div>
+
+    ---
+
+    <!-- Section 5: Hermite and Laguerre Differential Equations -->
+    <div class="sticky-note teal">
+        <h2>5. Hermite and Laguerre Differential Equations</h2>
+    </div>
+    
+    <div class="math-box">
+        <h3>Hermite Differential Equation</h3>
+        <p>
+            The Hermite differential equation is:
+            $$ y'' - 2x y' + 2n y = 0 $$
+            where <code>n</code> is a constant. Its solutions are <strong>Hermite polynomials</strong> <code>H_n(x)</code>.
+        </p>
+        
+        <h3>Laguerre Differential Equation</h3>
+        <p>
+            The Laguerre differential equation is:
+            $$ x y'' + (1 - x) y' + n y = 0 $$
+            where <code>n</code> is a constant. Its solutions are <strong>Laguerre polynomials</strong> <code>L_n(x)</code>.
+        </p>
+    </div>
+
+    ---
+
+    <!-- Interactive Charts Section -->
+    <div class="sticky-note soft">
+        <h2>Interactive Visualizations</h2>
+    </div>
+    
+    <div class="chart-container">
+        <canvas id="legendreChart"></canvas>
+    </div>
+    
+    <div class="threejs-container" id="bessel3D"></div>
+    
+    <script>
+        // Legendre Polynomials Chart
+        const legendreCtx = document.getElementById('legendreChart').getContext('2d');
+        const legendreChart = new Chart(legendreCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 100 }, (_, i) => -1 + i * 0.02),
+                datasets: [
+                    {
+                        label: 'P₀(x) = 1',
+                        data: Array.from({ length: 100 }, () => 1),
+                        borderColor: '#a8e6cf',
+                        backgroundColor: 'rgba(168, 230, 207, 0.2)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'P₁(x) = x',
+                        data: Array.from({ length: 100 }, (_, i) => -1 + i * 0.02),
+                        borderColor: '#fd9898',
+                        backgroundColor: 'rgba(253, 152, 152, 0.2)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'P₂(x) = (3x² - 1)/2',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                            const x = -1 + i * 0.02;
+                            return (3 * x * x - 1) / 2;
+                        }),
+                        borderColor: '#ffd3a5',
+                        backgroundColor: 'rgba(255, 211, 165, 0.2)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Legendre Polynomials: P₀(x), P₁(x), P₂(x)'
+                    }
+                }
+            }
+        });
+
+        // Bessel Function 3D Visualization
+        const besselContainer = document.getElementById('bessel3D');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, besselContainer.clientWidth / besselContainer.clientHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(besselContainer.clientWidth, besselContainer.clientHeight);
+        besselContainer.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        camera.position.z = 5;
+
+        // Create Bessel function surface
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+        const colors = [];
+        const size = 20;
+        const scale = 0.2;
+
+        for (let i = 0; i <= size; i++) {
+            for (let j = 0; j <= size; j++) {
+                const x = (i / size - 0.5) * 10;
+                const y = (j / size - 0.5) * 10;
+                const r = Math.sqrt(x * x + y * y);
+                const z = Math.sin(r) * scale;
+
+                vertices.push(x, y, z);
+                colors.push((x + 5) / 10, (y + 5) / 10, (z + 1) / 2);
+            }
+        }
+
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+        const material = new THREE.PointsMaterial({ size: 0.1, vertexColors: true });
+        const points = new THREE.Points(geometry, material);
+        scene.add(points);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = besselContainer.clientWidth / besselContainer.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(besselContainer.clientWidth, besselContainer.clientHeight);
+        });
+    </script>
+</body>
+</html>
