@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Theory of Relativity — Complete Exam Notes with Derivations &amp; Solved Problems</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --secondary: #2b6cb0;
+            --accent: #ed8936;
+            --bg: #f7fafc;
+            --card: #ffffff;
+            --text: #2d3748;
+            --border: #e2e8f0;
+            --success: #38a169;
+            --light-blue: #ebf8ff;
+            --deriv: #faf5ff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            font-size: 16px;
+        }
+        header {
+            background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+            color: white;
+            padding: 1.75rem 1rem;
+            text-align: center;
+        }
+        header h1 { font-size: clamp(1.3rem, 4vw, 1.9rem); margin-bottom: 0.4rem; }
+        header p { opacity: 0.92; font-size: clamp(0.85rem, 2.5vw, 1rem); }
+        nav {
+            background: white;
+            padding: 0.6rem 0.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            white-space: nowrap;
+        }
+        nav a {
+            display: inline-block;
+            padding: 0.35rem 0.65rem;
+            margin: 0 0.15rem;
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        nav a:hover, nav a:focus { background: var(--light-blue); }
+        .container { max-width: 980px; margin: 0 auto; padding: 1rem; }
+        section {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 1.25rem 1.35rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 0.4rem;
+            margin-bottom: 0.9rem;
+            font-size: clamp(1.25rem, 3.5vw, 1.45rem);
+        }
+        h3 { color: var(--secondary); margin: 1.3rem 0 0.6rem; font-size: 1.1rem; }
+        h4 { color: #4a5568; margin: 0.9rem 0 0.4rem; font-size: 1rem; }
+        .theory {
+            background: var(--light-blue);
+            padding: 0.9rem 1.1rem;
+            border-radius: 8px;
+            margin: 0.8rem 0;
+            border-left: 4px solid var(--secondary);
+            font-size: 0.95rem;
+        }
+        .derivation {
+            background: var(--deriv);
+            padding: 1rem 1.15rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid #805ad5;
+            font-size: 0.94rem;
+        }
+        .derivation-title {
+            font-weight: 700;
+            color: #553c9a;
+            margin-bottom: 0.5rem;
+        }
+        .problem {
+            background: #fffaf0;
+            border: 1px solid #feebc8;
+            border-radius: 8px;
+            padding: 0.9rem 1.1rem;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        .problem-title { font-weight: 600; color: #c05621; margin-bottom: 0.4rem; }
+        .solution {
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+            border-radius: 8px;
+            padding: 0.9rem 1.1rem;
+            margin-top: 0.6rem;
+            font-size: 0.94rem;
+        }
+        .solution-title { font-weight: 600; color: var(--success); margin-bottom: 0.4rem; }
+        .step { margin: 0.45rem 0; padding-left: 0.75rem; border-left: 3px solid #9ae6b4; }
+        .chart-container {
+            position: relative;
+            height: 280px;
+            margin: 1.2rem 0;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 0.4rem;
+            border: 1px solid var(--border);
+        }
+        @media (min-width: 700px) {
+            .chart-container { height: 320px; }
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            margin: 0.8rem 0;
+            padding: 0.65rem;
+            background: #edf2f7;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .controls label { font-weight: 500; }
+        .controls input[type="range"] { width: 130px; max-width: 40vw; }
+        .controls span.value {
+            font-family: ui-monospace, monospace;
+            background: white;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            min-width: 52px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        th, td { border: 1px solid var(--border); padding: 0.5rem 0.65rem; text-align: left; }
+        th { background: var(--primary); color: white; }
+        tr:nth-child(even) { background: #f7fafc; }
+        .formula-box {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 0.7rem 0.9rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.6rem 0;
+            font-size: 0.92rem;
+        }
+        .note { font-size: 0.85rem; color: #718096; font-style: italic; margin-top: 0.4rem; }
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            color: #718096;
+            font-size: 0.85rem;
+        }
+        ul, ol { padding-left: 1.3rem; margin: 0.4rem 0; }
+        li { margin: 0.25rem 0; }
+        .key-result {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            border-radius: 6px;
+            padding: 0.6rem 0.9rem;
+            margin: 0.6rem 0;
+            font-size: 0.93rem;
+        }
+        @media (max-width: 600px) {
+            section { padding: 1rem; }
+            .controls { flex-direction: column; align-items: flex-start; }
+            nav a { font-size: 0.75rem; padding: 0.3rem 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Special Theory of Relativity</h1>
+    <p>Complete Exam Notes • Full Derivations • Solved Problems • Interactive Graphs</p>
+</header>
+
+<nav>
+    <a href="#michelson">Michelson-Morley</a>
+    <a href="#postulates">Postulates</a>
+    <a href="#lorentz-der">Lorentz Derivation</a>
+    <a href="#lorentz">Lorentz Trans.</a>
+    <a href="#dilation">Time Dilation</a>
+    <a href="#contraction">Length Contr.</a>
+    <a href="#simultaneity">Simultaneity</a>
+    <a href="#velocity">Velocity Add.</a>
+    <a href="#intervals">Intervals</a>
+    <a href="#mass">Mass-Energy</a>
+    <a href="#fourvector">Four-Vectors</a>
+    <a href="#minkowski">Minkowski</a>
+    <a href="#doppler">Doppler</a>
+    <a href="#decay">Decay</a>
+    <a href="#emfields">E &amp; B</a>
+    <a href="#twin">Twin Paradox</a>
+</nav>
+
+<div class="container">
+
+<!-- ==================== MICHELSON-MORLEY ==================== -->
+<section id="michelson">
+    <h2>1. Michelson-Morley Experiment</h2>
+    <div class="theory">
+        <p>Attempted to detect Earth’s motion through the luminiferous aether by comparing light travel times in perpendicular arms of an interferometer. Classical aether theory predicted a fringe shift of order \((v/c)^2\).</p>
+        <p><strong>Outcome:</strong> Null result (no detectable shift). Speed of light is isotropic and independent of the motion of source/observer. This eliminated the preferred aether frame and led to Special Relativity.</p>
+    </div>
+
+    <div class="derivation">
+        <div class="derivation-title">Classical Expected Time Difference (Derivation)</div>
+        <p>Arm length \(L\), Earth speed \(v\), light speed \(c\), \(\beta=v/c\).</p>
+        <p>Round-trip time parallel to velocity:</p>
+        \[ t_\parallel = \frac{L}{c-v} + \frac{L}{c+v} = \frac{2L}{c}\frac{1}{1-\beta^2} \]
+        <p>Perpendicular (using light path Pythagoras):</p>
+        \[ t_\perp = \frac{2L}{c\sqrt{1-\beta^2}} \]
+        <p>Difference to order \(\beta^2\):</p>
+        \[ \Delta t \approx \frac{L}{c}\beta^2 \]
+        <p>Path difference \(\delta = c\Delta t \approx L\beta^2\). Fringe shift \(N=\delta/\lambda\).</p>
+        <p>For \(L=11\) m, \(v=30\) km/s, \(\lambda=550\) nm: \(N\sim 0.2\). Observed \(N\approx 0\) within error.</p>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 1.1</div>
+        <p>Calculate the expected classical fringe shift for \(L=11\) m, \(v=3\times10^4\) m/s, \(\lambda=5.5\times10^{-7}\) m.</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(\beta=10^{-4}\), \(\beta^2=10^{-8}\).</div>
+        <div class="step">\(\Delta t=(L/c)\beta^2=11/(3\times10^8)\times10^{-8}\approx3.67\times10^{-16}\) s.</div>
+        <div class="step">\(\delta=c\Delta t\approx1.1\times10^{-7}\) m → \(N=\delta/\lambda\approx0.2\).</div>
+        <div class="step">Experiment found \(N\ll0.2\). Explained by Lorentz contraction of the parallel arm (\(L_\parallel=L\sqrt{1-\beta^2}\)) making \(t_\parallel=t_\perp\).</div>
+    </div>
+</section>
+
+<!-- ==================== POSTULATES ==================== -->
+<section id="postulates">
+    <h2>2. Postulates of Special Relativity</h2>
+    <div class="theory">
+        <ol>
+            <li><strong>Principle of Relativity:</strong> The laws of physics (including electrodynamics) are identical in all inertial frames. No preferred inertial frame exists.</li>
+            <li><strong>Constancy of the Speed of Light:</strong> The speed of light in vacuum \(c\) is the same for all inertial observers, independent of the motion of the source or the observer.</li>
+        </ol>
+        <p>These two postulates replace the Galilean transformation with the Lorentz transformation and imply the relativity of simultaneity, time dilation, and length contraction.</p>
+    </div>
+</section>
+
+<!-- ==================== LORENTZ DERIVATION ==================== -->
+<section id="lorentz-der">
+    <h2>3. Derivation of the Lorentz Transformation</h2>
+    <div class="derivation">
+        <div class="derivation-title">Step-by-step Derivation from the Postulates</div>
+        <p>Assume linear transformation (homogeneous spacetime, constant relative velocity \(v\) along \(x\)):</p>
+        \[ x' = a(x-vt),\qquad t' = bx + dt \]
+        <p>(or equivalently \(x'=\gamma(x-vt)\), \(t'=\gamma(t-\frac{vx}{c^2})\) after determining constants).</p>
+        <p><strong>1. Light signal along +x:</strong> \(x=ct\) must map to \(x'=ct'\). Substituting yields consistency conditions.</p>
+        <p><strong>2. Inverse transformation:</strong> Interchange frames and \(v\to-v\). Group property and reciprocity require \(\gamma(v)=\gamma(-v)\).</p>
+        <p><strong>3. Invariance of the interval:</strong> Require \(c^2t'^2-x'^2=c^2t^2-x^2\) (light cone preserved). This forces</p>
+        \[ \gamma = \frac{1}{\sqrt{1-v^2/c^2}} \]
+        <p><strong>Final Lorentz transformation (boost along \(x\)):</strong></p>
+        \[
+        \begin{align}
+        x' &= \gamma(x-vt)\\
+        y' &= y,\quad z'=z\\
+        t' &= \gamma\Bigl(t-\frac{vx}{c^2}\Bigr)
+        \end{align}
+        \]
+        <p>where \(\displaystyle\gamma=\frac{1}{\sqrt{1-\beta^2}}\), \(\beta=v/c\).</p>
+        <p>Inverse: replace \(v\) by \(-v\) (or interchange primed/unprimed).</p>
+        <p>In rapidity \(\phi\) (\(\tanh\phi=\beta\)) the transformation is a hyperbolic rotation:</p>
+        \[ ct' = ct\cosh\phi - x\sinh\phi,\qquad x' = -ct\sinh\phi + x\cosh\phi \]
+    </div>
+</section>
+
+<!-- ==================== LORENTZ TRANSFORMATIONS ==================== -->
+<section id="lorentz">
+    <h2>4. Lorentz Transformations — Consequences &amp; Problems</h2>
+    <div class="theory">
+        <p>The LT mixes space and time. Key immediate consequences:</p>
+        <ul>
+            <li>Relativity of simultaneity</li>
+            <li>Time dilation</li>
+            <li>Length contraction</li>
+            <li>Velocity addition formula</li>
+        </ul>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 4.1</div>
+        <p>In frame \(S\), events occur at \((ct_1=0,x_1=0)\) and \((ct_2=4\,\text{m},x_2=3\,\text{m})\). Frame \(S'\) moves at \(v=0.6c\). Find coordinates in \(S'\).</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(\beta=0.6\), \(\gamma=1.25\).</div>
+        <div class="step">\(x'=\gamma(x-\beta\,ct)\), \(ct'=\gamma(ct-\beta x)\).</div>
+        <div class="step">Event 1: \(x_1'=0\), \(ct_1'=0\).</div>
+        <div class="step">Event 2: \(x_2'=1.25(3-0.6\cdot4)=0.75\) m, \(ct_2'=1.25(4-0.6\cdot3)=2.75\) m.</div>
+        <div class="step">Invariant interval: \((ct)^2-x^2\) is the same in both frames.</div>
+    </div>
+
+    <div class="controls">
+        <label>\(\beta=v/c\): <input type="range" id="lorentzBeta" min="0" max="0.99" step="0.01" value="0.6"> <span class="value" id="lorentzBetaVal">0.60</span></label>
+    </div>
+    <div class="chart-container"><canvas id="chartLorentz"></canvas></div>
+    <p class="note">Interactive Lorentz transformation of a spacetime grid. Blue = S, orange = S′.</p>
+</section>
+
+<!-- ==================== TIME DILATION ==================== -->
+<section id="dilation">
+    <h2>5. Time Dilation — Derivation &amp; Problems</h2>
+    <div class="derivation">
+        <div class="derivation-title">Derivation from Light Clock / Lorentz Transformation</div>
+        <p><strong>Light-clock argument:</strong> A clock consisting of two mirrors separated by proper distance \(d\) (perpendicular to motion). Proper period \(\tau_0=2d/c\).</p>
+        <p>In lab frame the light travels a longer zigzag path. Time for one tick:</p>
+        \[ \Bigl(\frac{c\Delta t}{2}\Bigr)^2 = d^2 + \Bigl(\frac{v\Delta t}{2}\Bigr)^2 \implies \Delta t = \frac{2d}{c\sqrt{1-\beta^2}} = \gamma\tau_0 \]
+        <p><strong>From LT:</strong> Two events at the same location in \(S'\) (\(x'=0\)) have \(\Delta t'=\Delta\tau\). Then \(\Delta t=\gamma\Delta\tau\).</p>
+        <div class="key-result">
+            \(\Delta t = \gamma\Delta\tau\) (moving clocks run slow). \(\Delta\tau\) = proper time.
+        </div>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 5.1 (Muon Lifetime)</div>
+        <p>Muons have proper lifetime \(\tau_0=2.2\,\mu\)s. They travel at \(v=0.995c\). (a) Lifetime in Earth frame? (b) Mean distance travelled?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(\gamma=1/\sqrt{1-0.995^2}\approx10.01\).</div>
+        <div class="step">\(\Delta t=\gamma\tau_0\approx22.0\,\mu\)s.</div>
+        <div class="step">\(d=v\Delta t\approx0.995c\times22.0\times10^{-6}\approx6.57\) km (classical prediction only \(\sim0.66\) km).</div>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 5.2</div>
+        <p>A spaceship clock reads 5 s for an interval. The ship moves at \(0.6c\) relative to Earth. What time interval does an Earth observer measure for the same events (which occur at the same place on the ship)?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">Proper time \(\Delta\tau=5\) s, \(\gamma=1/\sqrt{1-0.36}=1.25\).</div>
+        <div class="step">\(\Delta t=\gamma\Delta\tau=6.25\) s.</div>
+    </div>
+
+    <div class="controls">
+        <label>\(\beta\): <input type="range" id="dilateBeta" min="0" max="0.999" step="0.001" value="0.9"> <span class="value" id="dilateBetaVal">0.900</span></label>
+    </div>
+    <div class="chart-container"><canvas id="chartDilate"></canvas></div>
+</section>
+
+<!-- ==================== LENGTH CONTRACTION ==================== -->
+<section id="contraction">
+    <h2>6. Length (Lorentz) Contraction — Derivation &amp; Problems</h2>
+    <div class="derivation">
+        <div class="derivation-title">Derivation</div>
+        <p>Proper length \(L_0\) is measured in the rest frame of the object (both ends at the same time \(t'\)).</p>
+        <p>In the lab frame the length \(L\) is the simultaneous (\(t=\)const) difference of the end coordinates. From the inverse LT:</p>
+        \[ L_0 = x_2'-x_1' = \gamma(x_2-x_1)=\gamma L \implies L=\frac{L_0}{\gamma}=L_0\sqrt{1-\beta^2} \]
+        <p>Only the parallel dimension contracts; transverse lengths are unchanged.</p>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 6.1</div>
+        <p>A spaceship has proper length 100 m. It flies past Earth at \(0.8c\). What length does an Earth observer measure?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(\gamma=5/3\approx1.667\), \(L=100/\gamma=60\) m.</div>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 6.2</div>
+        <p>An arrow of rest length 1 m is launched at \(0.8c\). What length does a stationary observer measure?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(L=1\times\sqrt{1-0.64}=0.6\) m.</div>
+    </div>
+
+    <div class="controls">
+        <label>\(\beta\): <input type="range" id="contractBeta" min="0" max="0.99" step="0.01" value="0.8"> <span class="value" id="contractBetaVal">0.80</span></label>
+        <label>\(L_0\) (m): <input type="range" id="contractL0" min="10" max="200" step="10" value="100"> <span class="value" id="contractL0Val">100</span></label>
+    </div>
+    <div class="chart-container"><canvas id="chartContract"></canvas></div>
+</section>
+
+<!-- ==================== SIMULTANEITY ==================== -->
+<section id="simultaneity">
+    <h2>7. Simultaneity and Order of Events</h2>
+    <div class="theory">
+        <p>From the LT: \(\Delta t'=\gamma(\Delta t - v\Delta x/c^2)\). Events simultaneous in \(S\) (\(\Delta t=0\)) have \(\Delta t'=-\gamma v\Delta x/c^2\neq0\) if \(\Delta x\neq0\).</p>
+        <p>Temporal order of <em>spacelike</em>-separated events can reverse between frames. Order of <em>timelike</em>-separated events is absolute (causality preserved).</p>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 7.1</div>
+        <p>Two lightning strikes are simultaneous (\(\Delta t=0\)) at \(x_A=0\) and \(x_B=1000\) m in \(S\). An observer in \(S'\) moves at \(0.8c\). Find \(\Delta t'\) and which strike occurs first in \(S'\).</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(\gamma=5/3\), \(\Delta t'=\gamma(0 - \beta\Delta x/c)=-(5/3)(0.8)(1000/c)\approx-4.44\,\mu\)s.</div>
+        <div class="step">Event at larger \(x\) (B) occurs earlier in \(S'\).</div>
+    </div>
+</section>
+
+<!-- ==================== VELOCITY ADDITION ==================== -->
+<section id="velocity">
+    <h2>8. Relativistic Velocity Addition — Full Derivation &amp; Problems</h2>
+    <div class="derivation">
+        <div class="derivation-title">Derivation from Lorentz Transformation</div>
+        <p>Let an object have velocity \(u'=dx'/dt'\) in \(S'\). \(S'\) moves at \(v\) relative to \(S\).</p>
+        \[ dx'=\gamma(dx-v\,dt),\qquad dt'=\gamma\Bigl(dt-\frac{v\,dx}{c^2}\Bigr) \]
+        \[ u'=\frac{dx'}{dt'}=\frac{dx-v\,dt}{dt-v\,dx/c^2}=\frac{u-v}{1-uv/c^2} \]
+        <p>Solving for \(u\):</p>
+        \[ u=\frac{u'+v}{1+u'v/c^2} \]
+        <p><strong>General (3-D) components</strong> (boost along \(x\)):</p>
+        \[
+        \begin{align}
+        u_x&=\frac{u_x'+v}{1+u_x'v/c^2}\\
+        u_y&=\frac{u_y'}{\gamma(1+u_x'v/c^2)}\\
+        u_z&=\frac{u_z'}{\gamma(1+u_x'v/c^2)}
+        \end{align}
+        \]
+        <p>Special cases:</p>
+        <ul>
+            <li>If \(u'=c\) then \(u=c\) (light speed invariant).</li>
+            <li>If \(u',v\ll c\) the formula reduces to classical \(u\approx u'+v\).</li>
+            <li>The operation is non-commutative and non-associative in general (Thomas rotation appears for non-collinear velocities).</li>
+        </ul>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 8.1 (Classic)</div>
+        <p>A spaceship moves at \(0.9c\) relative to Earth. It launches a probe forward at \(0.9c\) relative to itself. Speed of the probe relative to Earth?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(u=\dfrac{0.9c+0.9c}{1+0.9\cdot0.9}=\dfrac{1.8c}{1.81}\approx0.9945c\).</div>
+        <div class="step">Classical answer \(1.8c\) is forbidden; relativity keeps \(u&lt;c\).</div>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 8.2</div>
+        <p>Two spaceships approach each other, each with speed \(0.8c\) relative to Earth (opposite directions). What is their relative speed?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">Take one ship as \(S'\): \(v=0.8c\), the other has \(u'=-0.8c\) in Earth frame → in \(S'\) use the formula with signs.</div>
+        <div class="step">Relative speed \(=\dfrac{0.8c+0.8c}{1+0.8\cdot0.8}=\dfrac{1.6c}{1.64}\approx0.9756c\).</div>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 8.3 (Perpendicular component)</div>
+        <p>In \(S'\) a particle has velocity components \(u_x'=0.6c\), \(u_y'=0.6c\). \(S'\) moves at \(v=0.8c\) relative to \(S\). Find the velocity components in \(S\).</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(\gamma_v=1/\sqrt{1-0.64}=5/3\).</div>
+        <div class="step">\(u_x=\dfrac{0.6c+0.8c}{1+0.6\cdot0.8}=\dfrac{1.4c}{1.48}\approx0.9459c\).</div>
+        <div class="step">\(u_y=\dfrac{0.6c}{(5/3)(1+0.48)}=\dfrac{0.6c}{(5/3)\cdot1.48}\approx0.2432c\).</div>
+        <div class="step">Speed in \(S\): \(\sqrt{u_x^2+u_y^2}\approx0.977c&lt;c\).</div>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 8.4</div>
+        <p>Show that if \(u'=c\) then \(u=c\) for any \(v&lt;c\).</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(u=\dfrac{c+v}{1+v/c}=\dfrac{c(1+\beta)}{1+\beta}=c\).</div>
+    </div>
+
+    <div class="controls">
+        <label>\(v/c\): <input type="range" id="velV" min="0" max="0.95" step="0.01" value="0.6"> <span class="value" id="velVVal">0.60</span></label>
+        <label>\(u'/c\): <input type="range" id="velU" min="-0.95" max="0.95" step="0.01" value="0.6"> <span class="value" id="velUVal">0.60</span></label>
+    </div>
+    <div class="chart-container"><canvas id="chartVelocity"></canvas></div>
+    <p class="note">Classical (dashed) vs relativistic velocity addition. Relativistic result always stays below \(c\).</p>
+</section>
+
+<!-- ==================== INTERVALS & CAUSALITY ==================== -->
+<section id="intervals">
+    <h2>9. Spacetime Intervals, Causality &amp; Proper Time</h2>
+    <div class="theory">
+        <p>Invariant interval:</p>
+        \[ \Delta s^2 = c^2\Delta t^2 - \Delta x^2 - \Delta y^2 - \Delta z^2 \]
+        <ul>
+            <li><strong>Timelike</strong> \(\Delta s^2&gt;0\): can be connected by a massive particle. Causal order absolute. Proper time \(\Delta\tau=\sqrt{\Delta s^2}/c\).</li>
+            <li><strong>Lightlike / Null</strong> \(\Delta s^2=0\): light signal. Boundary of causal influence.</li>
+            <li><strong>Spacelike</strong> \(\Delta s^2&lt;0\): no causal influence possible; temporal order frame-dependent.</li>
+        </ul>
+        <p><strong>Causality:</strong> A cause can influence an effect only if the separation is timelike or lightlike. This is preserved by Lorentz transformations.</p>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 9.1</div>
+        <p>Classify: (a) \(\Delta x=3\) m, \(c\Delta t=5\) m; (b) \(\Delta x=5\) m, \(c\Delta t=3\) m; (c) \(\Delta x=4\) m, \(c\Delta t=4\) m.</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">(a) \(\Delta s^2=25-9=16&gt;0\) → timelike.</div>
+        <div class="step">(b) \(\Delta s^2=9-25=-16&lt;0\) → spacelike.</div>
+        <div class="step">(c) \(\Delta s^2=0\) → lightlike.</div>
+    </div>
+
+    <div class="chart-container"><canvas id="chartIntervals"></canvas></div>
+</section>
+
+<!-- ==================== MASS-ENERGY ==================== -->
+<section id="mass">
+    <h2>10. Relativistic Mass, Energy, Momentum &amp; \(E=mc^2\)</h2>
+    <div class="derivation">
+        <div class="derivation-title">Key Relations</div>
+        <p>Four-momentum \(P^\mu=(E/c,\mathbf{p})\) with rest mass \(m_0\):</p>
+        \[ E=\gamma m_0 c^2,\qquad \mathbf{p}=\gamma m_0\mathbf{v},\qquad E^2=p^2c^2+m_0^2c^4 \]
+        <p>Rest energy \(E_0=m_0c^2\). Kinetic energy \(K=E-m_0c^2=(\gamma-1)m_0c^2\).</p>
+        <p>Massless particles (\(m_0=0\)): \(E=pc\), always travel at \(c\).</p>
+        <p>Historical “relativistic mass” \(m=\gamma m_0\) is now rarely used; prefer rest mass + energy-momentum.</p>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 10.1</div>
+        <p>Electron rest energy \(511\) keV, speed \(0.99c\). Find total energy, kinetic energy and momentum.</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(\gamma\approx7.09\), \(E\approx3620\) keV, \(K\approx3109\) keV, \(pc\approx3584\) keV.</div>
+    </div>
+
+    <div class="controls">
+        <label>\(\beta\): <input type="range" id="massBeta" min="0" max="0.999" step="0.001" value="0.8"> <span class="value" id="massBetaVal">0.800</span></label>
+    </div>
+    <div class="chart-container"><canvas id="chartMass"></canvas></div>
+</section>
+
+<!-- ==================== FOUR-VECTORS ==================== -->
+<section id="fourvector">
+    <h2>11. Four-Vector Formalism</h2>
+    <div class="theory">
+        <p>A four-vector \(A^\mu\) transforms exactly as the coordinates \(x^\mu=(ct,x,y,z)\). The Minkowski inner product \(A\cdot B=A^0B^0-\mathbf{A}\cdot\mathbf{B}\) is Lorentz invariant.</p>
+        <h4>Important four-vectors</h4>
+        <ul>
+            <li><strong>Four-velocity</strong> \(U^\mu=dx^\mu/d\tau=\gamma(c,\mathbf{v})\). \(U\cdot U=c^2\).</li>
+            <li><strong>Four-acceleration</strong> \(A^\mu=dU^\mu/d\tau\). Always orthogonal to four-velocity: \(A\cdot U=0\).</li>
+            <li><strong>Four-momentum</strong> \(P^\mu=m_0U^\mu=(E/c,\mathbf{p})\). \(P\cdot P=m_0^2c^2\).</li>
+            <li><strong>Four-force</strong> \(F^\mu=dP^\mu/d\tau\).</li>
+        </ul>
+        <p><strong>Conservation of four-momentum:</strong> In any collision or decay the total four-momentum is conserved. This unifies energy and momentum conservation and is frame-independent.</p>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 11.1</div>
+        <p>Show \(U\cdot U=c^2\).</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(U^\mu=\gamma(c,\mathbf{v})\). Then \(U\cdot U=\gamma^2c^2-\gamma^2v^2=\gamma^2c^2(1-\beta^2)=c^2\).</div>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 11.2 (Two-body decay)</div>
+        <p>A particle of rest mass \(M\) at rest decays into two identical particles of rest mass \(m\). Find the energy of each daughter.</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">Four-momentum conservation: \((Mc,\mathbf{0})=P_1+P_2\).</div>
+        <div class="step">By symmetry each has energy \(E=Mc^2/2\).</div>
+        <div class="step">Momentum from \(E^2=p^2c^2+m^2c^4\). Threshold condition \(M\ge2m\).</div>
+    </div>
+</section>
+
+<!-- ==================== MINKOWSKI ==================== -->
+<section id="minkowski">
+    <h2>12. Minkowski Diagram</h2>
+    <div class="theory">
+        <p>Spacetime diagram with vertical \(ct\) and horizontal \(x\). Light worldlines are at \(45^\circ\). Worldlines of massive particles have \(|{\rm slope}|&gt;1\). Simultaneous events in a given frame lie on horizontal (or boosted) lines of constant \(t\).</p>
+        <p>A Lorentz boost appears as a hyperbolic rotation of the axes. Hyperbolae \(c^2t^2-x^2={\rm const}\) are loci of constant proper time / interval.</p>
+    </div>
+    <div class="controls">
+        <label>Boost \(\beta\): <input type="range" id="minkBeta" min="-0.9" max="0.9" step="0.05" value="0.5"> <span class="value" id="minkBetaVal">0.50</span></label>
+    </div>
+    <div class="chart-container" style="height:360px;"><canvas id="chartMinkowski"></canvas></div>
+</section>
+
+<!-- ==================== DOPPLER ==================== -->
+<section id="doppler">
+    <h2>13. Relativistic Doppler Effect &amp; Aberration</h2>
+    <div class="derivation">
+        <div class="derivation-title">Longitudinal Doppler (Derivation sketch)</div>
+        <p>Source emits frequency \(f_0\) in its rest frame. Relative velocity \(\beta\) (positive = receding).</p>
+        <p>Two effects combine: (1) classical Doppler from changing path length, (2) time dilation of the source clock. Result:</p>
+        \[ f = f_0\sqrt{\frac{1-\beta}{1+\beta}}\quad\text{(receding)},\qquad
+           f = f_0\sqrt{\frac{1+\beta}{1-\beta}}\quad\text{(approaching)} \]
+        <p><strong>Transverse Doppler</strong> (source moving perpendicular to line of sight at closest approach): purely time-dilation redshift</p>
+        \[ f = f_0/\gamma \]
+        <p><strong>Aberration formula:</strong></p>
+        \[ \cos\theta=\frac{\cos\theta'+\beta}{1+\beta\cos\theta'} \]
+        <p>(or \(\tan(\theta/2)=e^{-\phi}\tan(\theta'/2)\) with rapidity \(\phi\)).</p>
+    </div>
+
+    <div class="problem">
+        <div class="problem-title">Problem 13.1</div>
+        <p>A star emits light of proper frequency \(f_0\) and recedes at \(0.6c\). What frequency is observed?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(f=f_0\sqrt{(1-0.6)/(1+0.6)}=f_0\sqrt{0.25}=0.5f_0\).</div>
+    </div>
+
+    <div class="controls">
+        <label>\(\beta\) (positive = receding): <input type="range" id="dopplerBeta" min="-0.95" max="0.95" step="0.01" value="0.5"> <span class="value" id="dopplerBetaVal">0.50</span></label>
+    </div>
+    <div class="chart-container"><canvas id="chartDoppler"></canvas></div>
+</section>
+
+<!-- ==================== DECAY ==================== -->
+<section id="decay">
+    <h2>14. Decay Processes</h2>
+    <div class="theory">
+        <p>Analysed most cleanly in the parent rest frame using four-momentum conservation. Lab lifetime is dilated: \(\tau_{\rm lab}=\gamma\tau_0\).</p>
+    </div>
+    <div class="problem">
+        <div class="problem-title">Problem 14.1 (Pion decay)</div>
+        <p>Charged pion \(\tau_0=26\) ns, \(m_\pi c^2=140\) MeV, moves with \(\gamma=10\). (a) Lab lifetime? (b) Mean distance? (c) Comment on muon energy.</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">(a) \(\tau_{\rm lab}=260\) ns.</div>
+        <div class="step">(b) \(d\approx c\tau_{\rm lab}\approx78\) m.</div>
+        <div class="step">(c) In pion rest frame the two-body kinematics fix the muon energy; boosting to the lab produces a continuous spectrum depending on emission angle.</div>
+    </div>
+</section>
+
+<!-- ==================== E & B ==================== -->
+<section id="emfields">
+    <h2>15. Transformation of \(\mathbf{E}\) and \(\mathbf{B}\) — Invariance of Maxwell’s Equations</h2>
+    <div class="theory">
+        <p>For a boost along \(x\):</p>
+        \[
+        \begin{align}
+        E'_x&=E_x,&
+        E'_y&=\gamma(E_y-vB_z),&
+        E'_z&=\gamma(E_z+vB_y)\\
+        B'_x&=B_x,&
+        B'_y&=\gamma\Bigl(B_y+\frac{v}{c^2}E_z\Bigr),&
+        B'_z&=\gamma\Bigl(B_z-\frac{v}{c^2}E_y\Bigr)
+        \end{align}
+        \]
+        <p>Lorentz invariants: \(\mathbf{E}\cdot\mathbf{B}\) and \(E^2-c^2B^2\).</p>
+        <p>Because the field-strength tensor \(F^{\mu\nu}\) and the four-current \(J^\mu\) transform as tensors, Maxwell’s equations keep the same form in every inertial frame — historically a major motivation for Special Relativity.</p>
+    </div>
+    <div class="problem">
+        <div class="problem-title">Problem 15.1</div>
+        <p>In \(S\) there is a pure electric field \(\mathbf{E}=(0,E,0)\), \(\mathbf{B}=0\). What fields does an observer moving at velocity \(v\) along \(x\) measure?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">\(E'_y=\gamma E\), \(B'_z=-\gamma v E/c^2\); all other components zero. A pure \(\mathbf{E}\) in one frame is a mixture of \(\mathbf{E}\) and \(\mathbf{B}\) in another — magnetism as a relativistic effect of moving charges.</div>
+    </div>
+</section>
+
+<!-- ==================== TWIN PARADOX ==================== -->
+<section id="twin">
+    <h2>16. Twin Paradox</h2>
+    <div class="theory">
+        <p>One twin travels at high speed and returns; the travelling twin ages less. No paradox: the travelling twin changes inertial frames (accelerates at turnaround), breaking the symmetry. Only the stay-at-home twin remains in a single inertial frame throughout.</p>
+    </div>
+    <div class="problem">
+        <div class="problem-title">Problem 16.1</div>
+        <p>Twin A stays on Earth. Twin B travels at \(0.8c\) to a star 8 ly away (Earth frame) and returns at the same speed. How much does each twin age?</p>
+    </div>
+    <div class="solution">
+        <div class="solution-title">Solution</div>
+        <div class="step">Earth time one way \(=8/0.8=10\) y → round-trip 20 y. Twin A ages 20 y.</div>
+        <div class="step">\(\gamma=5/3\), proper time for B each leg \(=10/\gamma=6\) y → total 12 y. Twin B ages 12 y.</div>
+    </div>
+    <div class="chart-container"><canvas id="chartTwin"></canvas></div>
+</section>
+
+<footer>
+    <p>Special Theory of Relativity — Exam-oriented notes with full derivations, solved problems and interactive Chart.js graphs</p>
+    <p>MathJax 3 · Chart.js 4 · Responsive design</p>
+</footer>
+
+</div>
+
+<script>
+const gamma = b => 1/Math.sqrt(1-b*b);
+
+// Lorentz grid
+let lorentzChart;
+function updateLorentz() {
+    const beta = +document.getElementById('lorentzBeta').value;
+    document.getElementById('lorentzBetaVal').textContent = beta.toFixed(2);
+    const g = gamma(beta);
+    const ptsO=[], ptsT=[];
+    for(let x=-2;x<=2;x+=0.5) for(let t=-2;t<=2;t+=0.5){
+        ptsO.push({x,y:t});
+        ptsT.push({x:g*(x-beta*t), y:g*(t-beta*x)});
+    }
+    if(lorentzChart) lorentzChart.destroy();
+    lorentzChart = new Chart(document.getElementById('chartLorentz'),{
+        type:'scatter',
+        data:{datasets:[
+            {label:'S',data:ptsO,backgroundColor:'rgba(43,108,176,0.6)',pointRadius:3.5},
+            {label:"S'",data:ptsT,backgroundColor:'rgba(237,137,54,0.7)',pointRadius:3.5}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+            plugins:{title:{display:true,text:`Lorentz grid β=${beta.toFixed(2)}`}},
+            scales:{x:{title:{display:true,text:'x'},min:-4,max:4},y:{title:{display:true,text:'ct'},min:-4,max:4}}
+        }
+    });
+}
+document.getElementById('lorentzBeta').addEventListener('input',updateLorentz);
+updateLorentz();
+
+// Time dilation
+let dilateChart;
+function updateDilate(){
+    const beta=+document.getElementById('dilateBeta').value;
+    document.getElementById('dilateBetaVal').textContent=beta.toFixed(3);
+    const g=gamma(beta), tau0=2.2;
+    const betas=Array.from({length:200},(_,i)=>i/200*0.999);
+    if(dilateChart) dilateChart.destroy();
+    dilateChart=new Chart(document.getElementById('chartDilate'),{
+        type:'line',
+        data:{labels:betas.map(b=>b.toFixed(3)),datasets:[
+            {label:'γ',data:betas.map(b=>gamma(b)),borderColor:'#2b6cb0',yAxisID:'y',tension:0.2},
+            {label:'Dilated τ (µs)',data:betas.map(b=>gamma(b)*tau0),borderColor:'#ed8936',yAxisID:'y1',tension:0.2}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+            plugins:{title:{display:true,text:`γ≈${g.toFixed(2)}, τ≈${(g*tau0).toFixed(1)} µs`}},
+            scales:{x:{title:{display:true,text:'β'}},y:{position:'left',title:{display:true,text:'γ'},min:1},
+                y1:{position:'right',title:{display:true,text:'τ (µs)'},min:0,grid:{drawOnChartArea:false}}}
+        }
+    });
+}
+document.getElementById('dilateBeta').addEventListener('input',updateDilate);
+updateDilate();
+
+// Length contraction
+let contractChart;
+function updateContract(){
+    const beta=+document.getElementById('contractBeta').value;
+    const L0=+document.getElementById('contractL0').value;
+    document.getElementById('contractBetaVal').textContent=beta.toFixed(2);
+    document.getElementById('contractL0Val').textContent=L0;
+    const L=L0*Math.sqrt(1-beta*beta);
+    const betas=Array.from({length:100},(_,i)=>i/100);
+    if(contractChart) contractChart.destroy();
+    contractChart=new Chart(document.getElementById('chartContract'),{
+        type:'line',
+        data:{labels:betas.map(b=>b.toFixed(2)),datasets:[
+            {label:'L(β)',data:betas.map(b=>L0*Math.sqrt(1-b*b)),borderColor:'#2b6cb0',fill:true,backgroundColor:'rgba(43,108,176,0.1)',tension:0.2},
+            {label:'Current',data:betas.map(b=>Math.abs(b-beta)<0.01?L:null),borderColor:'#ed8936',pointRadius:7,pointBackgroundColor:'#ed8936'}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+            plugins:{title:{display:true,text:`L₀=${L0} m → L=${L.toFixed(1)} m`}},
+            scales:{x:{title:{display:true,text:'β'}},y:{title:{display:true,text:'Length (m)'},min:0}}
+        }
+    });
+}
+document.getElementById('contractBeta').addEventListener('input',updateContract);
+document.getElementById('contractL0').addEventListener('input',updateContract);
+updateContract();
+
+// Velocity addition
+let velChart;
+function updateVelocity(){
+    const v=+document.getElementById('velV').value, u=+document.getElementById('velU').value;
+    document.getElementById('velVVal').textContent=v.toFixed(2);
+    document.getElementById('velUVal').textContent=u.toFixed(2);
+    const uRel=(u+v)/(1+u*v);
+    const us=Array.from({length:39},(_,i)=>-0.95+i*0.05);
+    if(velChart) velChart.destroy();
+    velChart=new Chart(document.getElementById('chartVelocity'),{
+        type:'line',
+        data:{labels:us.map(x=>x.toFixed(2)),datasets:[
+            {label:'Relativistic',data:us.map(up=>(up+v)/(1+up*v)),borderColor:'#2b6cb0',tension:0.2},
+            {label:'Classical',data:us.map(up=>up+v),borderColor:'#e53e3e',borderDash:[5,5],tension:0.2},
+            {label:'Current',data:us.map(up=>Math.abs(up-u)<0.03?uRel:null),borderColor:'#ed8936',pointRadius:7,pointBackgroundColor:'#ed8936'}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+            plugins:{title:{display:true,text:`Result = ${uRel.toFixed(4)}c`}},
+            scales:{x:{title:{display:true,text:"u'/c"}},y:{title:{display:true,text:'u/c'},min:-1.5,max:1.5}}
+        }
+    });
+}
+document.getElementById('velV').addEventListener('input',updateVelocity);
+document.getElementById('velU').addEventListener('input',updateVelocity);
+updateVelocity();
+
+// Intervals
+new Chart(document.getElementById('chartIntervals'),{
+    type:'scatter',
+    data:{datasets:[
+        {label:'Future cone',data:[{x:0,y:0},{x:3,y:3},{x:-3,y:3}],borderColor:'#38a169',backgroundColor:'rgba(56,161,105,0.1)',showLine:true,fill:true,pointRadius:0,borderWidth:2},
+        {label:'Past cone',data:[{x:0,y:0},{x:3,y:-3},{x:-3,y:-3}],borderColor:'#e53e3e',backgroundColor:'rgba(229,62,62,0.1)',showLine:true,fill:true,pointRadius:0,borderWidth:2},
+        {label:'Timelike',data:[{x:1,y:2}],backgroundColor:'#2b6cb0',pointRadius:9},
+        {label:'Spacelike',data:[{x:2.5,y:1}],backgroundColor:'#ed8936',pointRadius:9},
+        {label:'Lightlike',data:[{x:2,y:2}],backgroundColor:'#38a169',pointRadius:9}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+        plugins:{title:{display:true,text:'Light cones & causal structure'}},
+        scales:{x:{title:{display:true,text:'x'},min:-4,max:4},y:{title:{display:true,text:'ct'},min:-4,max:4}}
+    }
+});
+
+// Mass-energy
+let massChart;
+function updateMass(){
+    const beta=+document.getElementById('massBeta').value;
+    document.getElementById('massBetaVal').textContent=beta.toFixed(3);
+    const g=gamma(beta);
+    const betas=Array.from({length:200},(_,i)=>i/200*0.999);
+    if(massChart) massChart.destroy();
+    massChart=new Chart(document.getElementById('chartMass'),{
+        type:'line',
+        data:{labels:betas.map(b=>b.toFixed(3)),datasets:[
+            {label:'γ = E/(m₀c²)',data:betas.map(b=>gamma(b)),borderColor:'#2b6cb0',tension:0.2},
+            {label:'Classical ½β²',data:betas.map(b=>0.5*b*b),borderColor:'#a0aec0',borderDash:[5,5],tension:0.2},
+            {label:'Current',data:betas.map(b=>Math.abs(b-beta)<0.005?g:null),borderColor:'#ed8936',pointRadius:7,pointBackgroundColor:'#ed8936'}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+            plugins:{title:{display:true,text:`γ≈${g.toFixed(2)} → E=${g.toFixed(2)} m₀c²`}},
+            scales:{x:{title:{display:true,text:'β'}},y:{title:{display:true,text:'γ or KE/(m₀c²)'},min:0}}
+        }
+    });
+}
+document.getElementById('massBeta').addEventListener('input',updateMass);
+updateMass();
+
+// Minkowski
+let minkChart;
+function updateMinkowski(){
+    const beta=+document.getElementById('minkBeta').value;
+    document.getElementById('minkBetaVal').textContent=beta.toFixed(2);
+    const xAxis=[], tAxis=[];
+    for(let s=-3;s<=3;s+=0.1){ xAxis.push({x:s,y:beta*s}); tAxis.push({x:beta*s,y:s}); }
+    const hyp=[];
+    for(let t=-3;t<=3;t+=0.05){ const x2=t*t-1; if(x2>=0){ hyp.push({x:Math.sqrt(x2),y:t}); hyp.push({x:-Math.sqrt(x2),y:t}); } }
+    if(minkChart) minkChart.destroy();
+    minkChart=new Chart(document.getElementById('chartMinkowski'),{
+        type:'scatter',
+        data:{datasets:[
+            {label:'Light cones',data:[{x:-3,y:-3},{x:3,y:3},{x:NaN,y:NaN},{x:-3,y:3},{x:3,y:-3}],borderColor:'#a0aec0',borderDash:[4,4],showLine:true,pointRadius:0,borderWidth:1.5},
+            {label:"x' axis",data:xAxis,borderColor:'#ed8936',showLine:true,pointRadius:0,borderWidth:2},
+            {label:"ct' axis",data:tAxis,borderColor:'#e53e3e',showLine:true,pointRadius:0,borderWidth:2},
+            {label:'Hyperbola Δs²=1',data:hyp,backgroundColor:'rgba(43,108,176,0.35)',pointRadius:1},
+            {label:'S axes',data:[{x:-3,y:0},{x:3,y:0},{x:NaN,y:NaN},{x:0,y:-3},{x:0,y:3}],borderColor:'#2b6cb0',showLine:true,pointRadius:0,borderWidth:2}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+            plugins:{title:{display:true,text:`Minkowski diagram β=${beta.toFixed(2)}`}},
+            scales:{x:{title:{display:true,text:'x'},min:-3.5,max:3.5},y:{title:{display:true,text:'ct'},min:-3.5,max:3.5}}
+        }
+    });
+}
+document.getElementById('minkBeta').addEventListener('input',updateMinkowski);
+updateMinkowski();
+
+// Doppler
+let dopplerChart;
+function updateDoppler(){
+    const beta=+document.getElementById('dopplerBeta').value;
+    document.getElementById('dopplerBetaVal').textContent=beta.toFixed(2);
+    const factor=Math.sqrt((1-beta)/(1+beta));
+    const betas=Array.from({length:191},(_,i)=>-0.95+i*0.01);
+    if(dopplerChart) dopplerChart.destroy();
+    dopplerChart=new Chart(document.getElementById('chartDoppler'),{
+        type:'line',
+        data:{labels:betas.map(b=>b.toFixed(2)),datasets:[
+            {label:'Longitudinal f/f₀',data:betas.map(b=>Math.sqrt((1-b)/(1+b))),borderColor:'#2b6cb0',tension:0.2},
+            {label:'Transverse 1/γ',data:betas.map(b=>1/gamma(Math.abs(b))),borderColor:'#38a169',borderDash:[5,5],tension:0.2},
+            {label:'Current',data:betas.map(b=>Math.abs(b-beta)<0.015?factor:null),borderColor:'#ed8936',pointRadius:7,pointBackgroundColor:'#ed8936'}
+        ]},
+        options:{responsive:true,maintainAspectRatio:false,
+            plugins:{title:{display:true,text:`f/f₀=${factor.toFixed(3)}`}},
+            scales:{x:{title:{display:true,text:'β'}},y:{title:{display:true,text:'f/f₀'},min:0}}
+        }
+    });
+}
+document.getElementById('dopplerBeta').addEventListener('input',updateDoppler);
+updateDoppler();
+
+// Twin worldlines
+new Chart(document.getElementById('chartTwin'),{
+    type:'scatter',
+    data:{datasets:[
+        {label:'Stay-at-home',data:[{x:0,y:0},{x:0,y:20}],borderColor:'#2b6cb0',backgroundColor:'#2b6cb0',showLine:true,pointRadius:5,borderWidth:3},
+        {label:'Outbound',data:[{x:0,y:0},{x:8,y:10}],borderColor:'#ed8936',backgroundColor:'#ed8936',showLine:true,pointRadius:5,borderWidth:3},
+        {label:'Return',data:[{x:8,y:10},{x:0,y:20}],borderColor:'#e53e3e',backgroundColor:'#e53e3e',showLine:true,pointRadius:5,borderWidth:3},
+        {label:'Light',data:[{x:0,y:0},{x:10,y:10}],borderColor:'#a0aec0',borderDash:[5,5],showLine:true,pointRadius:0,borderWidth:1}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+        plugins:{title:{display:true,text:'Twin paradox worldlines'}},
+        scales:{x:{title:{display:true,text:'x (ly)'},min:-1,max:10},y:{title:{display:true,text:'ct (y)'},min:0,max:22}}
+    }
+});
+</script>
+</body>
+</html>
