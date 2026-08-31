@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Checklist: Kinetic Theory of Gases (Research Mode)</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface-hover: #243044;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --text-muted: #8b9cb3;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #22c55e;
+      --success-bg: rgba(34, 197, 94, 0.15);
+      --research: #a78bfa;
+      --research-bg: rgba(167, 139, 250, 0.12);
+      --research-border: rgba(167, 139, 250, 0.35);
+      --progress-bg: #1e293b;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --radius: 12px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 24px 16px 80px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 28px 20px;
+      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .mode-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 4px 14px;
+      background: var(--research-bg);
+      color: var(--research);
+      border: 1px solid var(--research-border);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .progress-section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .progress-header h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .progress-stats {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .progress-stats strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .progress-bar-container {
+      height: 12px;
+      background: var(--progress-bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #60a5fa);
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-percent {
+      text-align: right;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-hover);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--border);
+      border-color: #3d4f6a;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    button.danger {
+      background: transparent;
+      border-color: #ef4444;
+      color: #f87171;
+    }
+
+    button.danger:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .filter-btn.research-filter.active {
+      background: var(--research);
+      border-color: var(--research);
+      color: #0f1419;
+    }
+
+    .section {
+      background: var(--surface);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+      border-bottom: 1px solid transparent;
+    }
+
+    .section-header:hover {
+      background: var(--surface-hover);
+    }
+
+    .section.open .section-header {
+      border-bottom-color: var(--border);
+    }
+
+    .section-toggle {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      transition: transform 0.25s ease;
+    }
+
+    .section.open .section-toggle {
+      transform: rotate(90deg);
+    }
+
+    .section-title {
+      flex: 1;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .section-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--progress-bg);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .section-count {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    .section-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .section.open .section-body {
+      max-height: 4000px;
+    }
+
+    .items {
+      list-style: none;
+      padding: 8px 12px 16px;
+    }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+
+    .item:hover {
+      background: var(--surface-hover);
+    }
+
+    .item.checked {
+      background: var(--success-bg);
+    }
+
+    .item.checked .item-text {
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    .item.research {
+      border-left: 3px solid var(--research);
+      background: var(--research-bg);
+    }
+
+    .item.research:hover {
+      background: rgba(167, 139, 250, 0.18);
+    }
+
+    .item.research.checked {
+      background: var(--success-bg);
+      border-left-color: var(--success);
+    }
+
+    .checkbox {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      background: transparent;
+    }
+
+    .item.checked .checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .item.research .checkbox {
+      border-color: var(--research);
+    }
+
+    .item.research.checked .checkbox {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .checkbox svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .item.checked .checkbox svg {
+      opacity: 1;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-text {
+      font-size: 0.95rem;
+      transition: color 0.2s, text-decoration 0.2s;
+    }
+
+    .item-text .math {
+      font-style: italic;
+      color: #93c5fd;
+    }
+
+    .item.checked .item-text .math {
+      color: var(--text-muted);
+    }
+
+    .item-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(167, 139, 250, 0.25);
+      color: var(--research);
+    }
+
+    .item.checked .item-tag {
+      opacity: 0.6;
+    }
+
+    .hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.45;
+      font-style: italic;
+    }
+
+    .item.checked .hint {
+      text-decoration: line-through;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .celebrate {
+      animation: pulse 0.6s ease;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.4rem; }
+      .section-header { padding: 14px 16px; }
+      .section-title { font-size: 0.95rem; }
+      .item { padding: 10px 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Study Checklist</h1>
+      <p>The Kinetic Theory of Gases</p>
+      <div class="mode-badge">Research-First Mode · Not Rote Memorisation</div>
+    </header>
+
+    <div class="progress-section" id="progressSection">
+      <div class="progress-header">
+        <h2>Overall Progress</h2>
+        <div class="progress-stats">
+          <strong id="completedCount">0</strong> / <span id="totalCount">0</span> items
+        </div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="progress-percent" id="progressPercent">0%</div>
+      <div class="controls">
+        <button class="primary" id="expandAll">Expand All</button>
+        <button id="collapseAll">Collapse All</button>
+        <button class="danger" id="resetAll">Reset All</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All Items</button>
+      <button class="filter-btn" data-filter="core">Core Topics</button>
+      <button class="filter-btn research-filter" data-filter="research">Research Challenges</button>
+    </div>
+
+    <div id="sections"></div>
+
+    <footer>
+      Research prompts encourage active investigation, derivation, simulation &amp; historical digging · Progress saved locally
+    </footer>
+  </div>
+
+  <script>
+    const STUDY_DATA = [
+      {
+        id: "foundations",
+        title: "1. Foundations of the Kinetic Theory",
+        time: "≈ 4–6 hours",
+        items: [
+          { text: "Objective of the theory: understanding a macroscopic system from its microscopic constituents.", type: "core" },
+          { text: "Classical ideal gas and the ideal gas law.", type: "core" },
+          { text: "Microscopic view of an ideal gas and the basic postulates of the kinetic theory.", type: "core" },
+          { text: "Justifications and implications of the postulates.", type: "core" },
+          { text: "Mean free path, collision probability, and estimates of mean free path.", type: "core" },
+          { text: "Kinetic interpretation of pressure <span class=\"math\">P</span>.", type: "core" },
+          { text: "Relation between pressure and translational kinetic energy of the molecules.", type: "core" },
+          { text: "Kinetic interpretation of temperature: average molecular kinetic energy ∝ absolute temperature.", type: "core" },
+          {
+            text: "Trace the historical path: Bernoulli (1738) → Herapath → Waterston → Krönig → Clausius → Maxwell.",
+            type: "research",
+            hint: "Look up Waterston’s 1845 paper (rejected then later recognised). Why did the community resist the kinetic view for decades?"
+          },
+          {
+            text: "Derive the pressure expression yourself from first principles (momentum transfer to a wall) without looking at a textbook derivation first.",
+            type: "research",
+            hint: "Start from a single particle, then ensemble average. Explicitly state every assumption you introduce."
+          },
+          {
+            text: "Investigate the mean free path of air molecules at sea level vs. 100 km altitude. What does this imply for continuum vs. free-molecular flow regimes?",
+            type: "research",
+            hint: "Connect to the Knudsen number. Useful for aerospace / vacuum technology context."
+          },
+          {
+            text: "Explore the conceptual tension: how can temperature be a measure of average kinetic energy if molecules have a wide speed distribution?",
+            type: "research",
+            hint: "This leads naturally into the need for a statistical description (Maxwell–Boltzmann)."
+          }
+        ]
+      },
+      {
+        id: "equipartition",
+        title: "2. Equipartition Theorem and Related Concepts",
+        time: "≈ 3–5 hours",
+        items: [
+          { text: "Equipartition theorem (statement only).", type: "core" },
+          { text: "Kinetic degrees of freedom (<span class=\"math\">f</span>).", type: "core" },
+          { text: "Thermal energy and specific heats of gases (<span class=\"math\">C<sub>p</sub></span> and <span class=\"math\">C<sub>v</sub></span>).", type: "core" },
+          { text: "<span class=\"math\">γ = C<sub>p</sub> / C<sub>v</sub></span> and the relation between <span class=\"math\">γ</span> and <span class=\"math\">f</span>.", type: "core" },
+          { text: "Specific heat of a monatomic gas and of a diatomic gas (<span class=\"math\">N<sub>2</sub></span>): experimental values and quantum restriction of active modes.", type: "core" },
+          { text: "Brownian motion and its significance.", type: "core" },
+          {
+            text: "Research why classical equipartition fails for diatomic gases at room temperature (rotational vs. vibrational modes).",
+            type: "research",
+            hint: "Look up the characteristic temperatures θ_rot and θ_vib. Plot experimental C_v(T) for H₂, N₂, O₂ and overlay classical predictions."
+          },
+          {
+            text: "Investigate Einstein’s 1905 paper on Brownian motion. How did it provide decisive evidence for the atomic hypothesis?",
+            type: "research",
+            hint: "Focus on the quantitative prediction of mean-square displacement and Perrin’s later experimental confirmation."
+          },
+          {
+            text: "Derive the relation between γ and f yourself, then use it to predict γ for a polyatomic gas with hindered rotation.",
+            type: "research",
+            hint: "Think about what “hindered” means for the effective number of degrees of freedom."
+          },
+          {
+            text: "Explore modern echoes of equipartition: equipartition in classical statistical mechanics vs. quantum harmonic oscillators, and the Dulong–Petit law breakdown.",
+            type: "research",
+            hint: "This bridges to solid-state physics and the Einstein / Debye models of specific heat."
+          }
+        ]
+      },
+      {
+        id: "maxwell",
+        title: "3. Molecular Speeds and Maxwell–Boltzmann Distribution",
+        time: "≈ 8–12 hours",
+        items: [
+          { text: "Speeds of molecules of an ideal gas in thermal equilibrium.", type: "core" },
+          { text: "Maxwell–Boltzmann distribution law (statement): probability density <span class=\"math\">ρ(c)</span> vs speed <span class=\"math\">c</span> and its graph.", type: "core" },
+          { text: "Graph features: asymmetric single peak; effect of increasing T; effect of increasing molecular mass (He, Ne, Ar).", type: "core" },
+          { text: "Number of molecules <span class=\"math\">dN</span> with speeds between <span class=\"math\">c</span> and <span class=\"math\">c + dc</span>.", type: "core" },
+          { text: "Key conclusions: heavy molecules rarely reach very high speeds; high-speed tail grows with T; area under curve is temperature-independent.", type: "core" },
+          { text: "Estimation of the fraction of molecules faster than a chosen speed <span class=\"math\">c</span>.", type: "core" },
+          { text: "Mean speed <span class=\"math\">C<sub>av</sub></span>, rms speed <span class=\"math\">C<sub>rms</sub></span>, most probable speed <span class=\"math\">C<sub>mp</sub></span>.", type: "core" },
+          { text: "Comparison of the three characteristic speeds at fixed T.", type: "core" },
+          { text: "Maxwell–Boltzmann energy distribution derived from the speed distribution; average kinetic energy.", type: "core" },
+          {
+            text: "Re-derive the Maxwell speed distribution starting from the assumption of isotropy and independence of velocity components.",
+            type: "research",
+            hint: "Maxwell’s original 1860 argument is elegant and short. Compare it with the modern derivation from the Boltzmann factor."
+          },
+          {
+            text: "Write a short Python/NumPy script (or use a spreadsheet) to sample velocities from a Gaussian, compute speeds, and histogram them. Overlay the theoretical ρ(c).",
+            type: "research",
+            hint: "Seeing the distribution emerge from random numbers is far more memorable than memorising the formula."
+          },
+          {
+            text: "Investigate the high-speed tail’s role in chemical reaction rates (Arrhenius behaviour) and in atmospheric escape (Jeans escape).",
+            type: "research",
+            hint: "Why does the Earth retain oxygen but lose hydrogen over geological time? Quantify with the distribution."
+          },
+          {
+            text: "Research how the Maxwell–Boltzmann distribution is modified in the presence of gravity (barometric formula + speed distribution) or in non-equilibrium situations.",
+            type: "research",
+            hint: "Look at the Chapman–Enskog expansion or simple models of evaporative cooling in ultracold gases."
+          },
+          {
+            text: "Compare C_mp, C_av, C_rms numerically for several gases at 300 K and 1000 K. Visualise the relative positions on the distribution curve.",
+            type: "research",
+            hint: "Make a single plot with vertical markers; the visual hierarchy sticks better than the √(2) : √(8/π) : √3 ratios alone."
+          }
+        ]
+      },
+      {
+        id: "transport",
+        title: "4. Non-Equilibrium States and Transport Phenomena",
+        time: "≈ 4–6 hours",
+        items: [
+          { text: "Viscosity: momentum transport; coefficient η in terms of mean free path λ.", type: "core" },
+          { text: "Thermal conductivity K in terms of λ; temperature dependence of K.", type: "core" },
+          { text: "Diffusion coefficient D in terms of λ; effects of T and pressure on D.", type: "core" },
+          {
+            text: "Derive (or reconstruct) the elementary kinetic-theory expressions for η, K and D. Identify the common physical idea (flux of a conserved quantity).",
+            type: "research",
+            hint: "All three are of the form (1/3)ρ⟨v⟩λ × (transported quantity per mass). Spot the pattern."
+          },
+          {
+            text: "Investigate why, according to elementary kinetic theory, viscosity of a gas is independent of pressure (at fixed T). Is this observed experimentally?",
+            type: "research",
+            hint: "Maxwell predicted this counter-intuitive result before accurate measurements existed. Look up the historical confirmation."
+          },
+          {
+            text: "Explore the limits of the simple mean-free-path picture: dense gases, liquids, and the transition to hydrodynamic descriptions (Navier–Stokes).",
+            type: "research",
+            hint: "Keywords: Enskog theory, Burnett equations, Knudsen layer, rarefied gas dynamics."
+          },
+          {
+            text: "Research a modern application: thermal conductivity or viscosity of gases in MEMS devices, vacuum insulation, or atmospheric science (eddy diffusion vs. molecular diffusion).",
+            type: "research",
+            hint: "Pick one concrete technology and see how kinetic-theory estimates are still used as a first approximation."
+          }
+        ]
+      },
+      {
+        id: "realgases",
+        title: "5. Real Gases",
+        time: "≈ 5–8 hours",
+        items: [
+          { text: "Andrews’ experiment on CO₂: principle, isothermals, interpretation and inferences.", type: "core" },
+          { text: "Critical constants.", type: "core" },
+          { text: "Van der Waals equation: correction for finite molecular size.", type: "core" },
+          { text: "Van der Waals equation: correction for intermolecular attraction.", type: "core" },
+          { text: "Comparison of Andrews’ isothermals with van der Waals P–V plots (similarities & differences).", type: "core" },
+          { text: "Expressions for T_c, p_c, V_c and the critical coefficient.", type: "core" },
+          { text: "Limitations of the van der Waals equation.", type: "core" },
+          { text: "Virial expansion; van der Waals written as a virial series; Boyle temperature in terms of T_c.", type: "core" },
+          {
+            text: "Reconstruct Andrews’ 1869 isotherms conceptually: what would you measure, and what qualitative features must any equation of state capture near the critical point?",
+            type: "research",
+            hint: "Focus on the flat portion (two-phase region) and the disappearance of the meniscus. Why is continuity of the gaseous and liquid states surprising?"
+          },
+          {
+            text: "Derive the critical constants from the van der Waals equation by imposing the inflection-point conditions (∂P/∂V)_T = 0 and (∂²P/∂V²)_T = 0.",
+            type: "research",
+            hint: "Do it algebraically once; the resulting universal critical coefficient 8/3 is a strong prediction (and a known limitation)."
+          },
+          {
+            text: "Research why the experimental critical coefficient is closer to 3.5–4 than to the van der Waals value 8/3 ≈ 2.67. What does this tell us about the mean-field approximation?",
+            type: "research",
+            hint: "This opens the door to modern critical phenomena, renormalisation-group ideas, and the concept of universality classes."
+          },
+          {
+            text: "Explore alternative equations of state (Redlich–Kwong, Peng–Robinson, Dieterici) and compare their critical coefficients and vapour-pressure predictions with van der Waals.",
+            type: "research",
+            hint: "Pick one modern cubic equation and plot reduced isotherms side-by-side with van der Waals."
+          },
+          {
+            text: "Investigate computer-simulation approaches: molecular-dynamics or Monte-Carlo realisation of a van der Waals-like fluid. What can simulations reveal that analytic EOS cannot?",
+            type: "research",
+            hint: "Look for papers on the Lennard-Jones fluid phase diagram; the coexistence curve is a classic benchmark."
+          },
+          {
+            text: "Connect the virial coefficients to intermolecular potentials: how does the second virial coefficient B(T) encode the interaction?",
+            type: "research",
+            hint: "The temperature dependence of B(T) is directly measurable and historically provided early estimates of molecular size and attractive strength."
+          }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "kineticTheoryChecklist_research_v1";
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let checkedState = loadState();
+    let currentFilter = "all";
+
+    function getItemKey(sectionId, index) {
+      return `${sectionId}_${index}`;
+    }
+
+    function isChecked(sectionId, index) {
+      return !!checkedState[getItemKey(sectionId, index)];
+    }
+
+    function toggleItem(sectionId, index) {
+      const key = getItemKey(sectionId, index);
+      checkedState[key] = !checkedState[key];
+      saveState(checkedState);
+      render();
+    }
+
+    function updateProgress() {
+      let total = 0;
+      let completed = 0;
+      STUDY_DATA.forEach(section => {
+        section.items.forEach((item, i) => {
+          if (currentFilter === "all" || item.type === currentFilter || (currentFilter === "core" && item.type === "core")) {
+            total++;
+            if (isChecked(section.id, i)) completed++;
+          }
+        });
+      });
+
+      // Always show global totals for the progress bar
+      let globalTotal = 0, globalCompleted = 0;
+      STUDY_DATA.forEach(section => {
+        section.items.forEach((_, i) => {
+          globalTotal++;
+          if (isChecked(section.id, i)) globalCompleted++;
+        });
+      });
+
+      const percent = globalTotal === 0 ? 0 : Math.round((globalCompleted / globalTotal) * 100);
+      document.getElementById("completedCount").textContent = globalCompleted;
+      document.getElementById("totalCount").textContent = globalTotal;
+      document.getElementById("progressBar").style.width = percent + "%";
+      document.getElementById("progressPercent").textContent = percent + "%";
+
+      const progressSection = document.getElementById("progressSection");
+      if (percent === 100) {
+        progressSection.classList.add("celebrate");
+        setTimeout(() => progressSection.classList.remove("celebrate"), 600);
+      }
+    }
+
+    function render() {
+      const container = document.getElementById("sections");
+      container.innerHTML = "";
+
+      STUDY_DATA.forEach(section => {
+        const visibleItems = section.items
+          .map((item, index) => ({ item, index }))
+          .filter(({ item }) => currentFilter === "all" || item.type === currentFilter);
+
+        if (visibleItems.length === 0) return;
+
+        const sectionEl = document.createElement("div");
+        sectionEl.className = "section open";
+        sectionEl.dataset.id = section.id;
+
+        let sectionCompleted = 0;
+        section.items.forEach((_, i) => {
+          if (isChecked(section.id, i)) sectionCompleted++;
+        });
+
+        sectionEl.innerHTML = `
+          <div class="section-header">
+            <div class="section-toggle">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+            <div class="section-title">${section.title}</div>
+            <div class="section-meta">
+              <span class="section-time">${section.time}</span>
+              <span class="section-count">${sectionCompleted}/${section.items.length}</span>
+            </div>
+          </div>
+          <div class="section-body">
+            <ul class="items"></ul>
+          </div>
+        `;
+
+        const itemsList = sectionEl.querySelector(".items");
+        visibleItems.forEach(({ item, index }) => {
+          const li = document.createElement("li");
+          const isResearch = item.type === "research";
+          li.className = "item" + (isChecked(section.id, index) ? " checked" : "") + (isResearch ? " research" : "");
+          li.innerHTML = `
+            <div class="checkbox">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="item-content">
+              <div class="item-text">${item.text}</div>
+              ${isResearch ? '<span class="item-tag">Research Challenge</span>' : ''}
+              ${item.hint ? `<div class="hint">${item.hint}</div>` : ''}
+            </div>
+          `;
+          li.addEventListener("click", () => toggleItem(section.id, index));
+          itemsList.appendChild(li);
+        });
+
+        sectionEl.querySelector(".section-header").addEventListener("click", () => {
+          sectionEl.classList.toggle("open");
+        });
+
+        container.appendChild(sectionEl);
+      });
+
+      updateProgress();
+    }
+
+    // Filter buttons
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.filter;
+        render();
+      });
+    });
+
+    document.getElementById("expandAll").addEventListener("click", () => {
+      document.querySelectorAll(".section").forEach(s => s.classList.add("open"));
+    });
+
+    document.getElementById("collapseAll").addEventListener("click", () => {
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("open"));
+    });
+
+    document.getElementById("resetAll").addEventListener("click", () => {
+      if (confirm("Reset all progress? This cannot be undone.")) {
+        checkedState = {};
+        saveState(checkedState);
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
