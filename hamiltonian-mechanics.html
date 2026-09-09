@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamiltonian Mechanics & Rigid Body Dynamics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #7f8c8d;
+            --card-bg: #ffffff;
+            --math-bg: #f8f9fa;
+            --border-radius: 8px;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            overflow-x: hidden;
+        }
+
+        h1 { font-size: clamp(1.75rem, 5vw, 2.75rem); }
+        h2 { font-size: clamp(1.4rem, 3.5vw, 1.85rem); }
+        h3 { font-size: clamp(1.15rem, 2.5vw, 1.4rem); }
+        p, li { font-size: clamp(0.95rem, 2vw, 1.05rem); }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: clamp(1.5rem, 4vw, 2.5rem) 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        header h1 {
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            opacity: 0.92;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        nav {
+            background-color: var(--dark-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            gap: 0.5rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 0.4rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            gap: 0.15rem;
+            margin: 0;
+            padding: 0.4rem 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.4rem 0.7rem;
+            border-radius: 4px;
+            transition: background-color 0.2s, transform 0.15s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            display: block;
+        }
+
+        nav ul li a:hover,
+        nav ul li a:focus {
+            background-color: var(--secondary-color);
+            outline: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        section {
+            margin-bottom: 2rem;
+            padding: clamp(1.25rem, 3vw, 1.75rem);
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.25s;
+        }
+
+        section:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-weight: 650;
+        }
+
+        section h3 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        ul, ol {
+            margin: 0.75rem 0 1rem 1.4rem;
+        }
+
+        li { margin-bottom: 0.4rem; }
+
+        .math {
+            font-family: 'Cambria Math', 'Times New Roman', 'Latin Modern Math', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+            background-color: var(--math-bg);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: block;
+            margin: 1rem 0;
+            text-align: center;
+            overflow-x: auto;
+            line-height: 1.5;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .math-inline {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            background-color: var(--math-bg);
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: clamp(280px, 45vw, 400px);
+            margin: 1.5rem 0;
+            width: 100%;
+        }
+
+        .chart-wrapper {
+            background: #fafbfc;
+            border-radius: var(--border-radius);
+            padding: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .threejs-container {
+            height: clamp(320px, 55vw, 480px);
+            margin: 1.5rem 0;
+            border: 1px solid #dde1e6;
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+            background: #0a0e14;
+        }
+
+        .threejs-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .viz-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: -0.75rem;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+
+        .example {
+            background-color: #f8f9fa;
+            padding: 1.1rem 1.25rem;
+            border-left: 4px solid var(--secondary-color);
+            margin: 1.25rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .example h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .advantages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .advantage-card {
+            background-color: #f8f9fa;
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .advantage-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .advantage-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout {
+            background: linear-gradient(135deg, rgba(52,152,219,0.08), rgba(46,204,113,0.06));
+            border: 1px solid rgba(52,152,219,0.25);
+            border-radius: var(--border-radius);
+            padding: 1.1rem 1.25rem;
+            margin: 1.25rem 0;
+        }
+
+        .callout strong {
+            color: var(--primary-color);
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            margin-top: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .toggle-dark-mode {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+            font-size: 0.9rem;
+            transition: background-color 0.2s, transform 0.15s;
+        }
+
+        .toggle-dark-mode:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .dark-mode {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #1a252f;
+            --dark-color: #0f161c;
+            --text-color: #ecf0f1;
+            --text-light: #bdc3c7;
+            --card-bg: #243447;
+            --math-bg: #1a252f;
+        }
+
+        .dark-mode body {
+            background-color: var(--light-color);
+        }
+
+        .dark-mode section {
+            background-color: var(--card-bg);
+        }
+
+        .dark-mode .math {
+            background-color: var(--math-bg);
+            color: #ecf0f1;
+            border-left-color: var(--primary-color);
+        }
+
+        .dark-mode .example,
+        .dark-mode .advantage-card {
+            background-color: #1e2a38;
+        }
+
+        .dark-mode .chart-wrapper {
+            background: #1e2a38;
+        }
+
+        .dark-mode .callout {
+            background: linear-gradient(135deg, rgba(52,152,219,0.15), rgba(46,204,113,0.1));
+            border-color: rgba(52,152,219,0.35);
+        }
+
+        .dark-mode .viz-caption {
+            color: #95a5a6;
+        }
+
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 0.5rem 0 0.75rem;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+
+            nav ul.open {
+                display: flex;
+            }
+
+            nav ul li {
+                width: 100%;
+            }
+
+            nav ul li a {
+                padding: 0.65rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .nav-inner {
+                flex-wrap: wrap;
+            }
+
+            .container {
+                padding: 0.85rem;
+            }
+
+            section {
+                padding: 1.1rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .advantages {
+                grid-template-columns: 1fr;
+            }
+
+            .threejs-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1.25rem 0.75rem;
+            }
+
+            .math {
+                padding: 0.6rem 0.7rem;
+                font-size: 0.9rem;
+            }
+
+            .toggle-dark-mode {
+                bottom: 0.85rem;
+                right: 0.85rem;
+                padding: 0.55rem 0.9rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        @media print {
+            nav, .toggle-dark-mode, .threejs-container {
+                display: none !important;
+            }
+            section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Hamiltonian Mechanics & Rigid Body Dynamics</h1>
+        <p>In-Depth Discussions with Logical Reasoning and Practical Applications</p>
+    </header>
+
+    <nav>
+        <div class="nav-inner">
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">Menu</button>
+            <ul id="navMenu">
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#hamiltonian">Hamiltonian</a></li>
+                <li><a href="#canonical-equations">Canonical Eqs</a></li>
+                <li><a href="#advantages">Advantages</a></li>
+                <li><a href="#energy">Energy</a></li>
+                <li><a href="#applications">Applications</a></li>
+                <li><a href="#poisson">Poisson</a></li>
+                <li><a href="#canonical-transformations">Canonical Trans</a></li>
+                <li><a href="#generating-functions">Generators</a></li>
+                <li><a href="#rigid-body">Rigid Body</a></li>
+                <li><a href="#frames">Frames</a></li>
+                <li><a href="#inertia">Inertia</a></li>
+                <li><a href="#principal-axes">Principal Axes</a></li>
+                <li><a href="#kinetic-energy">Kinetic Energy</a></li>
+                <li><a href="#euler">Euler Eqs</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="introduction">
+            <h2>1. Introduction to Hamiltonian Mechanics</h2>
+            <p>
+                Hamiltonian mechanics is a reformulation of classical mechanics introduced by William Rowan Hamilton
+                in 1833. Where Lagrangian mechanics works in <strong>configuration space</strong> with generalized
+                coordinates <span class="math-inline">q<sub>i</sub></span> and their velocities, the Hamiltonian
+                picture moves to <strong>phase space</strong>, whose coordinates are the
+                <span class="math-inline">q<sub>i</sub></span> together with their conjugate momenta
+                <span class="math-inline">p<sub>i</sub></span>.
+            </p>
+            <p>
+                The passage from the Lagrangian <span class="math-inline">L(q, q̇, t)</span> to the Hamiltonian
+                <span class="math-inline">H(q, p, t)</span> is a Legendre transform in the velocity variables.
+                The second-order Euler–Lagrange equations are thereby replaced by a first-order system — Hamilton’s
+                canonical equations — that is symmetric in coordinates and momenta and is the natural setting for
+                conservation laws, canonical transformations, and quantization.
+            </p>
+            <p>
+                This whitepaper develops the Hamiltonian formalism in full, then applies the same geometric ideas
+                to the dynamics of rigid bodies: generalized coordinates, body versus space frames, the inertia
+                tensor, principal axes, and Euler’s equations.
+            </p>
+            <div class="callout">
+                <strong>Key insight:</strong> Time evolution in Hamiltonian mechanics is a symplectic flow on
+                phase space generated by <em>H</em> itself. Energy is the generator of time translations, just as
+                momentum generates spatial translations and angular momentum generates rotations.
+            </div>
+        </section>
+
+        <section id="hamiltonian">
+            <h2>2. The Hamiltonian Function and Its Physical Significance</h2>
+            <p>
+                Given a Lagrangian <span class="math-inline">L(q, q̇, t)</span>, the conjugate momentum is
+            </p>
+            <p class="math">p<sub>i</sub> = ∂L / ∂q̇<sub>i</sub></p>
+            <p>
+                Provided this relation can be inverted for the velocities,
+                <span class="math-inline">q̇<sub>i</sub> = q̇<sub>i</sub>(q, p, t)</span>, the Hamiltonian is the
+                Legendre transform
+            </p>
+            <p class="math">H(q, p, t) = Σ<sub>i</sub> p<sub>i</sub> q̇<sub>i</sub> − L(q, q̇, t)</p>
+            <p>
+                with every velocity on the right-hand side expressed in terms of <em>q</em> and <em>p</em>.
+            </p>
+
+            <h3>2.1 When is H the total energy?</h3>
+            <p>
+                If the kinetic energy <em>T</em> is a homogeneous quadratic form in the velocities (the usual case
+                for scleronomic, time-independent constraints) and the potential <em>V</em> depends only on the
+                coordinates, then
+            </p>
+            <p class="math">H(q, p) = T(q, p) + V(q)</p>
+            <p>
+                so <em>H</em> is the total mechanical energy. This identification fails when the constraints are
+                rheonomic (explicitly time-dependent) or when the potential is velocity-dependent, as for a charged
+                particle in an electromagnetic field:
+            </p>
+            <p class="math">H = (1 / 2m) |<strong>p</strong> − q<strong>A</strong>(<strong>r</strong>, t)|² + q φ(<strong>r</strong>, t)</p>
+
+            <h3>2.2 Physical significance</h3>
+            <ul>
+                <li><strong>Generator of time evolution.</strong> Infinitesimal canonical transformations generated by <em>H</em> are precisely time translations.</li>
+                <li><strong>Phase-space Hamiltonian.</strong> Level sets <span class="math-inline">H(q, p) = E</span> are the energy surfaces on which the motion is confined when <em>H</em> is conserved.</li>
+                <li><strong>Bridge to statistical mechanics.</strong> The microcanonical ensemble is the uniform measure on an energy surface; Liouville’s theorem follows from Hamilton’s equations.</li>
+                <li><strong>Bridge to quantum mechanics.</strong> Canonical quantization replaces <span class="math-inline">{q, p} = 1</span> by <span class="math-inline">[q̂, p̂] = iℏ</span> and <em>H</em> by the Schrödinger operator.</li>
+            </ul>
+
+            <div class="example">
+                <h4>Example: Simple harmonic oscillator</h4>
+                <p class="math">L = ½ m q̇² − ½ k q² , &nbsp;&nbsp; p = m q̇</p>
+                <p class="math">H(q, p) = p² / (2m) + ½ k q²</p>
+                <p>
+                    <em>H</em> is the sum of kinetic and potential energy. Its elliptical level curves in the
+                    <span class="math-inline">(q, p)</span> plane are the orbits of the oscillator.
+                </p>
+            </div>
+        </section>
+
+        <section id="canonical-equations">
+            <h2>3. Hamilton’s Canonical Equations of Motion</h2>
+            <p>
+                Differentiating the Legendre transform and using the Euler–Lagrange equation yields the 2<em>n</em>
+                first-order equations
+            </p>
+            <p class="math">q̇<sub>i</sub> = ∂H / ∂p<sub>i</sub> , &nbsp;&nbsp;&nbsp; ṗ<sub>i</sub> = − ∂H / ∂q<sub>i</sub></p>
+            <p>
+                If a generalized force <span class="math-inline">Q<sub>i</sub></span> not derived from a potential
+                is present, it is added to the momentum equation:
+                <span class="math-inline">ṗ<sub>i</sub> = −∂H/∂q<sub>i</sub> + Q<sub>i</sub></span>.
+            </p>
+
+            <h3>3.1 Derivation sketch</h3>
+            <ol>
+                <li>From <span class="math-inline">H = Σ p q̇ − L</span>, take the differential <em>dH</em>.</li>
+                <li>Substitute <span class="math-inline">dL = Σ (∂L/∂q) dq + (∂L/∂q̇) dq̇ + (∂L/∂t) dt</span> and <span class="math-inline">p = ∂L/∂q̇</span>.</li>
+                <li>The <span class="math-inline">dq̇</span> terms cancel. Euler–Lagrange gives <span class="math-inline">ṗ = ∂L/∂q</span>, hence <span class="math-inline">dH = Σ (q̇ dp − ṗ dq) − (∂L/∂t) dt</span>.</li>
+                <li>Comparing with <span class="math-inline">dH = Σ (∂H/∂q dq + ∂H/∂p dp) + (∂H/∂t) dt</span> produces the canonical equations and <span class="math-inline">∂H/∂t = −∂L/∂t</span>.</li>
+            </ol>
+
+            <h3>3.2 Phase-space flow</h3>
+            <p>
+                The vector field <span class="math-inline">X<sub>H</sub> = (∂H/∂p, −∂H/∂q)</span> is the Hamiltonian
+                vector field. Trajectories never cross (uniqueness), preserve phase-space volume (Liouville), and
+                stay on level sets of <em>H</em> whenever <em>H</em> is time-independent.
+            </p>
+
+            <div class="threejs-container" id="phaseSpaceAnimation" role="img" aria-label="Interactive 3D view of harmonic-oscillator phase-space ellipses"></div>
+            <p class="viz-caption">Phase space of a harmonic oscillator. Green ellipses are energy contours; the red state point travels on a single contour. Drag to rotate.</p>
+
+            <div class="callout">
+                <strong>First-order versus second-order:</strong> Lagrange’s equations are <em>n</em> second-order
+                ODEs. Hamilton’s equations are 2<em>n</em> first-order ODEs. The two descriptions are equivalent,
+                but the first-order form is the one that admits a symplectic geometry and a Poisson-bracket algebra.
+            </div>
+        </section>
+
+        <section id="advantages">
+            <h2>4. Advantages of Hamilton’s Formalism over the Lagrangian Formulation</h2>
+            <p>
+                The Lagrangian already improves on Newton for constrained systems. The Hamiltonian goes further
+                whenever one needs geometry, transformations, or a path to quantum and statistical physics.
+            </p>
+            <div class="advantages">
+                <div class="advantage-card">
+                    <h4>First-Order Phase-Space Form</h4>
+                    <p>
+                        Coordinates and momenta enter on an equal footing. Existence, uniqueness, and geometric
+                        constructions (symplectic maps, generating functions) become transparent.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Canonical Transformations</h4>
+                    <p>
+                        A large group of transformations preserves the form of Hamilton’s equations. This is far
+                        richer than the point transformations of the Lagrangian theory.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Poisson Structure</h4>
+                    <p>
+                        Conserved quantities, symmetry algebras, and the correspondence principle
+                        <span class="math-inline">{ , } → [ , ] / iℏ</span> all live in the Poisson bracket.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Action–Angle Variables</h4>
+                    <p>
+                        For integrable systems a canonical transformation yields cyclic coordinates whose conjugate
+                        momenta are the actions. Perturbation theory (KAM, celestial mechanics) is built on this.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Liouville & Statistical Mechanics</h4>
+                    <p>
+                        Incompressibility of phase-space flow is immediate from
+                        <span class="math-inline">div X<sub>H</sub> = 0</span>, the starting point of equilibrium
+                        statistical mechanics.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Pathway to Quantum Theory</h4>
+                    <p>
+                        The Hamiltonian is the classical counterpart of the Schrödinger operator; path integrals
+                        still start from the action, but canonical quantization starts from <em>H</em> and the
+                        Poisson algebra.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="formalismChart" aria-label="Bar chart comparing strengths of Lagrangian and Hamiltonian formalisms"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Schematic emphasis of each formalism across typical theoretical tasks. Neither replaces the other; they are complementary.</p>
+        </section>
+
+        <section id="energy">
+            <h2>5. Conservation of Energy</h2>
+            <p>
+                Along a solution of Hamilton’s equations,
+            </p>
+            <p class="math">dH/dt = ∂H/∂t + Σ<sub>i</sub> (∂H/∂q<sub>i</sub> q̇<sub>i</sub> + ∂H/∂p<sub>i</sub> ṗ<sub>i</sub>) = ∂H/∂t</p>
+            <p>
+                The sum vanishes identically by the canonical equations. Therefore:
+            </p>
+            <ul>
+                <li>If <span class="math-inline">H</span> does not depend explicitly on time, then <span class="math-inline">H</span> is a constant of the motion.</li>
+                <li>Combined with <span class="math-inline">∂H/∂t = −∂L/∂t</span>, this recovers the Lagrangian criterion: time-translation invariance of <em>L</em> implies conservation of <em>H</em>.</li>
+            </ul>
+
+            <h3>5.1 Energy surfaces</h3>
+            <p>
+                For an autonomous system the orbit lies on the hypersurface
+                <span class="math-inline">H(q, p) = E</span>. In one degree of freedom this is a curve (an ellipse
+                for the harmonic oscillator, a more complicated oval for the pendulum). In <em>n</em> degrees of
+                freedom it is a (2<em>n</em> − 1)-dimensional manifold; integrability foliates it further into
+                invariant tori.
+            </p>
+
+            <div class="example">
+                <h4>Jacobi integral</h4>
+                <p>
+                    Even when the potential is time-independent but the kinetic energy contains gyroscopic or
+                    rheonomic pieces, the conserved quantity may differ from the Newtonian energy. The Jacobi
+                    integral of celestial mechanics is the Hamiltonian in a rotating frame, and includes a
+                    centrifugal contribution.
+                </p>
+            </div>
+
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="energyChart" aria-label="Line chart of kinetic, potential and Hamiltonian energy versus time"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Harmonic oscillator: T and V oscillate in antiphase; H = T + V is strictly constant.</p>
+        </section>
+
+        <section id="applications">
+            <h2>6. Applications of Hamilton’s Equations to Simple Systems</h2>
+            <p>
+                The following textbook systems show how little algebra is required once <em>H</em> is written down.
+            </p>
+
+            <div class="example">
+                <h4>6.1 Simple harmonic oscillator</h4>
+                <p class="math">H = p² / (2m) + ½ k q²</p>
+                <p class="math">q̇ = p/m , &nbsp;&nbsp; ṗ = −k q</p>
+                <p>
+                    Differentiating the first and substituting the second recovers
+                    <span class="math-inline">q̈ + ω² q = 0</span> with <span class="math-inline">ω = √(k/m)</span>.
+                    The phase portrait is a nested family of ellipses.
+                </p>
+            </div>
+
+            <div class="example">
+                <h4>6.2 Simple pendulum</h4>
+                <p>
+                    Generalized coordinate θ (from the downward vertical), conjugate momentum
+                    <span class="math-inline">p<sub>θ</sub> = m ℓ² θ̇</span>:
+                </p>
+                <p class="math">H = p<sub>θ</sub>² / (2 m ℓ²) − m g ℓ cos θ</p>
+                <p class="math">θ̇ = p<sub>θ</sub> / (m ℓ²) , &nbsp;&nbsp; ṗ<sub>θ</sub> = − m g ℓ sin θ</p>
+                <p>
+                    Closed orbits (libration) exist for <span class="math-inline">E < m g ℓ</span>; circulating
+                    orbits (rotation over the top) exist for <span class="math-inline">E > m g ℓ</span>. The
+                    separatrix at <span class="math-inline">E = m g ℓ</span> is the infinite-period homoclinic
+                    trajectory through the inverted equilibrium.
+                </p>
+            </div>
+
+            <div class="threejs-container" id="pendulumAnimation" role="img" aria-label="Real-time simulation of a simple pendulum integrated from Hamilton’s equations"></div>
+            <p class="viz-caption">Simple pendulum integrated with Hamilton’s equations. The trail traces the bob; energy is conserved to integrator accuracy.</p>
+
+            <div class="example">
+                <h4>6.3 Central-force problem</h4>
+                <p class="math">H = p<sub>r</sub>² / (2m) + p<sub>θ</sub>² / (2m r²) + V(r)</p>
+                <p>
+                    θ is cyclic, so <span class="math-inline">p<sub>θ</sub> = ℓ</span> is constant. The radial
+                    motion is one-dimensional with effective potential
+                    <span class="math-inline">V<sub>eff</sub>(r) = V(r) + ℓ² / (2m r²)</span>.
+                </p>
+            </div>
+
+            <div class="example">
+                <h4>6.4 Free particle</h4>
+                <p class="math">H = |<strong>p</strong>|² / (2m) &nbsp;⇒&nbsp; q̇ = p/m , &nbsp; ṗ = 0</p>
+                <p>Uniform rectilinear motion: momentum is conserved because <em>H</em> is independent of <em>q</em>.</p>
+            </div>
+        </section>
+
+        <section id="poisson">
+            <h2>7. Poisson Brackets</h2>
+            <p>
+                For two phase-space functions <span class="math-inline">f(q, p, t)</span> and
+                <span class="math-inline">g(q, p, t)</span> the Poisson bracket is
+            </p>
+            <p class="math">{f, g} = Σ<sub>i</sub> ( ∂f/∂q<sub>i</sub> · ∂g/∂p<sub>i</sub> − ∂f/∂p<sub>i</sub> · ∂g/∂q<sub>i</sub> )</p>
+
+            <h3>7.1 Algebraic properties</h3>
+            <ul>
+                <li><strong>Antisymmetry:</strong> <span class="math-inline">{f, g} = −{g, f}</span>, hence <span class="math-inline">{f, f} = 0</span>.</li>
+                <li><strong>Bilinearity</strong> over the reals (or over constants of the motion).</li>
+                <li><strong>Leibniz (derivation) rule:</strong> <span class="math-inline">{f, g h} = {f, g} h + g {f, h}</span>.</li>
+                <li><strong>Jacobi identity:</strong> <span class="math-inline">{f, {g, h}} + {g, {h, f}} + {h, {f, g}} = 0</span>.</li>
+            </ul>
+            <p>
+                These make the smooth functions on phase space into a Lie algebra — the same abstract structure
+                that the commutator gives to quantum observables.
+            </p>
+
+            <h3>7.2 Fundamental brackets and equations of motion</h3>
+            <p class="math">{q<sub>i</sub>, q<sub>j</sub>} = 0 , &nbsp;&nbsp; {p<sub>i</sub>, p<sub>j</sub>} = 0 , &nbsp;&nbsp; {q<sub>i</sub>, p<sub>j</sub>} = δ<sub>ij</sub></p>
+            <p>
+                Any observable evolves as
+            </p>
+            <p class="math">df/dt = {f, H} + ∂f/∂t</p>
+            <p>
+                In particular Hamilton’s equations themselves are
+                <span class="math-inline">q̇<sub>i</sub> = {q<sub>i</sub>, H}</span> and
+                <span class="math-inline">ṗ<sub>i</sub> = {p<sub>i</sub>, H}</span>.
+                A quantity with no explicit time dependence is conserved if and only if it Poisson-commutes
+                with the Hamiltonian: <span class="math-inline">{f, H} = 0</span>.
+            </p>
+
+            <div class="two-col">
+                <div class="example">
+                    <h4>Angular-momentum algebra</h4>
+                    <p class="math">{L<sub>i</sub>, L<sub>j</sub>} = ε<sub>ijk</sub> L<sub>k</sub></p>
+                    <p>
+                        The same structure constants appear in the quantum commutation relations of angular
+                        momentum. If <em>H</em> is rotationally invariant, then <span class="math-inline">{L<sub>i</sub>, H} = 0</span>
+                        and each component of <strong>L</strong> is conserved.
+                    </p>
+                </div>
+                <div class="example">
+                    <h4>Canonical invariance</h4>
+                    <p>
+                        A transformation <span class="math-inline">(q, p) → (Q, P)</span> is canonical if and
+                        only if it preserves Poisson brackets:
+                        <span class="math-inline">{Q<sub>i</sub>, P<sub>j</sub>}<sub>q,p</sub> = δ<sub>ij</sub></span>.
+                        Equivalently, its Jacobian is a symplectic matrix.
+                    </p>
+                </div>
+            </div>
+
+            <div class="callout">
+                <strong>Quantization rule of thumb:</strong> Dirac’s correspondence
+                <span class="math-inline">{f, g} → (1 / iℏ) [f̂, ĝ]</span> turns the Poisson algebra into the
+                Heisenberg algebra. This is why the Hamiltonian — not the Lagrangian — is the starting point of
+                canonical quantization.
+            </div>
+        </section>
+
+        <section id="canonical-transformations">
+            <h2>8. Canonical Transformations</h2>
+            <p>
+                A coordinate change on phase space
+                <span class="math-inline">Q = Q(q, p, t)</span>,
+                <span class="math-inline">P = P(q, p, t)</span>
+                is <strong>canonical</strong> if it preserves the form of Hamilton’s equations: there exists a
+                new Hamiltonian <span class="math-inline">K(Q, P, t)</span> such that
+            </p>
+            <p class="math">Q̇<sub>i</sub> = ∂K / ∂P<sub>i</sub> , &nbsp;&nbsp; Ṗ<sub>i</sub> = − ∂K / ∂Q<sub>i</sub></p>
+
+            <h3>8.1 Why they matter</h3>
+            <p>
+                Point transformations (changes of the <em>q</em>’s alone) are a small subgroup. Canonical
+                transformations can mix coordinates and momenta, send a complicated <em>H</em> into a trivial
+                <em>K</em> (as in the Hamilton–Jacobi method), or isolate action–angle variables for perturbation
+                theory.
+            </p>
+
+            <h3>8.2 Characterizations</h3>
+            <ul>
+                <li>Preservation of the symplectic form: <span class="math-inline">Σ dQ<sub>i</sub> ∧ dP<sub>i</sub> = Σ dq<sub>i</sub> ∧ dp<sub>i</sub></span> (up to an exact term if time-dependent).</li>
+                <li>Preservation of fundamental Poisson brackets.</li>
+                <li>Existence of a generating function (Section 9).</li>
+                <li>The Jacobian matrix <em>M</em> satisfies <span class="math-inline">M<sup>T</sup> J M = J</span>, where <em>J</em> is the symplectic unit.</li>
+            </ul>
+
+            <div class="example">
+                <h4>Exchange transformation</h4>
+                <p class="math">Q = p , &nbsp;&nbsp; P = −q</p>
+                <p>
+                    Coordinates and momenta trade roles (with a sign). This is canonical but is <em>not</em> a
+                    point transformation — a distinctly Hamiltonian phenomenon.
+                </p>
+            </div>
+
+            <div class="example">
+                <h4>Infinitesimal canonical transformations</h4>
+                <p>
+                    Every phase-space function <em>G</em> generates an infinitesimal canonical transformation
+                    via <span class="math-inline">δq = ε {q, G}</span>,
+                    <span class="math-inline">δp = ε {p, G}</span>.
+                    Taking <em>G = H</em> recovers time evolution: Hamiltonian flow is itself a continuous
+                    canonical transformation.
+                </p>
+            </div>
+        </section>
+
+        <section id="generating-functions">
+            <h2>9. Generating Functions</h2>
+            <p>
+                A canonical transformation may be encoded in a single scalar, the generating function, of one
+                of four classical types according to which mixed pair of old and new variables is used as the
+                independent set.
+            </p>
+
+            <div class="advantages">
+                <div class="advantage-card">
+                    <h4>Type 1 — F<sub>1</sub>(q, Q, t)</h4>
+                    <p class="math">p<sub>i</sub> = ∂F<sub>1</sub>/∂q<sub>i</sub></p>
+                    <p class="math">P<sub>i</sub> = −∂F<sub>1</sub>/∂Q<sub>i</sub></p>
+                    <p>Useful when old and new coordinates are independent. The exchange map is generated by <span class="math-inline">F<sub>1</sub> = q Q</span>.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Type 2 — F<sub>2</sub>(q, P, t)</h4>
+                    <p class="math">p<sub>i</sub> = ∂F<sub>2</sub>/∂q<sub>i</sub></p>
+                    <p class="math">Q<sub>i</sub> = ∂F<sub>2</sub>/∂P<sub>i</sub></p>
+                    <p>The workhorse. The identity map is <span class="math-inline">F<sub>2</sub> = Σ q<sub>i</sub> P<sub>i</sub></span>. Point transformations live here.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Type 3 — F<sub>3</sub>(p, Q, t)</h4>
+                    <p class="math">q<sub>i</sub> = −∂F<sub>3</sub>/∂p<sub>i</sub></p>
+                    <p class="math">P<sub>i</sub> = −∂F<sub>3</sub>/∂Q<sub>i</sub></p>
+                    <p>The dual of Type 1, with old momenta and new coordinates as independents.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Type 4 — F<sub>4</sub>(p, P, t)</h4>
+                    <p class="math">q<sub>i</sub> = −∂F<sub>4</sub>/∂p<sub>i</sub></p>
+                    <p class="math">Q<sub>i</sub> = ∂F<sub>4</sub>/∂P<sub>i</sub></p>
+                    <p>Used less often; natural when both old and new momenta are convenient labels.</p>
+                </div>
+            </div>
+            <p>
+                In every case the new Hamiltonian is
+            </p>
+            <p class="math">K(Q, P, t) = H(q, p, t) + ∂F / ∂t</p>
+            <p>
+                If the generating function does not depend explicitly on time, then <em>K</em> is just <em>H</em>
+                rewritten in the new variables.
+            </p>
+
+            <div class="example">
+                <h4>Worked example: identity and point transformations</h4>
+                <p>
+                    <span class="math-inline">F<sub>2</sub> = Σ q<sub>i</sub> P<sub>i</sub></span> gives
+                    <span class="math-inline">p = P</span> and <span class="math-inline">Q = q</span> — the
+                    identity. Replacing <em>q</em> by a function of new coordinates,
+                    <span class="math-inline">F<sub>2</sub> = Σ f<sub>i</sub>(q) P<sub>i</sub></span>,
+                    generates an arbitrary point transformation together with the corresponding covariant
+                    transformation of the momenta.
+                </p>
+            </div>
+
+            <div class="example">
+                <h4>Worked example: harmonic oscillator to polar (action–angle) form</h4>
+                <p>
+                    The Type-1 generating function
+                    <span class="math-inline">F<sub>1</sub>(q, Q) = (m ω q² / 2) cot Q</span>
+                    sends the oscillator Hamiltonian to
+                </p>
+                <p class="math">K = ω P , &nbsp;&nbsp; P = E / ω</p>
+                <p>
+                    <em>Q</em> is then an ignorable angle advancing as <span class="math-inline">Q̇ = ω</span>,
+                    and <em>P</em> is the action. This is the prototype of action–angle coordinates.
+                </p>
+            </div>
+
+            <div class="callout">
+                <strong>Hamilton–Jacobi equation:</strong> Seeking a Type-2 generating function
+                <span class="math-inline">S(q, P, t)</span> that trivializes <em>K</em> (e.g. <em>K</em> = 0)
+                produces the Hamilton–Jacobi partial differential equation
+                <span class="math-inline">H(q, ∂S/∂q, t) + ∂S/∂t = 0</span>.
+                Complete integrals of this PDE generate the dynamics by quadrature.
+            </div>
+        </section>
+
+        <section id="rigid-body">
+            <h2>10. Generalized Coordinates of a Rigid Body</h2>
+            <p>
+                A rigid body is a system of particles (or a continuum) whose mutual distances are constrained
+                to be constant. After the holonomic rigidity constraints are imposed, a free rigid body in
+                three-dimensional space has <strong>six degrees of freedom</strong>: three of translation of the
+                centre of mass, and three of orientation.
+            </p>
+
+            <h3>10.1 Translational coordinates</h3>
+            <p>
+                The centre-of-mass coordinates <span class="math-inline">(X, Y, Z)</span> are the natural
+                translational generalized coordinates. By König’s theorem the kinetic energy splits into
+                centre-of-mass motion plus motion relative to the centre of mass, so the rotational problem
+                decouples from a free translation (or from motion in a uniform gravitational field, up to the
+                potential <span class="math-inline">M g Z</span>).
+            </p>
+
+            <h3>10.2 Rotational coordinates: Euler angles</h3>
+            <p>
+                Orientation is specified by a rotation taking a space-fixed frame into a body-fixed frame.
+                A standard 3–1–3 Euler chart uses
+            </p>
+            <ul>
+                <li><strong>φ</strong> — precession, rotation about the space <em>z</em>-axis;</li>
+                <li><strong>θ</strong> — nutation, rotation about the line of nodes;</li>
+                <li><strong>ψ</strong> — spin, rotation about the body <em>z</em>-axis.</li>
+            </ul>
+            <p class="math">R = R<sub>z</sub>(φ) R<sub>x</sub>(θ) R<sub>z</sub>(ψ)</p>
+            <p>
+                The chart is singular at <span class="math-inline">θ = 0, π</span> (gimbal lock). Alternative
+                parameterizations — unit quaternions (four coordinates, one constraint) or rotation matrices
+                (nine coordinates, six constraints) — avoid the coordinate singularity at the cost of redundancy.
+            </p>
+
+            <div class="callout">
+                <strong>Chasles’ theorem:</strong> the most general displacement of a rigid body is a translation
+                of an arbitrary point together with a rotation about an axis through that point. The six
+                generalized coordinates are the three translational components plus the three parameters of that
+                rotation.
+            </div>
+        </section>
+
+        <section id="frames">
+            <h2>11. Body and Space Reference Systems</h2>
+            <p>
+                Two orthonormal frames are in play:
+            </p>
+            <div class="two-col">
+                <div class="example">
+                    <h4>Space frame (inertial)</h4>
+                    <p>
+                        Axes <span class="math-inline">(e<sub>1</sub>, e<sub>2</sub>, e<sub>3</sub>)</span> fixed
+                        in an inertial laboratory. Newton’s and Euler’s laws in their Newtonian form refer to
+                        this frame. Angular momentum and energy are most simply conserved here when external
+                        torques vanish.
+                    </p>
+                </div>
+                <div class="example">
+                    <h4>Body frame</h4>
+                    <p>
+                        Axes <span class="math-inline">(ê<sub>1</sub>, ê<sub>2</sub>, ê<sub>3</sub>)</span> painted
+                        on the body. The inertia tensor is constant in this frame, which is why Euler’s equations
+                        are written there. The body frame is non-inertial: it rotates with angular velocity
+                        <strong>ω</strong>.
+                    </p>
+                </div>
+            </div>
+            <p>
+                A vector <strong>V</strong> has two sets of components related by the instantaneous rotation
+                matrix <em>R(t)</em>:
+            </p>
+            <p class="math"><strong>V</strong><sub>space</sub> = R(t) <strong>V</strong><sub>body</sub></p>
+            <p>
+                Time derivatives in the two frames differ by the transport theorem
+            </p>
+            <p class="math">(d<strong>V</strong>/dt)<sub>space</sub> = (d<strong>V</strong>/dt)<sub>body</sub> + <strong>ω</strong> × <strong>V</strong></p>
+
+            <h3>11.1 Angular velocity in Euler angles (3–1–3)</h3>
+            <p>
+                Adding the three sequential angular velocities and projecting onto body axes yields
+            </p>
+            <p class="math">ω<sub>1</sub> = θ̇ cos ψ + φ̇ sin θ sin ψ</p>
+            <p class="math">ω<sub>2</sub> = −θ̇ sin ψ + φ̇ sin θ cos ψ</p>
+            <p class="math">ω<sub>3</sub> = ψ̇ + φ̇ cos θ</p>
+
+            <div class="threejs-container" id="framesAnimation" role="img" aria-label="Cube with body-fixed axes rotating inside a space-fixed triad"></div>
+            <p class="viz-caption">Space axes (muted, fixed) versus body axes (bright, glued to the cube). Drag to inspect the two triads.</p>
+        </section>
+
+        <section id="inertia">
+            <h2>12. Angular Momentum and the Moment of Inertia Tensor</h2>
+            <p>
+                Relative to a chosen origin (almost always the centre of mass for a free body, or a fixed point
+                for a body with a pivot), the angular momentum of a rigid body is linear in the angular velocity:
+            </p>
+            <p class="math"><strong>L</strong> = <strong>I</strong> <strong>ω</strong></p>
+            <p>
+                The linear map <strong>I</strong> is the <strong>inertia tensor</strong>, with Cartesian components
+            </p>
+            <p class="math">I<sub>ij</sub> = ∫ (r² δ<sub>ij</sub> − x<sub>i</sub> x<sub>j</sub>) dm</p>
+            <p>
+                Diagonal entries are moments of inertia; off-diagonal entries
+                <span class="math-inline">I<sub>xy</sub> = −∫ x y dm</span> (and cyclic) are products of inertia.
+                <strong>I</strong> is symmetric and positive definite, hence orthogonally diagonalizable.
+            </p>
+
+            <h3>12.1 Simple bodies about their centre of mass</h3>
+            <div class="example">
+                <h4>Solid sphere, mass M, radius R</h4>
+                <p class="math">I<sub>ij</sub> = (2/5) M R² δ<sub>ij</sub></p>
+                <p>
+                    Every axis through the centre is a principal axis with the same moment
+                    <span class="math-inline">(2/5) M R²</span>. A thin spherical shell gives
+                    <span class="math-inline">(2/3) M R²</span>.
+                </p>
+            </div>
+            <div class="example">
+                <h4>Solid cube, mass M, side a</h4>
+                <p>
+                    Axes through the centre and parallel to the edges are principal, with
+                </p>
+                <p class="math">I<sub>xx</sub> = I<sub>yy</sub> = I<sub>zz</sub> = (1/6) M a²</p>
+                <p>
+                    (equivalently <span class="math-inline">M a² / 6</span> from
+                    <span class="math-inline">∫(x² + y²) dm = M(a² + a²)/12</span>).
+                    Products of inertia vanish by cubic symmetry, and the inertia tensor about the centre is
+                    isotropic: every axis through the centre is principal with the same moment.
+                </p>
+            </div>
+            <div class="example">
+                <h4>Solid circular cylinder, mass M, radius R, height h</h4>
+                <p>
+                    The symmetry axis <em>z</em> and any transverse CM axis are principal:
+                </p>
+                <p class="math">I<sub>zz</sub> = ½ M R²</p>
+                <p class="math">I<sub>xx</sub> = I<sub>yy</sub> = ¼ M R² + (1/12) M h²</p>
+                <p>
+                    The second formula is the perpendicular-axis / parallel-axis combination of a disk and a
+                    line distribution along the generators.
+                </p>
+            </div>
+
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="inertiaChart" aria-label="Bar chart of characteristic moments of inertia for sphere, cube and cylinder"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Characteristic principal moments in units of M L², with L the natural length (R for sphere and cylinder, side a for the cube). Cylinder transverse uses h = 2R.</p>
+
+            <div class="callout">
+                <strong>Parallel-axis theorem:</strong>
+                <span class="math-inline">I<sub>z</sub>(parallel) = I<sub>z</sub>(CM) + M d²</span>.
+                Once the CM tensor is known, moments about any parallel axis follow at once — essential for
+                compound pendulums and rolling bodies.
+            </div>
+        </section>
+
+        <section id="principal-axes">
+            <h2>13. Principal Axes and Principal Moments of Inertia</h2>
+            <p>
+                Because <strong>I</strong> is a real symmetric 3 × 3 matrix it possesses three orthonormal
+                eigenvectors — the <strong>principal axes</strong> — and three real eigenvalues
+                <span class="math-inline">I<sub>1</sub>, I<sub>2</sub>, I<sub>3</sub></span> — the
+                <strong>principal moments</strong>:
+            </p>
+            <p class="math"><strong>I</strong> n̂<sub>α</sub> = I<sub>α</sub> n̂<sub>α</sub> , &nbsp;&nbsp; α = 1, 2, 3</p>
+            <p>
+                In the principal frame the inertia tensor is diagonal and
+            </p>
+            <p class="math">L<sub>1</sub> = I<sub>1</sub> ω<sub>1</sub> , &nbsp;&nbsp; L<sub>2</sub> = I<sub>2</sub> ω<sub>2</sub> , &nbsp;&nbsp; L<sub>3</sub> = I<sub>3</sub> ω<sub>3</sub></p>
+
+            <h3>13.1 Geometric identification</h3>
+            <ul>
+                <li><strong>Sphere:</strong> every axis is principal; <span class="math-inline">I<sub>1</sub> = I<sub>2</sub> = I<sub>3</sub> = (2/5) M R²</span>.</li>
+                <li><strong>Cube:</strong> the three edge-parallel CM axes are principal and degenerate, <span class="math-inline">I<sub>1</sub> = I<sub>2</sub> = I<sub>3</sub> = M a² / 6</span>. The space diagonal is also a principal axis of the same moment (full isotropy of the tensor in the cube’s symmetry).</li>
+                <li><strong>Cylinder:</strong> the symmetry axis and any two orthogonal transverse CM axes. If <span class="math-inline">h ≠ √3 R</span> the axial and transverse moments differ; if they coincide the cylinder is inertially spherical.</li>
+                <li><strong>Generic body:</strong> solve det(<strong>I</strong> − λ 1) = 0. Alignment with geometric symmetry axes is guaranteed whenever a symmetry axis exists (it is automatically an eigenvector).</li>
+            </ul>
+
+            <h3>13.2 Inertia ellipsoid</h3>
+            <p>
+                The quadratic form <span class="math-inline">T<sub>rot</sub> = ½ <strong>ω</strong> · <strong>I</strong> <strong>ω</strong></span>
+                defines the inertia ellipsoid
+                <span class="math-inline">I<sub>1</sub> x² + I<sub>2</sub> y² + I<sub>3</sub> z² = 1</span>
+                in body coordinates. Poinsot’s construction: in torque-free motion the inertia ellipsoid rolls
+                without slipping on the invariable plane orthogonal to the conserved space-frame angular momentum.
+            </p>
+
+            <div class="callout">
+                <strong>Degeneracy and stability:</strong> if two principal moments coincide (symmetric top),
+                every axis in that plane is principal. Rotation about the unique distinct axis is stable;
+                the fully asymmetric case is governed by the tennis-racket (intermediate-axis) theorem of
+                Section 15.
+            </div>
+        </section>
+
+        <section id="kinetic-energy">
+            <h2>14. Kinetic Energy of a Rigid Body</h2>
+            <p>
+                König’s theorem decomposes the kinetic energy into translational and rotational pieces about
+                the centre of mass:
+            </p>
+            <p class="math">T = ½ M |<strong>V</strong><sub>cm</sub>|² + ½ <strong>ω</strong> · <strong>I</strong><sub>cm</sub> <strong>ω</strong></p>
+            <p>
+                In a principal frame the rotational term is purely quadratic and diagonal:
+            </p>
+            <p class="math">T<sub>rot</sub> = ½ I<sub>1</sub> ω<sub>1</sub>² + ½ I<sub>2</sub> ω<sub>2</sub>² + ½ I<sub>3</sub> ω<sub>3</sub>²</p>
+            <p>
+                Equivalently <span class="math-inline">T<sub>rot</sub> = ½ <strong>ω</strong> · <strong>L</strong></span>.
+                If the body is constrained to rotate about a fixed point <em>O</em> (physical pendulum, top with
+                a pivot), one uses <strong>I</strong> about <em>O</em> rather than about the CM and drops the
+                separate translational term.
+            </p>
+
+            <h3>14.1 Lagrangian of a free rigid body</h3>
+            <p>
+                With no potential, <span class="math-inline">L = T</span>. Written in Euler angles the
+                Lagrangian is a quadratic form in <span class="math-inline">(φ̇, θ̇, ψ̇)</span> with
+                configuration-dependent coefficients. The Hamiltonian is the Legendre transform of that
+                quadratic form; in body-frame components it is simply
+            </p>
+            <p class="math">H = L<sub>1</sub>² / (2 I<sub>1</sub>) + L<sub>2</sub>² / (2 I<sub>2</sub>) + L<sub>3</sub>² / (2 I<sub>3</sub>)</p>
+            <p>
+                which is the starting point of the Euler–Poinsot rigid-body dynamics on the angular-momentum
+                sphere.
+            </p>
+
+            <div class="example">
+                <h4>Symmetric top (I<sub>1</sub> = I<sub>2</sub> ≠ I<sub>3</sub>)</h4>
+                <p>
+                    φ and ψ are cyclic, so <span class="math-inline">p<sub>φ</sub></span> (space-vertical
+                    angular momentum) and <span class="math-inline">p<sub>ψ</sub></span> (spin) are conserved.
+                    The nutation angle θ obeys an effective one-dimensional potential, recovering uniform
+                    precession, nutation, and the sleeping-top equilibrium.
+                </p>
+            </div>
+        </section>
+
+        <section id="euler">
+            <h2>15. Euler Equations of Motion of a Rigid Body</h2>
+            <p>
+                In the body principal frame the transport theorem applied to
+                <span class="math-inline"><strong>L</strong> = <strong>I ω</strong></span>, together with
+                <span class="math-inline">(d<strong>L</strong>/dt)<sub>space</sub> = <strong>N</strong></span>
+                (external torque), yields Euler’s equations
+            </p>
+            <p class="math">I<sub>1</sub> ω̇<sub>1</sub> − (I<sub>2</sub> − I<sub>3</sub>) ω<sub>2</sub> ω<sub>3</sub> = N<sub>1</sub></p>
+            <p class="math">I<sub>2</sub> ω̇<sub>2</sub> − (I<sub>3</sub> − I<sub>1</sub>) ω<sub>3</sub> ω<sub>1</sub> = N<sub>2</sub></p>
+            <p class="math">I<sub>3</sub> ω̇<sub>3</sub> − (I<sub>1</sub> − I<sub>2</sub>) ω<sub>1</sub> ω<sub>2</sub> = N<sub>3</sub></p>
+            <p>
+                These are first-order in <strong>ω</strong> but must be supplemented by kinematic equations
+                (Euler-angle rates, or a quaternion ODE) to reconstruct the orientation.
+            </p>
+
+            <h3>15.1 Torque-free motion</h3>
+            <p>
+                For <span class="math-inline"><strong>N</strong> = 0</span> two quantities are conserved:
+                the rotational energy <em>T</em> and the magnitude of angular momentum
+                <span class="math-inline">|<strong>L</strong>|</span>. Their intersection in
+                <strong>ω</strong>-space (or on the <strong>L</strong>-sphere) is a polhode curve. In space,
+                <strong>L</strong> is a fixed vector (the invariable axis) and the energy ellipsoid rolls on
+                the invariable plane (Poinsot).
+            </p>
+
+            <h3>15.2 Stability of principal-axis rotation — tennis-racket theorem</h3>
+            <p>
+                Order the principal moments <span class="math-inline">I<sub>1</sub> < I<sub>2</sub> < I<sub>3</sub></span>.
+                Steady rotation about a principal axis is a solution of the torque-free Euler equations.
+                Linearization shows:
+            </p>
+            <ul>
+                <li>Rotation about the axis of largest moment (<span class="math-inline">I<sub>3</sub></span>) is stable.</li>
+                <li>Rotation about the axis of smallest moment (<span class="math-inline">I<sub>1</sub></span>) is stable.</li>
+                <li>Rotation about the <strong>intermediate</strong> axis (<span class="math-inline">I<sub>2</sub></span>) is unstable.</li>
+            </ul>
+            <p>
+                A tennis racket (or a book, or the T-handle of the Dzhanibekov effect) flipped about its
+                intermediate axis will reverse orientation in a spectacular π-flip — visible in the simulation
+                below.
+            </p>
+
+            <div class="threejs-container" id="eulerAnimation" role="img" aria-label="Torque-free tumbling of an asymmetric rigid body illustrating the intermediate-axis theorem"></div>
+            <p class="viz-caption">Asymmetric brick (I<sub>1</sub> < I<sub>2</sub> < I<sub>3</sub>) started near the intermediate principal axis. Cyan: conserved space-frame L. Yellow: body-frame ω. The π-flip is the tennis-racket / Dzhanibekov instability. Drag to rotate.</p>
+
+            <div class="example">
+                <h4>Symmetric Euler top (N = 0, I<sub>1</sub> = I<sub>2</sub>)</h4>
+                <p class="math">ω<sub>3</sub> = const , &nbsp;&nbsp; ω<sub>1</sub> + i ω<sub>2</sub> ∝ e<sup>i Ω t</sup></p>
+                <p>
+                    with <span class="math-inline">Ω = (I<sub>3</sub> − I<sub>1</sub>) ω<sub>3</sub> / I<sub>1</sub></span>.
+                    The angular-velocity vector precesses uniformly about the body symmetry axis, while the body
+                    symmetry axis precesses uniformly about the fixed <strong>L</strong> in space.
+                </p>
+            </div>
+
+            <div class="callout">
+                <strong>Hamiltonian structure:</strong> on the sphere of constant
+                <span class="math-inline">|<strong>L</strong>|</span>, Euler’s torque-free equations are
+                Hamilton’s equations for
+                <span class="math-inline">H = Σ L<sub>α</sub>² / (2 I<sub>α</sub>)</span>
+                with the rigid-body Poisson bracket
+                <span class="math-inline">{L<sub>i</sub>, L<sub>j</sub>} = −ε<sub>ijk</sub> L<sub>k</sub></span>
+                (body frame). The same geometry underlies the free rigid body as a Lie–Poisson system on
+                so(3)*.
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>16. Conclusion</h2>
+            <p>
+                Hamiltonian mechanics recasts the content of the Lagrangian theory in the symplectic geometry
+                of phase space. The payoff is a first-order calculus in which energy generates time evolution,
+                symmetries are Poisson-commuting conserved quantities, and a flexible group of canonical
+                transformations — encoded in generating functions — can simplify, integrate, or quantize a
+                system.
+            </p>
+            <p>
+                The development proceeded in two movements.
+            </p>
+            <ul>
+                <li>The Hamiltonian as a Legendre transform of <em>L</em>, and the conditions under which it equals <em>T + V</em>;</li>
+                <li>Hamilton’s canonical equations and the phase-space vector field;</li>
+                <li>Advantages over the Lagrangian formulation: symplectic maps, statistical mechanics, quantization;</li>
+                <li>Conservation of energy as <span class="math-inline">dH/dt = ∂H/∂t</span>;</li>
+                <li>Worked applications: oscillator, pendulum, central force, free particle;</li>
+                <li>Poisson brackets, their algebra, and the correspondence principle;</li>
+                <li>Canonical transformations and the four classical generating functions;</li>
+                <li>Rigid-body configuration: six coordinates, Euler angles, body versus space frames;</li>
+                <li>The inertia tensor of the sphere, cube and cylinder; principal axes and the inertia ellipsoid;</li>
+                <li>König’s theorem and the rotational Hamiltonian;</li>
+                <li>Euler’s equations, Poinsot motion, and the intermediate-axis theorem.</li>
+            </ul>
+            <p>
+                Taken together, the Hamiltonian and rigid-body formalisms are the working language of celestial
+                mechanics, rigid-body attitude control, molecular spectroscopy, and the canonical route into
+                quantum theory. Mastery of both is a practical tool and a conceptual gateway.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Hamiltonian Mechanics & Rigid Body Dynamics Whitepaper. All rights reserved.</p>
+    </footer>
+
+    <button class="toggle-dark-mode" onclick="toggleDarkMode()" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        navToggle.addEventListener('click', () => {
+            const open = navMenu.classList.toggle('open');
+            navToggle.setAttribute('aria-expanded', open);
+        });
+        navMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                navMenu.classList.remove('open');
+                navToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const formalismCtx = document.getElementById('formalismChart').getContext('2d');
+            new Chart(formalismCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Constrained DOF', 'Phase-space geometry', 'Canonical maps', 'Quantization', 'Perturbation / KAM', 'Multi-body energy'],
+                    datasets: [
+                        {
+                            label: 'Lagrangian',
+                            data: [90, 35, 25, 40, 30, 85],
+                            backgroundColor: 'rgba(52, 152, 219, 0.75)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Hamiltonian',
+                            data: [55, 95, 92, 90, 88, 70],
+                            backgroundColor: 'rgba(231, 76, 60, 0.75)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Relative Strength of the Two Formalisms',
+                            font: { size: 15, weight: '600' },
+                            color: '#2c3e50'
+                        },
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.dataset.label}: ${ctx.raw}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Relative fitness (schematic)' },
+                            grid: { color: 'rgba(0,0,0,0.06)' }
+                        },
+                        x: { grid: { display: false }, ticks: { maxRotation: 45, minRotation: 0 } }
+                    }
+                }
+            });
+
+            const energyCtx = document.getElementById('energyChart').getContext('2d');
+            const t = [];
+            const T = [];
+            const V = [];
+            const H = [];
+            const omega = 2 * Math.PI;
+            const A = 1, m = 1, k = m * omega * omega;
+            for (let i = 0; i <= 200; i++) {
+                const ti = i / 200;
+                t.push(ti);
+                const x = A * Math.cos(omega * ti);
+                const v = -A * omega * Math.sin(omega * ti);
+                const kin = 0.5 * m * v * v;
+                const pot = 0.5 * k * x * x;
+                T.push(kin);
+                V.push(pot);
+                H.push(kin + pot);
+            }
+            new Chart(energyCtx, {
+                type: 'line',
+                data: {
+                    labels: t.map(v => v.toFixed(2)),
+                    datasets: [
+                        {
+                            label: 'Kinetic T',
+                            data: T,
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            backgroundColor: 'rgba(52, 152, 219, 0.15)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Potential V',
+                            data: V,
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            backgroundColor: 'rgba(231, 76, 60, 0.15)',
+                            fill: true,
+                            tension: 0.3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Hamiltonian H = T+V',
+                            data: H,
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 2,
+                            borderDash: [6, 3],
+                            fill: false,
+                            tension: 0,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Energy Partition: H Conserved for the Oscillator',
+                            font: { size: 15, weight: '600' },
+                            color: '#2c3e50'
+                        },
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Time (periods)' },
+                            ticks: { maxTicksLimit: 8 }
+                        },
+                        y: {
+                            title: { display: true, text: 'Energy' },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            const inertiaCtx = document.getElementById('inertiaChart').getContext('2d');
+            new Chart(inertiaCtx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        ['Solid sphere', '(any diam.)'],
+                        ['Thin spherical', 'shell'],
+                        ['Solid cube', '(edge axis)'],
+                        ['Cylinder', '(symmetry axis)'],
+                        ['Cylinder', '(transverse, h=2R)']
+                    ],
+                    datasets: [{
+                        label: 'I / (M L²)',
+                        data: [0.40, 0.667, 0.167, 0.50, 0.583],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.75)',
+                            'rgba(155, 89, 182, 0.75)',
+                            'rgba(231, 76, 60, 0.75)',
+                            'rgba(46, 204, 113, 0.75)',
+                            'rgba(241, 196, 15, 0.85)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(231, 76, 60, 1)',
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(241, 196, 15, 1)'
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Principal Moments of Simple Rigid Bodies',
+                            font: { size: 15, weight: '600' },
+                            color: '#2c3e50'
+                        },
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const notes = [
+                                        'I = (2/5) M R²',
+                                        'I = (2/3) M R²',
+                                        'I = (1/6) M a²',
+                                        'I_zz = (1/2) M R²',
+                                        'I_xx = (1/4)MR² + (1/12)Mh²'
+                                    ];
+                                    return notes[ctx.dataIndex] + '  ≈  ' + ctx.raw;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 0.8,
+                            title: { display: true, text: 'I / (M L²)' },
+                            grid: { color: 'rgba(0,0,0,0.06)' }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+
+        function makeRenderer(container) {
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            return renderer;
+        }
+
+        function handleResize(container, camera, renderer) {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        }
+
+        function runWhenVisible(container, tick) {
+            let raf = 0;
+            let running = false;
+            function loop() {
+                if (!running) return;
+                tick();
+                raf = requestAnimationFrame(loop);
+            }
+            const io = new IntersectionObserver((entries) => {
+                const vis = entries[0] && entries[0].isIntersecting;
+                if (vis && !running) {
+                    running = true;
+                    loop();
+                } else if (!vis && running) {
+                    running = false;
+                    cancelAnimationFrame(raf);
+                }
+            }, { threshold: 0.05 });
+            io.observe(container);
+        }
+
+        function addLights(scene) {
+            const light = new THREE.DirectionalLight(0xffffff, 1.05);
+            light.position.set(3, 5, 4);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404060, 0.65));
+        }
+
+        (function () {
+            const container = document.getElementById('phaseSpaceAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.08;
+
+            const grid = new THREE.GridHelper(8, 16, 0x333333, 0x222222);
+            grid.rotation.x = Math.PI / 2;
+            scene.add(grid);
+
+            function makeEllipse(a, b, color) {
+                const pts = [];
+                for (let i = 0; i <= 64; i++) {
+                    const th = (i / 64) * Math.PI * 2;
+                    pts.push(new THREE.Vector3(a * Math.cos(th), b * Math.sin(th), 0));
+                }
+                return new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints(pts),
+                    new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.85 })
+                );
+            }
+            scene.add(makeEllipse(1.1, 1.1, 0x2ecc71));
+            scene.add(makeEllipse(1.8, 1.8, 0x27ae60));
+            scene.add(makeEllipse(2.5, 2.5, 0x1e8449));
+
+            const qAxis = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(-3.6, 0, 0), 7.2, 0x95a5a6, 0.18, 0.1);
+            const pAxis = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -3.6, 0), 7.2, 0x95a5a6, 0.18, 0.1);
+            scene.add(qAxis, pAxis);
+
+            const particle = new THREE.Mesh(
+                new THREE.SphereGeometry(0.14, 24, 24),
+                new THREE.MeshStandardMaterial({ color: 0xe74c3c, metalness: 0.3, roughness: 0.4 })
+            );
+            scene.add(particle);
+
+            const vArrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 0.9, 0x3498db, 0.18, 0.1);
+            scene.add(vArrow);
+
+            const trailPts = [];
+            for (let i = 0; i < 80; i++) trailPts.push(new THREE.Vector3());
+            const trail = new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(trailPts),
+                new THREE.LineBasicMaterial({ color: 0xf1c40f, transparent: true, opacity: 0.65 })
+            );
+            scene.add(trail);
+
+            addLights(scene);
+            camera.position.set(0, 0, 7.2);
+            controls.target.set(0, 0, 0);
+
+            const A = 1.8;
+            let t = 0;
+            runWhenVisible(container, function () {
+                t += 0.018;
+                const q = A * Math.cos(t);
+                const p = -A * Math.sin(t);
+                particle.position.set(q, p, 0);
+                const dir = new THREE.Vector3(-Math.sin(t), -Math.cos(t), 0).normalize();
+                vArrow.position.copy(particle.position);
+                vArrow.setDirection(dir);
+
+                const pos = trail.geometry.attributes.position.array;
+                for (let i = 79; i > 0; i--) {
+                    pos[i * 3] = pos[(i - 1) * 3];
+                    pos[i * 3 + 1] = pos[(i - 1) * 3 + 1];
+                    pos[i * 3 + 2] = pos[(i - 1) * 3 + 2];
+                }
+                pos[0] = q; pos[1] = p; pos[2] = 0;
+                trail.geometry.attributes.position.needsUpdate = true;
+
+                controls.update();
+                renderer.render(scene, camera);
+            });
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('pendulumAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+
+            addLights(scene);
+
+            const pivot = new THREE.Mesh(
+                new THREE.SphereGeometry(0.08, 16, 16),
+                new THREE.MeshStandardMaterial({ color: 0xbdc3c7 })
+            );
+            scene.add(pivot);
+
+            const bob = new THREE.Mesh(
+                new THREE.SphereGeometry(0.2, 24, 24),
+                new THREE.MeshStandardMaterial({ color: 0xe74c3c, metalness: 0.3, roughness: 0.4 })
+            );
+            scene.add(bob);
+
+            const rod = new THREE.Line(
+                new THREE.BufferGeometry(),
+                new THREE.LineBasicMaterial({ color: 0xecf0f1 })
+            );
+            scene.add(rod);
+
+            const trailLen = 100;
+            const trailPositions = new Float32Array(trailLen * 3);
+            const trailGeo = new THREE.BufferGeometry();
+            trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+            const trail = new THREE.Line(
+                trailGeo,
+                new THREE.LineBasicMaterial({ color: 0xf1c40f, transparent: true, opacity: 0.5 })
+            );
+            scene.add(trail);
+            let trailIdx = 0;
+
+            camera.position.set(0, -0.4, 5.2);
+            camera.lookAt(0, -0.8, 0);
+
+            const g = 9.81, L = 1.6, mass = 1, dt = 0.012;
+            let th = 2.15, pth = 0.4;
+
+            function step() {
+                pth += -mass * g * L * Math.sin(th) * dt;
+                th += pth / (mass * L * L) * dt;
+            }
+
+            runWhenVisible(container, function () {
+                step();
+                const x = L * Math.sin(th);
+                const y = -L * Math.cos(th);
+                bob.position.set(x, y, 0);
+                rod.geometry.setFromPoints([
+                    new THREE.Vector3(0, 0, 0),
+                    new THREE.Vector3(x, y, 0)
+                ]);
+                trailPositions[trailIdx * 3] = x;
+                trailPositions[trailIdx * 3 + 1] = y;
+                trailPositions[trailIdx * 3 + 2] = 0;
+                trailIdx = (trailIdx + 1) % trailLen;
+                trail.geometry.attributes.position.needsUpdate = true;
+                renderer.render(scene, camera);
+            });
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('framesAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            addLights(scene);
+
+            function triad(length, colors, opacity) {
+                const g = new THREE.Group();
+                const dirs = [
+                    new THREE.Vector3(1, 0, 0),
+                    new THREE.Vector3(0, 1, 0),
+                    new THREE.Vector3(0, 0, 1)
+                ];
+                dirs.forEach((d, i) => {
+                    const a = new THREE.ArrowHelper(d, new THREE.Vector3(), length, colors[i], 0.22, 0.12);
+                    a.line.material.transparent = true;
+                    a.line.material.opacity = opacity;
+                    a.cone.material.transparent = true;
+                    a.cone.material.opacity = opacity;
+                    g.add(a);
+                });
+                return g;
+            }
+
+            const spaceTriad = triad(2.4, [0x7f8c8d, 0x7f8c8d, 0x7f8c8d], 0.55);
+            scene.add(spaceTriad);
+
+            const body = new THREE.Group();
+            const cube = new THREE.Mesh(
+                new THREE.BoxGeometry(1.15, 1.15, 1.15),
+                new THREE.MeshStandardMaterial({
+                    color: 0x3498db,
+                    metalness: 0.25,
+                    roughness: 0.45,
+                    transparent: true,
+                    opacity: 0.55
+                })
+            );
+            body.add(cube);
+            const edges = new THREE.LineSegments(
+                new THREE.EdgesGeometry(new THREE.BoxGeometry(1.15, 1.15, 1.15)),
+                new THREE.LineBasicMaterial({ color: 0xecf0f1 })
+            );
+            body.add(edges);
+            body.add(triad(1.7, [0xe74c3c, 0x2ecc71, 0xf1c40f], 1));
+            scene.add(body);
+
+            const grid = new THREE.GridHelper(6, 12, 0x333333, 0x222222);
+            scene.add(grid);
+
+            camera.position.set(3.4, 2.6, 4.4);
+            controls.target.set(0, 0.2, 0);
+
+            let t = 0;
+            runWhenVisible(container, function () {
+                t += 0.01;
+                body.rotation.y = t * 0.7;
+                body.rotation.z = 0.35 * Math.sin(t * 0.45);
+                body.rotation.x = 0.25 * Math.cos(t * 0.3);
+                controls.update();
+                renderer.render(scene, camera);
+            });
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('eulerAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            addLights(scene);
+            scene.add(new THREE.GridHelper(7, 14, 0x333333, 0x222222));
+
+            const ax = 0.45, ay = 1.15, az = 1.85;
+            const M = 6;
+            const I1 = (M / 12) * (ay * ay + az * az);
+            const I2 = (M / 12) * (ax * ax + az * az);
+            const I3 = (M / 12) * (ax * ax + ay * ay);
+            const I = [I1, I2, I3];
+
+            const brick = new THREE.Mesh(
+                new THREE.BoxGeometry(ax * 2, ay * 2, az * 2),
+                new THREE.MeshStandardMaterial({ color: 0xe67e22, metalness: 0.3, roughness: 0.4 })
+            );
+            const brickEdges = new THREE.LineSegments(
+                new THREE.EdgesGeometry(new THREE.BoxGeometry(ax * 2, ay * 2, az * 2)),
+                new THREE.LineBasicMaterial({ color: 0xecf0f1 })
+            );
+            const body = new THREE.Group();
+            body.add(brick, brickEdges);
+            scene.add(body);
+
+            const wArrow = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(), 2.2, 0xf1c40f, 0.22, 0.14);
+            const LArrow = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(), 2.6, 0x3498db, 0.22, 0.14);
+            scene.add(wArrow, LArrow);
+
+            const trailLen = 160;
+            const trailPositions = new Float32Array(trailLen * 3);
+            const trailGeo = new THREE.BufferGeometry();
+            trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+            const trail = new THREE.Line(
+                trailGeo,
+                new THREE.LineBasicMaterial({ color: 0xe74c3c, transparent: true, opacity: 0.7 })
+            );
+            scene.add(trail);
+            let trailIdx = 0;
+
+            camera.position.set(4.2, 2.8, 5.2);
+            controls.target.set(0, 0, 0);
+
+            let w = [0.18, 3.35, 0.12];
+            const q = new THREE.Quaternion();
+            const dt = 1 / 90;
+
+            function eulerAccel(ww) {
+                return [
+                    ((I[1] - I[2]) * ww[1] * ww[2]) / I[0],
+                    ((I[2] - I[0]) * ww[2] * ww[0]) / I[1],
+                    ((I[0] - I[1]) * ww[0] * ww[1]) / I[2]
+                ];
+            }
+
+            function rk4(ww, h) {
+                const k1 = eulerAccel(ww);
+                const w2 = [ww[0] + 0.5 * h * k1[0], ww[1] + 0.5 * h * k1[1], ww[2] + 0.5 * h * k1[2]];
+                const k2 = eulerAccel(w2);
+                const w3 = [ww[0] + 0.5 * h * k2[0], ww[1] + 0.5 * h * k2[1], ww[2] + 0.5 * h * k2[2]];
+                const k3 = eulerAccel(w3);
+                const w4 = [ww[0] + h * k3[0], ww[1] + h * k3[1], ww[2] + h * k3[2]];
+                const k4 = eulerAccel(w4);
+                return [
+                    ww[0] + (h / 6) * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]),
+                    ww[1] + (h / 6) * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]),
+                    ww[2] + (h / 6) * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])
+                ];
+            }
+
+            const omegaQ = new THREE.Quaternion();
+            const qDot = new THREE.Quaternion();
+            const wBody = new THREE.Vector3();
+            const LBody = new THREE.Vector3();
+            const tipLocal = new THREE.Vector3(0, ay, az);
+
+            runWhenVisible(container, function () {
+                w = rk4(w, dt);
+                omegaQ.set(w[0], w[1], w[2], 0);
+                qDot.copy(q).multiply(omegaQ);
+                q.x += 0.5 * dt * qDot.x;
+                q.y += 0.5 * dt * qDot.y;
+                q.z += 0.5 * dt * qDot.z;
+                q.w += 0.5 * dt * qDot.w;
+                q.normalize();
+                body.quaternion.copy(q);
+
+                wBody.set(w[0], w[1], w[2]).applyQuaternion(q);
+                LBody.set(I[0] * w[0], I[1] * w[1], I[2] * w[2]).applyQuaternion(q);
+                if (wBody.length() > 1e-6) wArrow.setDirection(wBody.clone().normalize());
+                wArrow.setLength(1.4 + 0.25 * wBody.length(), 0.22, 0.14);
+                if (LBody.length() > 1e-6) LArrow.setDirection(LBody.clone().normalize());
+                LArrow.setLength(2.4, 0.22, 0.14);
+
+                const tip = tipLocal.clone().applyQuaternion(q);
+                trailPositions[trailIdx * 3] = tip.x;
+                trailPositions[trailIdx * 3 + 1] = tip.y;
+                trailPositions[trailIdx * 3 + 2] = tip.z;
+                trailIdx = (trailIdx + 1) % trailLen;
+                trail.geometry.attributes.position.needsUpdate = true;
+
+                controls.update();
+                renderer.render(scene, camera);
+            });
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+    </script>
+</body>
+</html>
