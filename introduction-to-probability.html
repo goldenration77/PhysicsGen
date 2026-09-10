@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Probability</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #7f8c8d;
+            --card-bg: #ffffff;
+            --math-bg: #f8f9fa;
+            --border-radius: 8px;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            overflow-x: hidden;
+        }
+
+        h1 { font-size: clamp(1.75rem, 5vw, 2.75rem); }
+        h2 { font-size: clamp(1.4rem, 3.5vw, 1.85rem); }
+        h3 { font-size: clamp(1.15rem, 2.5vw, 1.4rem); }
+        p, li { font-size: clamp(0.95rem, 2vw, 1.05rem); }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: clamp(1.5rem, 4vw, 2.5rem) 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        header h1 {
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            opacity: 0.92;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        nav {
+            background-color: var(--dark-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            gap: 0.5rem;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 0.4rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            gap: 0.15rem;
+            margin: 0;
+            padding: 0.4rem 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.4rem 0.7rem;
+            border-radius: 4px;
+            transition: background-color 0.2s, transform 0.15s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            display: block;
+        }
+
+        nav ul li a:hover,
+        nav ul li a:focus {
+            background-color: var(--secondary-color);
+            outline: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        section {
+            margin-bottom: 2rem;
+            padding: clamp(1.25rem, 3vw, 1.75rem);
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: box-shadow 0.25s;
+        }
+
+        section:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+            font-weight: 650;
+        }
+
+        section h3 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 0.75rem;
+            font-weight: 600;
+        }
+
+        p { margin-bottom: 1rem; }
+
+        ul, ol {
+            margin: 0.75rem 0 1rem 1.4rem;
+        }
+
+        li { margin-bottom: 0.4rem; }
+
+        .math {
+            font-family: 'Cambria Math', 'Times New Roman', 'Latin Modern Math', serif;
+            font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+            background-color: var(--math-bg);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            display: block;
+            margin: 1rem 0;
+            text-align: center;
+            overflow-x: auto;
+            line-height: 1.5;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .math-inline {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            background-color: var(--math-bg);
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: clamp(280px, 45vw, 400px);
+            margin: 1.5rem 0;
+            width: 100%;
+        }
+
+        .chart-wrapper {
+            background: #fafbfc;
+            border-radius: var(--border-radius);
+            padding: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .threejs-container {
+            height: clamp(320px, 55vw, 480px);
+            margin: 1.5rem 0;
+            border: 1px solid #dde1e6;
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+            background: #0a0e14;
+        }
+
+        .threejs-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .viz-caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: -0.75rem;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+
+        .example {
+            background-color: #f8f9fa;
+            padding: 1.1rem 1.25rem;
+            border-left: 4px solid var(--secondary-color);
+            margin: 1.25rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .example h4 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .advantages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .advantage-card {
+            background-color: #f8f9fa;
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .advantage-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .advantage-card h4 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout {
+            background: linear-gradient(135deg, rgba(52,152,219,0.08), rgba(46,204,113,0.06));
+            border: 1px solid rgba(52,152,219,0.25);
+            border-radius: var(--border-radius);
+            padding: 1.1rem 1.25rem;
+            margin: 1.25rem 0;
+        }
+
+        .callout strong {
+            color: var(--primary-color);
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            margin-top: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .toggle-dark-mode {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+            z-index: 1000;
+            font-size: 0.9rem;
+            transition: background-color 0.2s, transform 0.15s;
+        }
+
+        .toggle-dark-mode:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        .dark-mode {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #1a252f;
+            --dark-color: #0f161c;
+            --text-color: #ecf0f1;
+            --text-light: #bdc3c7;
+            --card-bg: #243447;
+            --math-bg: #1a252f;
+        }
+
+        .dark-mode body {
+            background-color: var(--light-color);
+        }
+
+        .dark-mode section {
+            background-color: var(--card-bg);
+        }
+
+        .dark-mode .math {
+            background-color: var(--math-bg);
+            color: #ecf0f1;
+            border-left-color: var(--primary-color);
+        }
+
+        .dark-mode .example,
+        .dark-mode .advantage-card {
+            background-color: #1e2a38;
+        }
+
+        .dark-mode .chart-wrapper {
+            background: #1e2a38;
+        }
+
+        .dark-mode .callout {
+            background: linear-gradient(135deg, rgba(52,152,219,0.15), rgba(46,204,113,0.1));
+            border-color: rgba(52,152,219,0.35);
+        }
+
+        .dark-mode .viz-caption {
+            color: #95a5a6;
+        }
+
+        .viz-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.85rem 1.25rem;
+            align-items: center;
+            margin: 0.5rem 0 0;
+            padding: 0.85rem 1rem;
+            background: var(--math-bg);
+            border-radius: var(--border-radius);
+        }
+
+        .viz-controls label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1 1 200px;
+        }
+
+        .viz-controls input[type="range"] {
+            flex: 1;
+            accent-color: var(--secondary-color);
+            min-width: 80px;
+        }
+
+        .viz-controls .val {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            min-width: 2.4rem;
+            color: var(--accent-color);
+            font-weight: 650;
+        }
+
+        .event-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin: 0.75rem 0 0;
+        }
+
+        .event-btns button,
+        .viz-overlay button {
+            background: var(--secondary-color);
+            color: #fff;
+            border: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .event-btns button.active {
+            background: var(--accent-color);
+        }
+
+        .viz-overlay {
+            position: absolute;
+            left: 0.75rem;
+            bottom: 0.75rem;
+            z-index: 2;
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .live-stat {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            margin: 0.5rem 0 0;
+        }
+
+        .dark-mode .viz-controls {
+            background: #1e2a38;
+        }
+
+        @media (max-width: 900px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                padding: 0.5rem 0 0.75rem;
+                max-height: 70vh;
+                overflow-y: auto;
+            }
+
+            nav ul.open {
+                display: flex;
+            }
+
+            nav ul li {
+                width: 100%;
+            }
+
+            nav ul li a {
+                padding: 0.65rem 1rem;
+                font-size: 0.95rem;
+            }
+
+            .nav-inner {
+                flex-wrap: wrap;
+            }
+
+            .container {
+                padding: 0.85rem;
+            }
+
+            section {
+                padding: 1.1rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .advantages {
+                grid-template-columns: 1fr;
+            }
+
+            .threejs-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1.25rem 0.75rem;
+            }
+
+            .math {
+                padding: 0.6rem 0.7rem;
+                font-size: 0.9rem;
+            }
+
+            .toggle-dark-mode {
+                bottom: 0.85rem;
+                right: 0.85rem;
+                padding: 0.55rem 0.9rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        @media print {
+            nav, .toggle-dark-mode, .threejs-container, .viz-overlay {
+                display: none !important;
+            }
+            section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Introduction to Probability</h1>
+        <p>Random experiments, events, random variables, and the distributions that model them</p>
+    </header>
+
+    <nav>
+        <div class="nav-inner">
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">Menu</button>
+            <ul id="navMenu">
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#experiments">Experiments</a></li>
+                <li><a href="#sample-space">Sample Space</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#probability">Probability</a></li>
+                <li><a href="#random-variables">Random Variables</a></li>
+                <li><a href="#binomial">Binomial</a></li>
+                <li><a href="#poisson">Poisson</a></li>
+                <li><a href="#gaussian">Gaussian</a></li>
+                <li><a href="#mean-variance">Mean & Variance</a></li>
+                <li><a href="#recap">Quick Recap</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="introduction">
+            <h2>1. Introduction</h2>
+            <p>
+                Probability is the mathematical language of uncertainty. It assigns numbers to events in a
+                repeatable experiment so that long-run frequencies, fair bets, and physical noise can be
+                reasoned about with the same calculus.
+            </p>
+            <p>
+                This note builds the subject from the ground up: a <strong>random experiment</strong> produces
+                an outcome in a <strong>sample space</strong>; an <strong>event</strong> is a subset of that
+                space; a <strong>probability</strong> is a consistent assignment of mass to events; a
+                <strong>random variable</strong> turns outcomes into numbers, and a
+                <strong>distribution</strong> tells us how those numbers are spread. We then study the three
+                workhorse laws of an introductory course — the binomial, the Poisson, and the Gaussian —
+                and the two numbers that summarise them, mean and variance.
+            </p>
+            <div class="callout">
+                <strong>How to read this page.</strong> Formulas sit in highlighted blocks. Interactive
+                sliders rebuild the charts live. The 3-D panels can be dragged. A one-page formula recap
+                is at the end.
+            </div>
+        </section>
+
+        <section id="experiments">
+            <h2>2. Random Experiments</h2>
+            <p>
+                A <strong>random experiment</strong> is a well-defined, repeatable procedure whose outcome
+                cannot be predicted with certainty, even though the set of possible outcomes is known in
+                advance.
+            </p>
+            <div class="advantages">
+                <div class="advantage-card">
+                    <h4>Repeatable</h4>
+                    <p>The same protocol can be run again under essentially identical conditions (toss, roll, count, measure).</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Uncertain outcome</h4>
+                    <p>Before the trial we do not know which elementary result will occur — only the catalogue of possibilities.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Identifiable results</h4>
+                    <p>Each run ends in a definite, observable outcome (heads, a face of a die, a count, a measured length).</p>
+                </div>
+            </div>
+            <div class="example">
+                <h4>Classic experiments</h4>
+                <ul>
+                    <li>Toss a fair coin once, or <em>n</em> times.</li>
+                    <li>Roll one fair die, or a pair of dice.</li>
+                    <li>Draw a card from a shuffled deck.</li>
+                    <li>Count decays from a radioactive sample in one second.</li>
+                    <li>Measure the landing position of a dart, or a voltage with thermal noise.</li>
+                </ul>
+            </div>
+            <p>
+                The first four have a discrete list of outcomes; the last has a continuum. That distinction
+                will reappear as discrete versus continuous random variables.
+            </p>
+            <div class="threejs-container" id="diceAnimation" role="img" aria-label="Interactive 3D pair of dice">
+                <div class="viz-overlay">
+                    <button type="button" id="rollDiceBtn">Roll the dice</button>
+                </div>
+            </div>
+            <p class="viz-caption" id="diceCaption">A pair of fair dice — the prototype random experiment. Press “Roll the dice”; drag to inspect.</p>
+        </section>
+
+        <section id="sample-space">
+            <h2>3. Sample Space</h2>
+            <p>
+                The <strong>sample space</strong> <span class="math-inline">Ω</span> (omega) is the set of
+                all possible outcomes of the experiment. Each element
+                <span class="math-inline">ω ∈ Ω</span> is an <strong>elementary outcome</strong> (or sample point).
+            </p>
+            <div class="two-col">
+                <div class="example">
+                    <h4>Discrete sample spaces</h4>
+                    <p>Finite or countably infinite. Coin:
+                        <span class="math-inline">Ω = {H, T}</span>.
+                        One die:
+                        <span class="math-inline">Ω = {1,2,3,4,5,6}</span>.
+                        Two distinguishable dice:
+                        <span class="math-inline">Ω = {(i, j) : i, j = 1…6}</span>,
+                        so <span class="math-inline">|Ω| = 36</span>.
+                    </p>
+                </div>
+                <div class="example">
+                    <h4>Continuous sample spaces</h4>
+                    <p>
+                        Uncountable. Lifetime of a bulb:
+                        <span class="math-inline">Ω = [0, ∞)</span>.
+                        Impact position on a target:
+                        <span class="math-inline">Ω ⊂ ℝ²</span>.
+                        Probability of a single point is typically zero; mass lives on intervals and regions.
+                    </p>
+                </div>
+            </div>
+            <div class="callout">
+                <strong>Modelling choice.</strong> The sample space is part of the model, not of nature.
+                “Sum of two dice” uses a 11-point space {2,…,12} that is <em>not</em> equally likely;
+                “ordered pair of faces” uses 36 equally likely points. The second is usually the better Ω.
+            </div>
+            <div class="threejs-container" id="sampleSpaceAnimation" role="img" aria-label="3D 6 by 6 sample space of two dice"></div>
+            <div class="event-btns" id="spaceBtns">
+                <button type="button" data-event="all" class="active">All 36</button>
+                <button type="button" data-event="even">First die even</button>
+                <button type="button" data-event="sum7">Sum = 7</button>
+                <button type="button" data-event="doubles">Doubles</button>
+                <button type="button" data-event="gt9">Sum ≥ 10</button>
+            </div>
+            <p class="viz-caption" id="spaceCaption">Two-dice sample space: each cube is one outcome (i, j). Highlight an event; |E|/36 is the classical probability.</p>
+        </section>
+
+        <section id="events">
+            <h2>4. Events</h2>
+            <p>
+                An <strong>event</strong> is a subset <span class="math-inline">E ⊆ Ω</span> — a statement
+                about the outcome that is either true or false after the experiment is performed.
+            </p>
+            <ul>
+                <li><strong>Sure event:</strong> <span class="math-inline">Ω</span> itself, always occurs.</li>
+                <li><strong>Impossible event:</strong> the empty set <span class="math-inline">∅</span>.</li>
+                <li><strong>Elementary event:</strong> a singleton <span class="math-inline">{ω}</span>.</li>
+                <li><strong>Complement:</strong> <span class="math-inline">E<sup>c</sup> = Ω \ E</span> (“not E”).</li>
+                <li><strong>Union / intersection:</strong> E ∪ F (“or”), E ∩ F (“and”).</li>
+            </ul>
+            <h3>4.1 Relations among events</h3>
+            <div class="advantages">
+                <div class="advantage-card">
+                    <h4>Mutually exclusive</h4>
+                    <p>
+                        <span class="math-inline">E ∩ F = ∅</span>.
+                        They cannot occur together. Disjoint dice events: “sum = 2” and “sum = 12”.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Exhaustive</h4>
+                    <p>
+                        <span class="math-inline">E<sub>1</sub> ∪ … ∪ E<sub>k</sub> = Ω</span>.
+                        Together they cover every outcome. Faces {odd} and {even} on one die.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Independent</h4>
+                    <p>
+                        Knowledge of F does not change the chance of E:
+                        <span class="math-inline">P(E ∩ F) = P(E) P(F)</span>.
+                        Two successive fair coin tosses.
+                    </p>
+                </div>
+            </div>
+            <div class="example">
+                <h4>Two-dice events</h4>
+                <p>
+                    Let <span class="math-inline">A = {first die even}</span>,
+                    <span class="math-inline">B = {sum = 7}</span>,
+                    <span class="math-inline">C = {doubles}</span>.
+                    Then <span class="math-inline">|A| = 18</span>,
+                    <span class="math-inline">|B| = 6</span>,
+                    <span class="math-inline">|C| = 6</span>,
+                    <span class="math-inline">A ∩ B = {(2,5),(4,3),(6,1)}</span> so
+                    <span class="math-inline">|A ∩ B| = 3</span>.
+                    A and B are independent: 18/36 × 6/36 = 3/36.
+                </p>
+            </div>
+        </section>
+
+        <section id="probability">
+            <h2>5. Probability</h2>
+            <p>
+                A <strong>probability</strong> is a function P that assigns to each event a number in
+                [0, 1] in a way that matches the long-run frequency of that event.
+            </p>
+            <h3>5.1 Kolmogorov axioms</h3>
+            <p class="math">P(E) ≥ 0 , &nbsp;&nbsp; P(Ω) = 1 , &nbsp;&nbsp; P(E ∪ F) = P(E) + P(F) &nbsp; if E ∩ F = ∅</p>
+            <p>
+                Countable additivity extends the third axiom to a sequence of pairwise disjoint events.
+                Immediate consequences:
+            </p>
+            <p class="math">P(E<sup>c</sup>) = 1 − P(E) , &nbsp;&nbsp; P(∅) = 0 , &nbsp;&nbsp; P(E ∪ F) = P(E) + P(F) − P(E ∩ F)</p>
+
+            <h3>5.2 Classical (Laplace) assignment</h3>
+            <p>
+                If Ω is finite and every elementary outcome is equally likely,
+            </p>
+            <p class="math">P(E) = |E| / |Ω| = (number of favourable outcomes) / (number of possible outcomes)</p>
+
+            <h3>5.3 Frequentist meaning</h3>
+            <p>
+                If the experiment is repeated independently <em>n</em> times and the event occurs
+                <em>N<sub>n</sub></em> times, then
+            </p>
+            <p class="math">P(E) = lim<sub>n → ∞</sub> N<sub>n</sub> / n</p>
+            <p>
+                The running relative frequency of heads in fair coin tosses jitters around 1/2 and settles
+                there — the law of large numbers made visible.
+            </p>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="freqChart" aria-label="Relative frequency of heads versus number of tosses"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">One simulated sequence of 400 fair coin tosses. The relative frequency of heads converges to 1/2 (dashed).</p>
+
+            <h3>5.4 Conditional probability</h3>
+            <p class="math">P(E | F) = P(E ∩ F) / P(F) &nbsp;&nbsp; (P(F) > 0)</p>
+            <p>
+                Independence is the special case <span class="math-inline">P(E | F) = P(E)</span>.
+                Bayes’ rule reverses the conditioning:
+            </p>
+            <p class="math">P(F | E) = P(E | F) P(F) / P(E)</p>
+        </section>
+
+        <section id="random-variables">
+            <h2>6. Random Variables</h2>
+            <p>
+                A <strong>random variable</strong> is a numerical function of the outcome:
+                <span class="math-inline">X : Ω → ℝ</span>.
+                We never need the inner details of Ω once we know how X is distributed.
+            </p>
+            <div class="two-col">
+                <div class="example">
+                    <h4>Discrete random variable</h4>
+                    <p>
+                        X takes a countable set of values {x<sub>k</sub>}. It is described by a
+                        <strong>probability mass function</strong> (PMF)
+                    </p>
+                    <p class="math">p<sub>X</sub>(x) = P(X = x) , &nbsp;&nbsp; Σ<sub>x</sub> p<sub>X</sub>(x) = 1</p>
+                    <p>Examples: die face, number of heads, number of arrivals.</p>
+                </div>
+                <div class="example">
+                    <h4>Continuous random variable</h4>
+                    <p>
+                        X has a <strong>probability density function</strong> (PDF) f<sub>X</sub> with
+                    </p>
+                    <p class="math">P(a ≤ X ≤ b) = ∫<sub>a</sub><sup>b</sup> f<sub>X</sub>(x) dx , &nbsp;&nbsp; ∫<sub>−∞</sub><sup>∞</sup> f = 1</p>
+                    <p>A single point has probability zero. Examples: noise voltage, measurement error, waiting time.</p>
+                </div>
+            </div>
+            <p>
+                The <strong>cumulative distribution function</strong> (CDF)
+                <span class="math-inline">F<sub>X</sub>(x) = P(X ≤ x)</span>
+                exists in both cases: it is a step function for a discrete X and a smooth increasing function
+                (the integral of the PDF) for a continuous X.
+            </p>
+            <div class="callout">
+                <strong>Two-dice illustration.</strong> On Ω = {1,…,6}² let
+                X = i + j (the sum) and Y = i (the first face). X is discrete on {2,…,12} with a triangular
+                PMF; Y is uniform on {1,…,6}. Different variables, same experiment.
+            </div>
+        </section>
+
+        <section id="binomial">
+            <h2>7. Discrete Distributions — the Binomial</h2>
+            <p>
+                The simplest discrete law is the <strong>Bernoulli</strong> trial: one success/failure
+                experiment with P(success) = p. A random variable X ~ Bernoulli(p) satisfies
+            </p>
+            <p class="math">P(X = 1) = p , &nbsp;&nbsp; P(X = 0) = 1 − p , &nbsp;&nbsp; E[X] = p , &nbsp;&nbsp; Var(X) = p(1 − p)</p>
+            <h3>7.1 Binomial law</h3>
+            <p>
+                Repeat the Bernoulli trial independently <em>n</em> times and let X be the number of successes.
+                Then X follows the <strong>binomial distribution</strong> Binomial(<em>n</em>, <em>p</em>):
+            </p>
+            <p class="math">P(X = k) = C(n, k) p<sup>k</sup> (1 − p)<sup>n − k</sup> , &nbsp;&nbsp; k = 0, 1, …, n</p>
+            <p class="math">C(n, k) = n! / (k! (n − k)!) , &nbsp;&nbsp; E[X] = n p , &nbsp;&nbsp; Var(X) = n p (1 − p)</p>
+            <div class="example">
+                <h4>Why the formula?</h4>
+                <p>
+                    Any particular sequence with k successes and n − k failures has probability
+                    p<sup>k</sup>(1 − p)<sup>n − k</sup>. There are C(n, k) such sequences, and they are
+                    disjoint, so the probabilities add.
+                </p>
+            </div>
+            <div class="viz-controls">
+                <label>n
+                    <input type="range" id="binN" min="4" max="40" value="20">
+                    <span class="val" id="binNVal">20</span>
+                </label>
+                <label>p
+                    <input type="range" id="binP" min="5" max="95" value="50">
+                    <span class="val" id="binPVal">0.50</span>
+                </label>
+            </div>
+            <p class="live-stat" id="binStat">E[X] = 10.00 , Var(X) = 5.00</p>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="binomChart" aria-label="Interactive binomial probability mass function"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Binomial PMF. Drag n and p. For large n and p near 1/2 the histogram approaches a Gaussian bell (De Moivre–Laplace).</p>
+
+            <div class="threejs-container" id="galtonAnimation" role="img" aria-label="Galton board showing binomial counts building a bell shape">
+                <div class="viz-overlay">
+                    <button type="button" id="galtonDrop">Drop 50 balls</button>
+                    <button type="button" id="galtonReset">Reset</button>
+                </div>
+            </div>
+            <p class="viz-caption">Galton board (quincunx). Each peg is a fair Bernoulli trial; the bin index is Binomial(rows, 1/2). Many balls reconstruct the bell.</p>
+        </section>
+
+        <section id="poisson">
+            <h2>8. The Poisson Distribution</h2>
+            <p>
+                The <strong>Poisson</strong> law models a count of rare, independent events in a fixed
+                interval of time or space — arrivals, decays, defects, misprints.
+            </p>
+            <div class="callout">
+                <strong>Discrete, not continuous.</strong> Poisson is supported on
+                <span class="math-inline">k = 0, 1, 2, …</span>.
+                Syllabi often list it beside the Gaussian because both arise as limits of the binomial;
+                the Gaussian is the continuous limit, Poisson the rare-event limit.
+            </div>
+            <p class="math">P(X = k) = e<sup>−λ</sup> λ<sup>k</sup> / k! , &nbsp;&nbsp; k = 0, 1, 2, …</p>
+            <p class="math">E[X] = λ , &nbsp;&nbsp; Var(X) = λ</p>
+            <p>
+                The single parameter λ > 0 is both the mean and the variance. That “equal scatter”
+                is a diagnostic: counts whose sample variance greatly exceeds the sample mean are
+                <em>over-dispersed</em> and not Poisson.
+            </p>
+            <h3>8.1 Poisson as a binomial limit</h3>
+            <p>
+                Let X<sub>n</sub> ~ Binomial(n, p<sub>n</sub>) with n p<sub>n</sub> → λ as n → ∞ and
+                p<sub>n</sub> → 0 (many trials, each rarely a success). Then
+            </p>
+            <p class="math">P(X<sub>n</sub> = k) → e<sup>−λ</sup> λ<sup>k</sup> / k!</p>
+            <div class="example">
+                <h4>Worked numbers</h4>
+                <p>
+                    A sample of 800 chips, each defective with probability 0.005, independently.
+                    Then n p = 4. The number of defectives is essentially Poisson(λ = 4), so
+                    P(X = 0) ≈ e<sup>−4</sup> ≈ 0.0183, P(X ≤ 2) ≈ 0.238.
+                </p>
+            </div>
+            <div class="viz-controls">
+                <label>λ
+                    <input type="range" id="poiL" min="5" max="160" value="40">
+                    <span class="val" id="poiLVal">4.0</span>
+                </label>
+            </div>
+            <p class="live-stat" id="poiStat">E[X] = 4.00 , Var(X) = 4.00</p>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="poiChart" aria-label="Interactive Poisson probability mass function"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Poisson PMF. For larger λ the mass spreads and becomes more symmetric — another road toward the Gaussian.</p>
+        </section>
+
+        <section id="gaussian">
+            <h2>9. Continuous Distributions — the Gaussian</h2>
+            <p>
+                The <strong>Gaussian</strong> (normal) density on the real line is
+            </p>
+            <p class="math">f(x) = 1 / (σ √(2π)) · exp( − (x − μ)² / (2σ²) ) , &nbsp;&nbsp; x ∈ ℝ</p>
+            <p class="math">E[X] = μ , &nbsp;&nbsp; Var(X) = σ²</p>
+            <p>
+                μ locates the peak; σ stretches it. We write X ~ N(μ, σ²). The standard normal is
+                Z ~ N(0, 1); any Gaussian is a location-scale copy
+                <span class="math-inline">X = μ + σ Z</span>.
+            </p>
+            <h3>9.1 Empirical rule</h3>
+            <ul>
+                <li>P(|X − μ| ≤ σ) ≈ 0.683</li>
+                <li>P(|X − μ| ≤ 2σ) ≈ 0.954</li>
+                <li>P(|X − μ| ≤ 3σ) ≈ 0.997</li>
+            </ul>
+            <p>
+                These are the familiar 68–95–99.7 percentages. They are why “within two standard deviations”
+                is a default error bar.
+            </p>
+            <h3>9.2 Central limit theorem (the reason it is everywhere)</h3>
+            <p>
+                If X<sub>1</sub>, …, X<sub>n</sub> are i.i.d. with finite mean μ and variance σ², then
+            </p>
+            <p class="math">(X<sub>1</sub> + … + X<sub>n</sub> − nμ) / (σ √n) &nbsp; → &nbsp; N(0, 1)</p>
+            <p>
+                in distribution as n → ∞. Sums of independent noise, measurement averages, binomial counts
+                with large n — all become Gaussian. The Galton board is a mechanical CLT.
+            </p>
+            <div class="viz-controls">
+                <label>μ
+                    <input type="range" id="gMu" min="-40" max="40" value="0">
+                    <span class="val" id="gMuVal">0.0</span>
+                </label>
+                <label>σ
+                    <input type="range" id="gSig" min="4" max="30" value="10">
+                    <span class="val" id="gSigVal">1.0</span>
+                </label>
+            </div>
+            <p class="live-stat" id="gStat">E[X] = 0.00 , Var(X) = 1.00 &nbsp;|&nbsp; P(|X−μ|≤σ) ≈ 0.68</p>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="gaussChart" aria-label="Interactive Gaussian probability density"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Gaussian PDF. Shaded band is μ ± σ. Move the mean (slide) and the width (σ).</p>
+            <div class="threejs-container" id="gauss3dAnimation" role="img" aria-label="3D surface of a bivariate Gaussian bell"></div>
+            <p class="viz-caption">Bivariate isotropic Gaussian as a surface z ∝ exp(−(x² + y²)/(2σ²)). Drag to rotate; the level curves are circles.</p>
+        </section>
+
+        <section id="mean-variance">
+            <h2>10. Mean and Variance</h2>
+            <p>
+                The <strong>mean</strong> (expectation) is the probability-weighted average of X — the
+                centre of mass of the distribution. The <strong>variance</strong> is the expected squared
+                deviation from that centre — the moment of inertia of the same mass distribution.
+            </p>
+            <h3>10.1 Definitions</h3>
+            <p class="math">Discrete: &nbsp; E[X] = Σ<sub>x</sub> x p(x) , &nbsp;&nbsp; E[g(X)] = Σ<sub>x</sub> g(x) p(x)</p>
+            <p class="math">Continuous: &nbsp; E[X] = ∫ x f(x) dx , &nbsp;&nbsp; E[g(X)] = ∫ g(x) f(x) dx</p>
+            <p class="math">Var(X) = E[(X − E[X])²] = E[X²] − (E[X])² , &nbsp;&nbsp; σ = √Var(X)</p>
+            <h3>10.2 Algebra that is used constantly</h3>
+            <p class="math">E[aX + b] = a E[X] + b , &nbsp;&nbsp; Var(aX + b) = a² Var(X)</p>
+            <p class="math">If X, Y independent: &nbsp; E[XY] = E[X] E[Y] , &nbsp;&nbsp; Var(X + Y) = Var(X) + Var(Y)</p>
+            <p>
+                Adding a constant shifts the mean and leaves the variance alone. Scaling by <em>a</em>
+                scales the mean by <em>a</em> and the variance by <em>a²</em> (standard deviation by |a|).
+            </p>
+            <div class="example">
+                <h4>The three running examples</h4>
+                <p class="math">Bernoulli(p): &nbsp; mean p , &nbsp; variance p(1 − p)</p>
+                <p class="math">Binomial(n, p): &nbsp; mean n p , &nbsp; variance n p (1 − p)</p>
+                <p class="math">Poisson(λ): &nbsp; mean λ , &nbsp; variance λ</p>
+                <p class="math">Gaussian N(μ, σ²): &nbsp; mean μ , &nbsp; variance σ²</p>
+            </div>
+            <div class="chart-wrapper">
+                <div class="chart-container">
+                    <canvas id="momentChart" aria-label="Bar chart of mean and variance for binomial, Poisson and Gaussian"></canvas>
+                </div>
+            </div>
+            <p class="viz-caption">Matched means near 8: Binomial(20, 0.4), Poisson(8), Gaussian N(8, 4.8). Poisson is over-dispersed relative to the binomial with the same mean; the Gaussian here copies the binomial’s variance.</p>
+            <div class="callout">
+                <strong>Chebyshev’s inequality</strong> (distribution-free):
+                P(|X − μ| ≥ k σ) ≤ 1/k².
+                For k = 2 at most 25% of the mass can lie beyond two standard deviations — the Gaussian,
+                at about 5%, is much tighter. Mean and variance always give a coarse control on tails.
+            </div>
+        </section>
+
+        <section id="recap">
+            <h2>11. Quick Recap</h2>
+            <p>
+                Everything in one pass. Keep this section nearby while solving problems.
+            </p>
+            <div class="advantages">
+                <div class="advantage-card">
+                    <h4>Experiment → Ω → event</h4>
+                    <p>
+                        Repeatable uncertain procedure. Ω = all outcomes. Event E ⊆ Ω.
+                        Complement, union, intersection. Exclusive ⇔ disjoint.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Axioms & classical P</h4>
+                    <p class="math">P ≥ 0, P(Ω)=1, additivity</p>
+                    <p class="math">P(E) = |E|/|Ω|</p>
+                    <p>when outcomes are equally likely. Frequency: N<sub>n</sub>/n → P(E).</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Conditioning</h4>
+                    <p class="math">P(E|F) = P(E∩F)/P(F)</p>
+                    <p>Independent ⇔ P(E∩F)=P(E)P(F). Bayes reverses the bar.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Random variable</h4>
+                    <p>
+                        X : Ω → ℝ. Discrete: PMF p(x), Σ p = 1.
+                        Continuous: PDF f(x), ∫ f = 1, P(a,b)=∫<sub>a</sub><sup>b</sup> f.
+                    </p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Binomial(n, p)</h4>
+                    <p class="math">C(n,k) p<sup>k</sup>(1−p)<sup>n−k</sup></p>
+                    <p class="math">mean np , var np(1−p)</p>
+                    <p>Count of successes in n independent Bernoulli trials.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Poisson(λ) — discrete</h4>
+                    <p class="math">e<sup>−λ</sup> λ<sup>k</sup> / k!</p>
+                    <p class="math">mean = var = λ</p>
+                    <p>Rare-event / binomial limit n→∞, p→0, np→λ.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Gaussian N(μ, σ²)</h4>
+                    <p class="math">f ∝ exp(−(x−μ)²/(2σ²))</p>
+                    <p class="math">mean μ , var σ²</p>
+                    <p>68–95–99.7 rule. CLT: sums become Gaussian.</p>
+                </div>
+                <div class="advantage-card">
+                    <h4>Mean & variance</h4>
+                    <p class="math">E[aX+b]=aE[X]+b</p>
+                    <p class="math">Var(aX+b)=a² Var(X)</p>
+                    <p>Independent: variances add. Var = E[X²] − (E[X])².</p>
+                </div>
+            </div>
+            <div class="callout">
+                <strong>Limit picture to remember.</strong>
+                Bernoulli → (n trials) Binomial → (n large, p fixed) Gaussian;
+                Binomial → (n large, p small, np = λ) Poisson → (λ large) Gaussian.
+                One family of counting models, two different limits, one universal bell.
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <h2>12. Closing remarks</h2>
+            <p>
+                Probability starts as counting in a well-chosen sample space and becomes a calculus of
+                random variables once a PMF or PDF is written down. The binomial is the law of repeated
+                independent trials; the Poisson is the law of rare independent counts; the Gaussian is
+                the law of aggregated independent noise. Mean and variance are the two-number summary
+                that those three — and essentially every other law in this course — carry.
+            </p>
+            <p>
+                From here the natural sequels are jointly distributed variables, covariance, moment
+                generating functions, and the formal statement of the law of large numbers and the CLT.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Introduction to Probability. All rights reserved.</p>
+    </footer>
+
+    <button class="toggle-dark-mode" onclick="toggleDarkMode()" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        navToggle.addEventListener('click', () => {
+            const open = navMenu.classList.toggle('open');
+            navToggle.setAttribute('aria-expanded', open);
+        });
+        navMenu.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                navMenu.classList.remove('open');
+                navToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        function logFact(n) {
+            let s = 0;
+            for (let i = 2; i <= n; i++) s += Math.log(i);
+            return s;
+        }
+        function binomPMF(k, n, p) {
+            if (k < 0 || k > n) return 0;
+            if (p <= 0) return k === 0 ? 1 : 0;
+            if (p >= 1) return k === n ? 1 : 0;
+            return Math.exp(logFact(n) - logFact(k) - logFact(n - k) + k * Math.log(p) + (n - k) * Math.log(1 - p));
+        }
+        function poissonPMF(k, lam) {
+            if (k < 0) return 0;
+            if (lam <= 0) return k === 0 ? 1 : 0;
+            return Math.exp(-lam + k * Math.log(lam) - logFact(k));
+        }
+        function gaussPDF(x, mu, sig) {
+            const z = (x - mu) / sig;
+            return Math.exp(-0.5 * z * z) / (sig * Math.sqrt(2 * Math.PI));
+        }
+        function erf(x) {
+            const s = Math.sign(x);
+            x = Math.abs(x);
+            const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+            const t = 1 / (1 + 0.3275911 * x);
+            const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            return s * y;
+        }
+        function gaussBand(sigK) {
+            return erf(sigK / Math.SQRT2);
+        }
+
+        let binomChart, poiChart, gaussChart;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const tosses = 400;
+            const rel = [];
+            let heads = 0;
+            const labels = [];
+            for (let i = 1; i <= tosses; i++) {
+                if (Math.random() < 0.5) heads++;
+                rel.push(heads / i);
+                labels.push(i);
+            }
+            new Chart(document.getElementById('freqChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Relative frequency of heads',
+                            data: rel,
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            backgroundColor: 'rgba(52, 152, 219, 0.12)',
+                            fill: true,
+                            pointRadius: 0,
+                            tension: 0.15,
+                            borderWidth: 1.6
+                        },
+                        {
+                            label: 'P(H) = 1/2',
+                            data: labels.map(() => 0.5),
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderDash: [6, 3],
+                            pointRadius: 0,
+                            borderWidth: 2,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Law of Large Numbers — Fair Coin', font: { size: 15, weight: '600' }, color: '#2c3e50' },
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Number of tosses' }, ticks: { maxTicksLimit: 8 } },
+                        y: { min: 0, max: 1, title: { display: true, text: 'Relative frequency' } }
+                    }
+                }
+            });
+
+            binomChart = new Chart(document.getElementById('binomChart').getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{
+                    label: 'P(X = k)',
+                    data: [],
+                    backgroundColor: 'rgba(52, 152, 219, 0.75)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 1,
+                    borderRadius: 3
+                }]},
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Binomial PMF', font: { size: 15, weight: '600' }, color: '#2c3e50' },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'k' }, grid: { display: false } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Probability' } }
+                    }
+                }
+            });
+
+            poiChart = new Chart(document.getElementById('poiChart').getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{
+                    label: 'P(X = k)',
+                    data: [],
+                    backgroundColor: 'rgba(155, 89, 182, 0.75)',
+                    borderColor: 'rgba(155, 89, 182, 1)',
+                    borderWidth: 1,
+                    borderRadius: 3
+                }]},
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Poisson PMF', font: { size: 15, weight: '600' }, color: '#2c3e50' },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'k' }, grid: { display: false } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Probability' } }
+                    }
+                }
+            });
+
+            gaussChart = new Chart(document.getElementById('gaussChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'PDF',
+                            data: [],
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            backgroundColor: 'rgba(46, 204, 113, 0.18)',
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.2,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'μ ± σ',
+                            data: [],
+                            borderColor: 'rgba(231, 76, 60, 0.0)',
+                            backgroundColor: 'rgba(231, 76, 60, 0.22)',
+                            fill: true,
+                            pointRadius: 0,
+                            tension: 0.2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Gaussian PDF', font: { size: 15, weight: '600' }, color: '#2c3e50' },
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'x' }, ticks: { maxTicksLimit: 9 } },
+                        y: { beginAtZero: true, title: { display: true, text: 'Density' } }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('momentChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Binomial(20, 0.4)', 'Poisson(8)', 'N(8, 4.8)'],
+                    datasets: [
+                        {
+                            label: 'Mean',
+                            data: [8, 8, 8],
+                            backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Variance',
+                            data: [4.8, 8, 4.8],
+                            backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Mean and Variance Side by Side', font: { size: 15, weight: '600' }, color: '#2c3e50' },
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Value' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            updateBinomial();
+            updatePoisson();
+            updateGaussian();
+        });
+
+        function updateBinomial() {
+            const n = +document.getElementById('binN').value;
+            const p = +document.getElementById('binP').value / 100;
+            document.getElementById('binNVal').textContent = n;
+            document.getElementById('binPVal').textContent = p.toFixed(2);
+            document.getElementById('binStat').textContent =
+                'E[X] = ' + (n * p).toFixed(2) + ' ,  Var(X) = ' + (n * p * (1 - p)).toFixed(2);
+            if (!binomChart) return;
+            const labels = [];
+            const data = [];
+            for (let k = 0; k <= n; k++) {
+                labels.push(k);
+                data.push(binomPMF(k, n, p));
+            }
+            binomChart.data.labels = labels;
+            binomChart.data.datasets[0].data = data;
+            binomChart.update('none');
+        }
+        function updatePoisson() {
+            const lam = +document.getElementById('poiL').value / 10;
+            document.getElementById('poiLVal').textContent = lam.toFixed(1);
+            document.getElementById('poiStat').textContent =
+                'E[X] = ' + lam.toFixed(2) + ' ,  Var(X) = ' + lam.toFixed(2);
+            if (!poiChart) return;
+            const kMax = Math.max(12, Math.ceil(lam + 5 * Math.sqrt(lam)));
+            const labels = [];
+            const data = [];
+            for (let k = 0; k <= kMax; k++) {
+                labels.push(k);
+                data.push(poissonPMF(k, lam));
+            }
+            poiChart.data.labels = labels;
+            poiChart.data.datasets[0].data = data;
+            poiChart.update('none');
+        }
+        function updateGaussian() {
+            const mu = +document.getElementById('gMu').value / 10;
+            const sig = +document.getElementById('gSig').value / 10;
+            document.getElementById('gMuVal').textContent = mu.toFixed(1);
+            document.getElementById('gSigVal').textContent = sig.toFixed(1);
+            document.getElementById('gStat').textContent =
+                'E[X] = ' + mu.toFixed(2) + ' ,  Var(X) = ' + (sig * sig).toFixed(2) +
+                '  |  P(|X−μ|≤σ) ≈ ' + gaussBand(1).toFixed(2);
+            if (!gaussChart) return;
+            const labels = [];
+            const pdf = [];
+            const band = [];
+            const x0 = mu - 4 * sig;
+            const x1 = mu + 4 * sig;
+            for (let i = 0; i <= 160; i++) {
+                const x = x0 + (x1 - x0) * i / 160;
+                labels.push(x.toFixed(2));
+                const y = gaussPDF(x, mu, sig);
+                pdf.push(y);
+                band.push(Math.abs(x - mu) <= sig ? y : null);
+            }
+            gaussChart.data.labels = labels;
+            gaussChart.data.datasets[0].data = pdf;
+            gaussChart.data.datasets[1].data = band;
+            gaussChart.update('none');
+        }
+        document.getElementById('binN').addEventListener('input', updateBinomial);
+        document.getElementById('binP').addEventListener('input', updateBinomial);
+        document.getElementById('poiL').addEventListener('input', updatePoisson);
+        document.getElementById('gMu').addEventListener('input', updateGaussian);
+        document.getElementById('gSig').addEventListener('input', updateGaussian);
+
+        function makeRenderer(container) {
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            return renderer;
+        }
+        function handleResize(container, camera, renderer) {
+            const w = container.clientWidth, h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        }
+        function runWhenVisible(container, tick) {
+            let raf = 0, running = false;
+            function loop() {
+                if (!running) return;
+                tick();
+                raf = requestAnimationFrame(loop);
+            }
+            const io = new IntersectionObserver((entries) => {
+                const vis = entries[0] && entries[0].isIntersecting;
+                if (vis && !running) { running = true; loop(); }
+                else if (!vis && running) { running = false; cancelAnimationFrame(raf); }
+            }, { threshold: 0.05 });
+            io.observe(container);
+        }
+        function addLights(scene) {
+            const light = new THREE.DirectionalLight(0xffffff, 1.05);
+            light.position.set(3, 6, 4);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404060, 0.7));
+        }
+
+        function pipTexture(n) {
+            const c = document.createElement('canvas');
+            c.width = 128; c.height = 128;
+            const g = c.getContext('2d');
+            g.fillStyle = '#f4f1ea';
+            g.fillRect(0, 0, 128, 128);
+            g.strokeStyle = '#c8c0b4';
+            g.lineWidth = 4;
+            g.strokeRect(2, 2, 124, 124);
+            g.fillStyle = '#c0392b';
+            const spots = {
+                1: [[64, 64]],
+                2: [[36, 36], [92, 92]],
+                3: [[36, 36], [64, 64], [92, 92]],
+                4: [[36, 36], [92, 36], [36, 92], [92, 92]],
+                5: [[36, 36], [92, 36], [64, 64], [36, 92], [92, 92]],
+                6: [[36, 32], [92, 32], [36, 64], [92, 64], [36, 96], [92, 96]]
+            };
+            (spots[n] || []).forEach(([x, y]) => {
+                g.beginPath();
+                g.arc(x, y, 11, 0, Math.PI * 2);
+                g.fill();
+            });
+            const tex = new THREE.CanvasTexture(c);
+            return tex;
+        }
+        function makeDie() {
+            const maps = [3, 4, 2, 5, 1, 6].map(pipTexture);
+            const mats = maps.map(m => new THREE.MeshStandardMaterial({ map: m, roughness: 0.45, metalness: 0.08 }));
+            const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mats);
+            const edges = new THREE.LineSegments(
+                new THREE.EdgesGeometry(new THREE.BoxGeometry(1.001, 1.001, 1.001)),
+                new THREE.LineBasicMaterial({ color: 0x7f8c8d })
+            );
+            const g = new THREE.Group();
+            g.add(mesh, edges);
+            return g;
+        }
+        function quatForFace(face) {
+            const e = new THREE.Euler();
+            switch (face) {
+                case 1: e.set(-Math.PI / 2, 0, 0); break;
+                case 2: e.set(0, 0, 0); break;
+                case 3: e.set(0, 0, Math.PI / 2); break;
+                case 4: e.set(0, 0, -Math.PI / 2); break;
+                case 5: e.set(Math.PI, 0, 0); break;
+                case 6: e.set(Math.PI / 2, 0, 0); break;
+                default: e.set(0, 0, 0);
+            }
+            return new THREE.Quaternion().setFromEuler(e);
+        }
+
+        (function () {
+            const container = document.getElementById('diceAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            addLights(scene);
+            scene.add(new THREE.GridHelper(8, 16, 0x333333, 0x222222));
+            const die1 = makeDie();
+            const die2 = makeDie();
+            die1.position.set(-1.15, 0.55, 0);
+            die2.position.set(1.15, 0.55, 0);
+            scene.add(die1, die2);
+            camera.position.set(0, 3.2, 6.2);
+            controls.target.set(0, 0.4, 0);
+
+            let rolling = false, tRoll = 0, dur = 1.15;
+            const start1 = new THREE.Quaternion(), start2 = new THREE.Quaternion();
+            const end1 = new THREE.Quaternion(), end2 = new THREE.Quaternion();
+            let faceA = 1, faceB = 1;
+
+            function startRoll() {
+                faceA = 1 + Math.floor(Math.random() * 6);
+                faceB = 1 + Math.floor(Math.random() * 6);
+                start1.copy(die1.quaternion);
+                start2.copy(die2.quaternion);
+                end1.copy(quatForFace(faceA));
+                end2.copy(quatForFace(faceB));
+                tRoll = 0;
+                rolling = true;
+                document.getElementById('diceCaption').textContent = 'Rolling…';
+            }
+            document.getElementById('rollDiceBtn').addEventListener('click', startRoll);
+            startRoll();
+
+            runWhenVisible(container, function () {
+                if (rolling) {
+                    tRoll += 0.018;
+                    const u = Math.min(1, tRoll / dur);
+                    const e = 1 - Math.pow(1 - u, 3);
+                    die1.quaternion.copy(start1).slerp(end1, e);
+                    die2.quaternion.copy(start2).slerp(end2, e);
+                    const bounce = Math.sin(Math.PI * u) * (1 - u) * 1.4;
+                    die1.position.y = 0.55 + bounce;
+                    die2.position.y = 0.55 + bounce * 0.9;
+                    if (u >= 1) {
+                        rolling = false;
+                        die1.quaternion.copy(end1);
+                        die2.quaternion.copy(end2);
+                        die1.position.y = 0.55;
+                        die2.position.y = 0.55;
+                        document.getElementById('diceCaption').textContent =
+                            'Outcome: (' + faceA + ', ' + faceB + '), sum = ' + (faceA + faceB) + '. Each of the 36 pairs has probability 1/36.';
+                    }
+                }
+                controls.update();
+                renderer.render(scene, camera);
+            });
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('sampleSpaceAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            addLights(scene);
+
+            const cubes = [];
+            const geo = new THREE.BoxGeometry(0.72, 0.72, 0.72);
+            for (let i = 1; i <= 6; i++) {
+                for (let j = 1; j <= 6; j++) {
+                    const mat = new THREE.MeshStandardMaterial({
+                        color: 0x3498db,
+                        roughness: 0.4,
+                        metalness: 0.15
+                    });
+                    const m = new THREE.Mesh(geo, mat);
+                    m.position.set((j - 3.5) * 0.95, 0.36, (i - 3.5) * 0.95);
+                    m.userData = { i, j };
+                    scene.add(m);
+                    cubes.push(m);
+                }
+            }
+            scene.add(new THREE.GridHelper(8, 8, 0x333333, 0x222222));
+            camera.position.set(5.5, 6.5, 7.2);
+            controls.target.set(0, 0, 0);
+
+            const COLORS = { on: 0xe74c3c, off: 0x1c2833, all: 0x3498db };
+            function applyEvent(kind) {
+                let n = 0;
+                cubes.forEach(c => {
+                    const { i, j } = c.userData;
+                    let hit = false;
+                    if (kind === 'all') hit = true;
+                    else if (kind === 'even') hit = (i % 2 === 0);
+                    else if (kind === 'sum7') hit = (i + j === 7);
+                    else if (kind === 'doubles') hit = (i === j);
+                    else if (kind === 'gt9') hit = (i + j >= 10);
+                    if (hit) n++;
+                    c.material.color.setHex(kind === 'all' ? COLORS.all : (hit ? COLORS.on : COLORS.off));
+                    c.scale.setScalar(hit ? 1 : 0.72);
+                });
+                const names = {
+                    all: 'All 36 outcomes, P = 1',
+                    even: 'First die even: |E| = ' + n + ', P = ' + n + '/36 = ' + (n / 36).toFixed(3),
+                    sum7: 'Sum = 7: |E| = ' + n + ', P = ' + n + '/36 = ' + (n / 36).toFixed(3),
+                    doubles: 'Doubles: |E| = ' + n + ', P = ' + n + '/36 = ' + (n / 36).toFixed(3),
+                    gt9: 'Sum ≥ 10: |E| = ' + n + ', P = ' + n + '/36 = ' + (n / 36).toFixed(3)
+                };
+                document.getElementById('spaceCaption').textContent = names[kind];
+            }
+            document.getElementById('spaceBtns').addEventListener('click', (ev) => {
+                const btn = ev.target.closest('button');
+                if (!btn) return;
+                document.querySelectorAll('#spaceBtns button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                applyEvent(btn.dataset.event);
+            });
+
+            runWhenVisible(container, function () {
+                controls.update();
+                renderer.render(scene, camera);
+            });
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('gauss3dAnimation');
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0e14);
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+            const renderer = makeRenderer(container);
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            addLights(scene);
+
+            const geo = new THREE.PlaneGeometry(7.2, 7.2, 48, 48);
+            geo.rotateX(-Math.PI / 2);
+            const pos = geo.attributes.position;
+            const colors = [];
+            const col = new THREE.Color();
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i), z = pos.getZ(i);
+                const y = 2.4 * Math.exp(-(x * x + z * z) / (2 * 1.35 * 1.35));
+                pos.setY(i, y);
+                col.setHSL(0.55 - 0.35 * (y / 2.4), 0.75, 0.28 + 0.42 * (y / 2.4));
+                colors.push(col.r, col.g, col.b);
+            }
+            geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+            geo.computeVertexNormals();
+            const mesh = new THREE.Mesh(
+                geo,
+                new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.45, metalness: 0.1, side: THREE.DoubleSide })
+            );
+            scene.add(mesh);
+            const wire = new THREE.LineSegments(
+                new THREE.WireframeGeometry(geo),
+                new THREE.LineBasicMaterial({ color: 0x1a252f, transparent: true, opacity: 0.25 })
+            );
+            scene.add(wire);
+            scene.add(new THREE.GridHelper(8, 16, 0x333333, 0x222222));
+            camera.position.set(5.4, 4.2, 5.8);
+            controls.target.set(0, 0.6, 0);
+
+            runWhenVisible(container, function () {
+                mesh.rotation.y += 0.0025;
+                wire.rotation.y += 0.0025;
+                controls.update();
+                renderer.render(scene, camera);
+            });
+            window.addEventListener('resize', () => handleResize(container, camera, renderer));
+            handleResize(container, camera, renderer);
+        })();
+
+        (function () {
+            const container = document.getElementById('galtonAnimation');
+            const canvas = document.createElement('canvas');
+            canvas.style.cssText = 'position:absolute;inset:0;display:block;width:100%;height:100%;';
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+            const ROWS = 10;
+            const bins = new Array(ROWS + 1).fill(0);
+            let total = 0;
+            const balls = [];
+
+            function resize() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const w = Math.max(1, container.clientWidth), h = Math.max(1, container.clientHeight);
+                canvas.width = Math.floor(w * dpr);
+                canvas.height = Math.floor(h * dpr);
+                canvas.style.width = w + 'px';
+                canvas.style.height = h + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            if (typeof ResizeObserver !== 'undefined') {
+                new ResizeObserver(resize).observe(container);
+            }
+
+            function spawn(n) {
+                for (let i = 0; i < n; i++) {
+                    balls.push({
+                        row: 0,
+                        xOff: 0,
+                        phase: -i * 0.045,
+                        done: false,
+                        path: Array.from({ length: ROWS }, () => Math.random() < 0.5 ? -1 : 1)
+                    });
+                }
+            }
+            document.getElementById('galtonDrop').addEventListener('click', () => spawn(50));
+            document.getElementById('galtonReset').addEventListener('click', () => {
+                balls.length = 0;
+                bins.fill(0);
+                total = 0;
+            });
+            spawn(40);
+
+            function draw() {
+                const w = container.clientWidth, h = container.clientHeight;
+                ctx.fillStyle = '#0a0e14';
+                ctx.fillRect(0, 0, w, h);
+                const top = 28, bottom = h - 92;
+                const cx = w / 2;
+                const rowH = (bottom - top) / (ROWS + 0.5);
+                const gap = Math.min(36, w / (ROWS + 4));
+
+                ctx.fillStyle = '#7f8c8d';
+                ctx.font = '12px system-ui, sans-serif';
+                ctx.fillText('Binomial(' + ROWS + ', 1/2) bins — n = ' + total, 12, 18);
+
+                for (let r = 0; r < ROWS; r++) {
+                    const y = top + r * rowH;
+                    const count = r + 1;
+                    for (let k = 0; k < count; k++) {
+                        const x = cx + (k - (count - 1) / 2) * gap;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 4.2, 0, Math.PI * 2);
+                        ctx.fillStyle = '#95a5a6';
+                        ctx.fill();
+                    }
+                }
+
+                const maxB = Math.max(1, ...bins);
+                const binW = gap * 0.82;
+                const histH = 70;
+                for (let b = 0; b <= ROWS; b++) {
+                    const x = cx + (b - ROWS / 2) * gap;
+                    const bh = (bins[b] / maxB) * histH;
+                    ctx.fillStyle = 'rgba(52, 152, 219, 0.85)';
+                    ctx.fillRect(x - binW / 2, h - 18 - bh, binW, bh);
+                    ctx.fillStyle = '#bdc3c7';
+                    ctx.font = '10px system-ui, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(String(b), x, h - 6);
+                    if (bins[b]) ctx.fillText(String(bins[b]), x, h - 22 - bh);
+                }
+                ctx.textAlign = 'left';
+
+                const speed = 1.55;
+                balls.forEach(ball => {
+                    ball.phase += 0.016 * speed;
+                    if (ball.done) return;
+                    if (ball.phase < 0) return;
+                    const f = ball.phase / 0.42;
+                    const r = Math.min(ROWS, Math.floor(f));
+                    const local = f - r;
+                    let xOff = 0;
+                    for (let i = 0; i < r && i < ROWS; i++) xOff += ball.path[i];
+                    const y = top + Math.min(f, ROWS) * rowH;
+                    let x = cx + xOff * (gap / 2);
+                    if (r < ROWS) x += ball.path[r] * (gap / 2) * Math.min(1, local);
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5.2, 0, Math.PI * 2);
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.fill();
+                    if (f >= ROWS) {
+                        ball.done = true;
+                        let bin = 0;
+                        ball.path.forEach(s => { if (s > 0) bin++; });
+                        bins[bin]++;
+                        total++;
+                    }
+                });
+                for (let i = balls.length - 1; i >= 0; i--) if (balls[i].done && balls[i].phase > ROWS + 2) balls.splice(i, 1);
+            }
+
+            runWhenVisible(container, draw);
+        })();
+    </script>
+</body>
+</html>
