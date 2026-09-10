@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theory of Errors - Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 25px;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .example {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+        }
+        .summary {
+            background-color: #e8f8f0;
+            padding: 15px;
+            border-left: 4px solid #2ecc71;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Theory of Errors - Documentation</h1>
+
+    <h2>1. Types of Errors</h2>
+
+    <h3>A. Systematic Errors</h3>
+    <p><strong>Definition:</strong> Errors that consistently skew measurements in one direction due to flaws in the experimental setup, instrument calibration, or methodology.</p>
+    <p><strong>Characteristics:</strong></p>
+    <ul>
+        <li>Repeatable and predictable.</li>
+        <li>Cannot be reduced by increasing the number of measurements.</li>
+        <li>Often arise from:
+            <ul>
+                <li>Instrument miscalibration (e.g., a scale that always reads 0.1g too high).</li>
+                <li>Environmental factors (e.g., temperature affecting a measurement).</li>
+                <li>Human bias (e.g., parallax error in reading a scale).</li>
+            </ul>
+        </li>
+    </ul>
+    <p><strong>Example:</strong> A thermometer that always reads 2°C higher than the actual temperature.</p>
+    <p><strong>Mitigation:</strong></p>
+    <ul>
+        <li>Calibrate instruments regularly.</li>
+        <li>Use correction factors.</li>
+        <li>Improve experimental design.</li>
+    </ul>
+
+    <h3>B. Random Errors</h3>
+    <p><strong>Definition:</strong> Unpredictable variations in measurements due to uncontrollable factors (e.g., environmental noise, human reaction time).</p>
+    <p><strong>Characteristics:</strong></p>
+    <ul>
+        <li>Follow no fixed pattern but average out over multiple measurements.</li>
+        <li>Can be reduced by increasing the number of measurements.</li>
+        <li>Follow statistical laws (e.g., normal distribution).</li>
+    </ul>
+    <p><strong>Example:</strong> Slight variations in repeated measurements of the same object due to hand tremors.</p>
+    <p><strong>Mitigation:</strong></p>
+    <ul>
+        <li>Take multiple measurements and average them.</li>
+        <li>Use more precise instruments.</li>
+        <li>Control experimental conditions.</li>
+    </ul>
+
+    <h2>2. Propagation of Errors</h2>
+    <p>When performing calculations with measured quantities, errors propagate through the operations, affecting the final result.</p>
+
+    <h3>A. Error Propagation Rules</h3>
+    <p>For a function \( f(x, y, \dots) \), the uncertainty \( \Delta f \) can be approximated using partial derivatives:</p>
+
+    <table>
+        <tr>
+            <th>Operation</th>
+            <th>Formula</th>
+        </tr>
+        <tr>
+            <td>Addition/Subtraction</td>
+            <td>\( f = x \pm y \implies \Delta f = \sqrt{(\Delta x)^2 + (\Delta y)^2} \)</td>
+        </tr>
+        <tr>
+            <td>Multiplication/Division</td>
+            <td>\( f = x \cdot y \) or \( f = \frac{x}{y} \implies \frac{\Delta f}{f} = \sqrt{\left(\frac{\Delta x}{x}\right)^2 + \left(\frac{\Delta y}{y}\right)^2} \)</td>
+        </tr>
+        <tr>
+            <td>Powers</td>
+            <td>\( f = x^n \implies \frac{\Delta f}{f} = n \cdot \frac{\Delta x}{x} \)</td>
+        </tr>
+        <tr>
+            <td>General Formula (for independent errors)</td>
+            <td>\( \Delta f = \sqrt{\left(\frac{\partial f}{\partial x} \Delta x\right)^2 + \left(\frac{\partial f}{\partial y} \Delta y\right)^2 + \dots} \)</td>
+        </tr>
+    </table>
+
+    <div class="example">
+        <h4>Example:</h4>
+        <p>If \( f = x \cdot y \), where \( x = 5.0 \pm 0.1 \) and \( y = 3.0 \pm 0.2 \), then:</p>
+        <p>\( f = 5.0 \times 3.0 = 15.0 \)</p>
+        <p>\( \frac{\Delta f}{f} = \sqrt{\left(\frac{0.1}{5.0}\right)^2 + \left(\frac{0.2}{3.0}\right)^2} = \sqrt{0.0004 + 0.0044} \approx 0.068 \)</p>
+        <p>\( \Delta f = 15.0 \times 0.068 \approx 1.02 \)</p>
+        <p>Thus, \( f = 15.0 \pm 1.0 \).</p>
+    </div>
+
+    <h2>3. Normal Law of Errors (Gaussian Distribution)</h2>
+    <p>Random errors typically follow a <strong>normal distribution</strong> (bell curve), characterized by:</p>
+    <ul>
+        <li><strong>Mean (μ):</strong> The most probable value (true value in the absence of systematic errors).</li>
+        <li><strong>Standard Deviation (σ):</strong> Measures the spread of data.
+            <ul>
+                <li>~68% of measurements lie within \( \mu \pm \sigma \).</li>
+                <li>~95% within \( \mu \pm 2\sigma \).</li>
+                <li>~99.7% within \( \mu \pm 3\sigma \).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>Probability Density Function (PDF)</h3>
+    <p>The normal distribution is given by:</p>
+    <p style="text-align: center; font-size: 1.2em;">\( P(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{(x - \mu)^2}{2\sigma^2}} \)</p>
+
+    <h3>Standard Error (SE)</h3>
+    <p>The standard deviation of the <strong>mean</strong> of a sample:</p>
+    <p style="text-align: center; font-size: 1.2em;">\( SE = \frac{\sigma}{\sqrt{N}} \)</p>
+    <p>where \( N \) is the number of measurements.</p>
+
+    <h2>4. Standard and Probable Error</h2>
+
+    <h3>A. Standard Error (SE)</h3>
+    <ul>
+        <li>Measures the precision of the mean.</li>
+        <li>Smaller SE → more precise estimate of the true value.</li>
+    </ul>
+
+    <h3>B. Probable Error (PE)</h3>
+    <ul>
+        <li>Defined as \( 0.6745 \sigma \).</li>
+        <li>The range \( \mu \pm PE \) contains 50% of the data.</li>
+        <li>Historically used before computers made standard deviation more common.</li>
+    </ul>
+
+    <h3>Relation Between SE and PE</h3>
+    <p style="text-align: center; font-size: 1.2em;">\( PE = 0.6745 \cdot SE \)</p>
+
+    <div class="summary">
+        <h2>Summary Table</h2>
+        <table>
+            <tr>
+                <th>Concept</th>
+                <th>Definition</th>
+                <th>Formula</th>
+            </tr>
+            <tr>
+                <td>Systematic Error</td>
+                <td>Consistent bias in measurements</td>
+                <td>Cannot be reduced by averaging</td>
+            </tr>
+            <tr>
+                <td>Random Error</td>
+                <td>Unpredictable variations</td>
+                <td>Follows normal distribution</td>
+            </tr>
+            <tr>
+                <td>Error Propagation</td>
+                <td>How errors affect calculations</td>
+                <td>\( \Delta f = \sqrt{\sum \left(\frac{\partial f}{\partial x_i} \Delta x_i\right)^2} \)</td>
+            </tr>
+            <tr>
+                <td>Standard Deviation (σ)</td>
+                <td>Spread of data around the mean</td>
+                <td>\( \sigma = \sqrt{\frac{\sum (x_i - \mu)^2}{N}} \)</td>
+            </tr>
+            <tr>
+                <td>Standard Error (SE)</td>
+                <td>Precision of the mean</td>
+                <td>\( SE = \frac{\sigma}{\sqrt{N}} \)</td>
+            </tr>
+            <tr>
+                <td>Probable Error (PE)</td>
+                <td>50% confidence interval</td>
+                <td>\( PE = 0.6745 \cdot SE \)</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>Key Takeaways</h2>
+    <ul>
+        <li><strong>Systematic errors</strong> require fixing the experimental setup.</li>
+        <li><strong>Random errors</strong> can be reduced by increasing measurements and improving precision.</li>
+        <li><strong>Error propagation</strong> must be considered in calculations.</li>
+        <li><strong>Normal distribution</strong> is fundamental in error analysis.</li>
+        <li><strong>Standard error</strong> and <strong>probable error</strong> quantify uncertainty in the mean.</li>
+    </ul>
+</body>
+</html>
