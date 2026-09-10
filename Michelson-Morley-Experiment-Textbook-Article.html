@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Michelson–Morley Experiment — A Textbook Article</title>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  
+  :root {
+    --text: #1e293b;
+    --muted: #475569;
+    --accent: #0f766e;
+    --border: #e2e8f0;
+    --bg: #fafaf9;
+    --card: #ffffff;
+    --code-bg: #f1f5f9;
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--text);
+    background: var(--bg);
+  }
+  
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+  
+  header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+  
+  .eyebrow {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  
+  h1 {
+    font-size: 2.15rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+  
+  .subtitle {
+    font-size: 1.15rem;
+    color: var(--muted);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  
+  .meta {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 1.25rem;
+  }
+  
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 650;
+    margin: 2.75rem 0 1rem;
+    letter-spacing: -0.015em;
+    color: #0f172a;
+  }
+  
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.75rem 0 0.7rem;
+    color: #1e293b;
+  }
+  
+  p { margin-bottom: 1.15rem; }
+  
+  .lead {
+    font-size: 1.15rem;
+    color: #334155;
+    margin-bottom: 1.5rem;
+  }
+  
+  ul, ol {
+    margin: 0 0 1.25rem 1.4rem;
+  }
+  
+  li { margin-bottom: 0.4rem; }
+  
+  blockquote {
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border-left: 4px solid var(--accent);
+    background: #f0fdfa;
+    font-style: italic;
+    color: #134e4a;
+  }
+  
+  blockquote cite {
+    display: block;
+    margin-top: 0.5rem;
+    font-style: normal;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  
+  .equation {
+    margin: 1.5rem 0;
+    padding: 1rem 0;
+    overflow-x: auto;
+    text-align: center;
+  }
+  
+  .note, .key-point {
+    margin: 1.5rem 0;
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.98rem;
+  }
+  
+  .note {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+  }
+  
+  .key-point {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+  }
+  
+  .key-point strong {
+    color: #065f46;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+    font-family: Inter, system-ui, sans-serif;
+  }
+  
+  th, td {
+    border: 1px solid var(--border);
+    padding: 0.65rem 0.85rem;
+    text-align: left;
+  }
+  
+  th {
+    background: #f1f5f9;
+    font-weight: 600;
+  }
+  
+  code, .mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.9em;
+    background: var(--code-bg);
+    padding: 0.15em 0.35em;
+    border-radius: 4px;
+  }
+  
+  .figure {
+    margin: 2rem 0;
+    text-align: center;
+  }
+  
+  .figure-caption {
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-top: 0.6rem;
+    line-height: 1.45;
+  }
+  
+  .figure-box {
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 0.92rem;
+    color: #334155;
+    text-align: left;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+  
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  
+  a { color: var(--accent); }
+  
+  @media print {
+    body { background: white; }
+    .container { max-width: 100%; padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="eyebrow">Foundations of Modern Physics · Special Relativity</div>
+  <h1>The Michelson–Morley Experiment</h1>
+  <p class="subtitle">The most famous “failed” experiment in the history of physics, and the empirical cornerstone that helped open the road to Einstein’s special theory of relativity.</p>
+  <div class="meta">Textbook-style article · Companion to the interactive 3D virtual laboratory</div>
+</header>
+
+<p class="lead">
+In the late nineteenth century the wave theory of light was firmly established, yet it still required a medium—the <em>luminiferous aether</em>—through which electromagnetic waves were supposed to propagate. If the Earth moves through this aether, the speed of light should depend on direction. Albert A. Michelson and Edward W. Morley set out to measure that directional dependence with unprecedented precision. Their null result forced a profound revision of classical physics.
+</p>
+
+<h2>1. Historical Context and the Aether Hypothesis</h2>
+
+<p>
+By the 1870s Maxwell’s equations had unified electricity, magnetism and light. Light was understood as a transverse electromagnetic wave. Every other known wave required a material medium: sound needs air or water; water waves need a water surface. It seemed natural, therefore, that light should also require a medium that filled all space—the luminiferous (“light-bearing”) aether.
+</p>
+
+<p>
+The aether was imagined to be:
+</p>
+<ul>
+  <li>perfectly transparent and frictionless,</li>
+  <li>extremely rigid (to support the high frequency of light waves),</li>
+  <li>yet somehow allowing planets to move through it without resistance.</li>
+</ul>
+
+<p>
+If the aether were at rest with respect to the “fixed stars,” then the Earth, orbiting the Sun at roughly \(30\,\mathrm{km\,s^{-1}}\), must be ploughing through this medium at orbital speed. Consequently the measured speed of light should differ according to whether the light travels parallel or perpendicular to the Earth’s motion relative to the aether—the famous “aether wind.”
+</p>
+
+<p>
+Earlier attempts (Fizeau, Fresnel, Airy, etc.) had already constrained possible aether-drag models, but none had the sensitivity to detect an effect of order \((v/c)^2 \approx 10^{-8}\). Michelson’s interferometer was designed precisely for that second-order measurement.
+</p>
+
+<h2>2. Principle of the Michelson Interferometer</h2>
+
+<p>
+A coherent beam of light strikes a partially silvered mirror (beam splitter) oriented at \(45^\circ\). The beam is divided into two beams of roughly equal intensity that travel along mutually perpendicular arms, reflect from end mirrors, and return to the beam splitter. There they recombine and proceed to a telescope or detector where an interference pattern is observed.
+</p>
+
+<div class="figure">
+  <div class="figure-box">
+    <strong>Essential optical path</strong><br><br>
+    Source → Beam splitter → Arm 1 (longitudinal) → Mirror M₁ → back to beam splitter<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Arm 2 (transverse) → Mirror M₂ → back to beam splitter<br>
+    Recombined beams → Telescope / detector
+  </div>
+  <p class="figure-caption">Simplified schematic of the Michelson interferometer. In the 1887 apparatus each arm was folded by multiple reflections to give an effective path length of approximately 11 m.</p>
+</div>
+
+<p>
+A compensating plate of the same thickness and refractive index as the beam-splitter substrate is placed in one arm so that both beams traverse the same total thickness of glass. This is essential when white light (short coherence length) is used; monochromatic sodium light was employed mainly for initial alignment.
+</p>
+
+<p>
+Any difference in the optical path lengths of the two arms produces a phase difference and therefore a shift of the interference fringes. Because the light travels each arm twice (out and back), a change \(\Delta L\) in the geometric length of one arm changes the optical path by \(2\Delta L\).
+</p>
+
+<h2>3. Theoretical Prediction under Classical Aether Theory</h2>
+
+<p>
+Assume the apparatus moves with velocity \(v\) relative to a stationary aether, and let \(c\) be the speed of light with respect to the aether. Consider first the arm oriented parallel to \(\mathbf{v}\) (the “longitudinal” arm of length \(L\)).
+</p>
+
+<h3>3.1 Longitudinal transit time</h3>
+
+<p>
+On the outbound leg the light travels against the aether wind; the relative speed is \(c-v\). On the return leg the relative speed is \(c+v\). The round-trip time is therefore
+</p>
+
+<div class="equation">
+\[
+t_\parallel = \frac{L}{c-v} + \frac{L}{c+v} = \frac{2Lc}{c^2-v^2} = \frac{2L}{c}\cdot\frac{1}{1-\beta^2},
+\]
+</div>
+
+<p>
+where \(\beta = v/c\).
+</p>
+
+<h3>3.2 Transverse transit time</h3>
+
+<p>
+For the arm perpendicular to \(\mathbf{v}\) the light must be aimed slightly upstream so that its resultant velocity relative to the apparatus is perpendicular to the arm. The effective speed of the light relative to the apparatus is \(\sqrt{c^2-v^2}\). The round-trip time becomes
+</p>
+
+<div class="equation">
+\[
+t_\perp = \frac{2L}{\sqrt{c^2-v^2}} = \frac{2L}{c}\cdot\frac{1}{\sqrt{1-\beta^2}}.
+\]
+</div>
+
+<h3>3.3 Time difference and fringe shift</h3>
+
+<p>
+The difference in transit times is
+</p>
+
+<div class="equation">
+\[
+\Delta t = t_\parallel - t_\perp = \frac{2L}{c}\left(\frac{1}{1-\beta^2}-\frac{1}{\sqrt{1-\beta^2}}\right).
+\]
+</div>
+
+<p>
+For \(\beta\ll 1\) a binomial expansion yields the leading term
+</p>
+
+<div class="equation">
+\[
+\Delta t \approx \frac{L}{c}\beta^2 = \frac{L v^2}{c^3}.
+\]
+</div>
+
+<p>
+When the entire apparatus is rotated by \(90^\circ\), the roles of the two arms are interchanged and the sign of \(\Delta t\) reverses. The total change in the time difference is therefore \(2\Delta t\), corresponding to an optical-path change of \(2c\Delta t\). The expected fringe shift (number of fringes that pass a fixed reference mark) is
+</p>
+
+<div class="equation">
+\[
+N = \frac{2c\Delta t}{\lambda} \approx \frac{2L}{\lambda}\beta^2,
+\]
+</div>
+
+<p>
+where \(\lambda\) is the wavelength of the light.
+</p>
+
+<div class="key-point">
+  <strong>Numerical expectation for the 1887 apparatus.</strong><br>
+  Effective path length \(L \approx 11\,\mathrm{m}\), \(\lambda \approx 550\,\mathrm{nm}\), \(\beta \approx 10^{-4}\) (Earth’s orbital speed).<br>
+  Then \(N \approx 0.4\) fringe. The instrument was capable of detecting a shift of roughly 0.01 fringe—forty times smaller than the predicted effect.
+</div>
+
+<p>
+(The precise numerical factor depends on whether one uses the exact expression or the approximation, and on the exact value of \(L\) after multiple reflections; contemporary accounts quote an expected shift of about 0.40 fringe.)
+</p>
+
+<h2>4. The 1887 Apparatus and Experimental Procedure</h2>
+
+<p>
+Michelson’s first attempt (Potsdam, 1881) used a single-pass arm length of about 1.2 m and expected only \(\sim 0.04\) fringe. The result was already consistent with zero, but the sensitivity was marginal. With Morley he redesigned the instrument:
+</p>
+
+<ul>
+  <li>Multiple reflections (eight round trips) raised the effective optical path to approximately 11 m.</li>
+  <li>The optics were mounted on a massive sandstone slab (about 1.5 m on a side) floated on a pool of mercury. This isolated the apparatus from vibration and allowed smooth continuous rotation.</li>
+  <li>The whole assembly was housed in a basement laboratory of a heavy stone building at the Case School of Applied Science (Cleveland) to minimize thermal and acoustic disturbances.</li>
+</ul>
+
+<p>
+Observations were made by slowly rotating the interferometer (one full turn in about six minutes) and recording the position of a chosen fringe relative to a cross-hair at sixteen equally spaced orientations. Data were taken at noon and in the evening on several days in July 1887 so that the direction of the Earth’s orbital velocity relative to the laboratory changed.
+</p>
+
+<h2>5. Results of the 1887 Experiment</h2>
+
+<p>
+The observed fringe shifts were far smaller than the classical prediction. Michelson and Morley reported that the maximum displacement was about 0.02 fringe and the average much less than 0.01 fringe—roughly one-fortieth of the expected 0.40 fringe. In a letter to Lord Rayleigh (17 August 1887) Michelson wrote:
+</p>
+
+<blockquote>
+  “The Experiments on the relative motion of the earth and ether have been completed and the result decidedly negative. The expected deviation of the interference fringes from the zero should have been 0.40 of a fringe—the maximum displacement was 0.02 and the average much less than 0.01—and then not in the right place. As displacement is proportional to squares of the relative velocities it follows that if the ether does slip past the relative velocity is less than one sixth of the earth’s velocity.”
+  <cite>— A. A. Michelson to Lord Rayleigh</cite>
+</blockquote>
+
+<p>
+Because the predicted effect scales as \(v^2\), a null result at the level of \(1/40\) of the expected shift implied that any residual aether wind was smaller than about one-sixth of the Earth’s orbital speed (and “certainly less than one-fourth”).
+</p>
+
+<div class="note">
+  <strong>Note on the published curves.</strong> In the original paper the theoretical curve is often drawn reduced by a factor of eight so that it can be compared visually with the tiny residual scatter. The actual discrepancy is therefore even more dramatic than a casual glance at the figure might suggest.
+</div>
+
+<h2>6. Interpretation and Immediate Aftermath</h2>
+
+<p>
+Within the classical aether framework the result was deeply puzzling. Several ad-hoc explanations were offered:
+</p>
+
+<ul>
+  <li><strong>Aether drag</strong> — the Earth somehow drags the local aether with it, so that the laboratory is at rest relative to the aether. This conflicted with stellar aberration and with Fizeau’s measurements of the speed of light in moving water.</li>
+  <li><strong>Emission theories</strong> — the speed of light depends on the motion of the source. These theories were later ruled out by observations of binary stars and by terrestrial experiments.</li>
+  <li><strong>Length contraction</strong> — independently proposed by Fitzgerald (1889) and Lorentz (1892): bodies contract in the direction of motion through the aether by the factor \(\sqrt{1-\beta^2}\). This exactly cancels the longitudinal time difference, restoring a null result. Lorentz later developed a full electron theory incorporating this contraction together with a local-time transformation—the Lorentz transformations—yet still retained an absolute aether.</li>
+</ul>
+
+<p>
+The decisive conceptual step was taken by Einstein in 1905. In the special theory of relativity the speed of light is postulated to be the same in every inertial frame; there is no aether and no preferred rest frame. The Lorentz transformations emerge as the unique linear transformations that leave the speed of light invariant. Length contraction and time dilation become geometric properties of Minkowski spacetime rather than dynamical effects caused by motion through a medium.
+</p>
+
+<h2>7. Subsequent Tests and Modern Precision</h2>
+
+<p>
+The Michelson–Morley experiment has been repeated many times with steadily improving sensitivity:
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Era / Experiment</th>
+      <th>Technique</th>
+      <th>Bound on anisotropy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1887 Michelson–Morley</td>
+      <td>Optical interferometer, \(L\sim 11\,\mathrm{m}\)</td>
+      <td>\(\Delta c/c \lesssim 10^{-8}\) (order of magnitude)</td>
+    </tr>
+    <tr>
+      <td>1930s (Joos, etc.)</td>
+      <td>Improved optical interferometers</td>
+      <td>\(\sim 10^{-10}\)</td>
+    </tr>
+    <tr>
+      <td>1950s–60s</td>
+      <td>Masers, early lasers</td>
+      <td>\(\sim 10^{-11}\)</td>
+    </tr>
+    <tr>
+      <td>2000s–present</td>
+      <td>Cryogenic optical resonators, sapphire microwave cavities</td>
+      <td>\(\Delta c/c \sim 10^{-17}\) to \(10^{-18}\)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+Modern “Michelson–Morley” experiments typically compare the resonance frequencies of two orthogonal optical or microwave cavities as the Earth rotates and orbits the Sun. Any anisotropy in the speed of light would appear as a sidereal modulation of the frequency difference. Present limits constrain the relevant parameters of the Standard-Model Extension (SME) and of the Robertson–Mansouri–Sexl test theory at the level of parts in \(10^{17}\)–\(10^{18}\), fully consistent with exact Lorentz invariance.
+</p>
+
+<p>
+Complementary tests (Kennedy–Thorndike experiments that look for velocity dependence rather than pure anisotropy, and Ives–Stilwell-type measurements of time dilation) together confirm the full set of Lorentz transformations to extraordinary precision.
+</p>
+
+<h2>8. Significance for Physics</h2>
+
+<p>
+The Michelson–Morley experiment occupies a unique place in the history of science for several reasons:
+</p>
+
+<ol>
+  <li><strong>It is the classic example of a decisive null result.</strong> The absence of an expected effect forced a re-examination of fundamental assumptions.</li>
+  <li><strong>It eliminated the aether as a dynamical medium</strong> for electromagnetic waves and thereby removed the last classical absolute rest frame.</li>
+  <li><strong>It supplied the principal empirical motivation</strong> for the Lorentz transformations and, ultimately, for Einstein’s postulate of the constancy of the speed of light.</li>
+  <li><strong>It remains a living experimental tradition.</strong> Contemporary cavity experiments continue to search for possible Lorentz-violating signatures predicted by certain approaches to quantum gravity; so far none have been found.</li>
+</ol>
+
+<p>
+In short, the 1887 measurement is not merely a historical curiosity. It is one of the foundational empirical pillars of modern physics—the experimental demonstration that the speed of light is isotropic and independent of the motion of the laboratory, a fact that special relativity elevates to a postulate and that general relativity and quantum field theory continue to respect.
+</p>
+
+<hr>
+
+<h2>Further Reading</h2>
+
+<ul>
+  <li>A. A. Michelson &amp; E. W. Morley, “On the Relative Motion of the Earth and the Luminiferous Ether,” <em>American Journal of Science</em> 34, 333 (1887).</li>
+  <li>A. Einstein, “Zur Elektrodynamik bewegter Körper,” <em>Annalen der Physik</em> 17, 891 (1905).</li>
+  <li>R. S. Shankland et al., historical re-analyses of the original data and later repetitions.</li>
+  <li>Modern reviews of Lorentz-invariance tests within the Standard-Model Extension framework.</li>
+</ul>
+
+<footer>
+  Companion resource to the interactive Three.js 3D virtual laboratory of the Michelson–Morley interferometer.<br>
+  Written in textbook style for students of introductory modern physics and special relativity.
+</footer>
+
+</div>
+</body>
+</html>
