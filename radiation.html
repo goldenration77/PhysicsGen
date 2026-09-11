@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radiation: Blackbody Radiation and Related Laws</title>
+    <title>Thermal Radiation: A Full Textbook Treatment of Blackbody Radiation, Energy Density, Planck’s Law and Its Classical Limits</title>
     <!-- Modern polyfills / feature detection (replaces polyfill.io) -->
     <script src="https://cdn.jsdelivr.net/npm/core-js-bundle@3.38.1/minified.js"></script>
     <!-- MathJax 3 (stable, no polyfill dependency) -->
@@ -344,7 +344,7 @@
 
         .hint {
             font-size: 0.9em;
-            color: #f7f4dc;
+            color: #554859;
             margin-top: 6px;
         }
 
@@ -453,8 +453,8 @@
     <canvas id="webgl-bg"></canvas>
 
     <div class="page-wrap">
-    <h1>Thermal Radiation: A Documentation on Blackbody Radiation and Related Laws</h1>
-    <h2>Made with Mistral Vibe and enhanced with Grok by Soumyajit Roy</h2>
+    <h1>Thermal Radiation: A Full Textbook Article on Blackbody Radiation and Related Laws</h1>
+    <h2>Made with Mistral Vibe and enhanced with Grok by SJR</h2>
 
     <nav class="nav-bar" aria-label="Section navigation">
         <div class="nav-header">
@@ -482,13 +482,26 @@
     <div id="introduction" class="container">
         <h2>Introduction</h2>
         <p style="color: #f7f4dc">
-            This documentation provides a <strong>detailed and rigorous</strong> exploration of blackbody radiation and its spectral distribution, 
-            including the derivation of Planck's law and the deduction of the Stefan-Boltzmann law, Rayleigh-Jeans law, and Wien's displacement law. 
-            It is designed for <strong>undergraduate to postgraduate physics students</strong> and includes definitions, statements, deductions, proofs, and solved problems.
+            This textbook-style article provides a <strong>detailed, rigorous and self-contained</strong> exploration of blackbody radiation and its spectral distribution. 
+            It covers the concept of energy density of the radiation field, the complete derivation of Planck’s law from first principles (mode density + quantized average energy of oscillators), 
+            and the systematic deduction of the Stefan–Boltzmann law, the Rayleigh–Jeans law and Wien’s displacement law directly from Planck’s formula. 
+            The treatment is designed for <strong>undergraduate to postgraduate physics students</strong> and includes precise definitions, statements, step-by-step deductions, proofs, physical interpretation, and a large set of solved problems.
+        </p>
+        
+        <p style="color: #f7f4dc">
+            Throughout the text we employ the standard spectral quantities of modern radiometry and quantum statistics:
+            <ul style="color: #f7f4dc">
+                <li>\( B_\nu(T) \) – spectral radiance (power per unit area, per unit solid angle, per unit frequency),</li>
+                <li>\( B_\lambda(T) \) – spectral radiance per unit wavelength,</li>
+                <li>\( u_\nu(T) \) or \( E_\nu \) – spectral energy density (energy per unit volume per unit frequency),</li>
+                <li>\( u_\lambda(T) \) or \( E_\lambda \) – spectral energy density per unit wavelength,</li>
+                <li>\( u(T) \) – total energy density (integrated over all frequencies).</li>
+            </ul>
+            The relations between these quantities are carefully derived so that the student can move freely between frequency and wavelength representations and between energy-density and radiance formulations.
         </p>
         
         <div class="note">
-            <p><strong>Note:</strong> All mathematical derivations are presented step-by-step. Interactive graphs now support zoom, pan, multi-temperature overlays, live temperature sliders, and export. A subtle WebGL radiation field animates in the background.</p>
+            <p><strong>Note:</strong> All mathematical derivations are presented step-by-step. Interactive graphs support zoom, pan, multi-temperature overlays, live temperature sliders, and export. A subtle WebGL radiation field animates in the background. The original UI, colour scheme, navigation and JavaScript functionality are left completely intact.</p>
         </div>
         
         <h3>Fundamental Constants</h3>
@@ -530,6 +543,12 @@
                 <td>\( 2.897771955 \times 10^{-3} \)</td>
                 <td>m·K</td>
             </tr>
+            <tr>
+                <td>Radiation density constant</td>
+                <td>\( a = 4\sigma/c \)</td>
+                <td>\( 7.5657 \times 10^{-16} \)</td>
+                <td>J·m⁻³·K⁻⁴</td>
+            </tr>
         </table>
         </div><!-- /.table-scroll -->
     </div>
@@ -540,36 +559,61 @@
         <div class="definition">
             <h3>Definition</h3>
             <p>
-                A <strong>blackbody</strong> is an idealized physical body that absorbs <strong>all</strong> incident electromagnetic radiation, 
-                regardless of frequency or angle of incidence. It is also a <strong>perfect emitter</strong> of radiation, and its spectral distribution 
-                depends <strong>only</strong> on its temperature. The concept of a blackbody is fundamental in understanding thermal radiation and the laws governing it.
+                A <strong>blackbody</strong> (or black body) is an idealized physical body that absorbs <strong>all</strong> incident electromagnetic radiation 
+                at every frequency and every angle of incidence; its absorptivity is identically equal to unity. 
+                By Kirchhoff’s law of thermal radiation a blackbody is also a perfect emitter: at a given temperature \(T\) it radiates the maximum possible power 
+                per unit area at every wavelength. The spectral distribution of the radiation that leaves a blackbody depends <strong>only</strong> on its thermodynamic temperature 
+                and is independent of the material composition or surface properties of the body. 
+                Real objects can approach blackbody behaviour over limited spectral ranges (e.g., a small aperture in a large isothermal cavity, or the surface of a star).
             </p>
         </div>
         
         <div class="statement">
             <h3>Key Properties</h3>
             <ul>
-                <li><strong>Absorptivity:</strong> A blackbody absorbs 100% of the radiation incident on it.</li>
-                <li><strong>Emissivity:</strong> A blackbody emits the maximum possible radiation at a given temperature.</li>
-                <li><strong>Spectral Distribution:</strong> The radiation emitted by a blackbody is continuous and spans all wavelengths.</li>
-                <li><strong>Isotropy:</strong> The radiation is isotropic, meaning it is emitted uniformly in all directions.</li>
+                <li><strong>Absorptivity \(\alpha=1\):</strong> A blackbody absorbs 100 % of the radiation incident upon it at every wavelength.</li>
+                <li><strong>Emissivity \(\varepsilon=1\):</strong> A blackbody emits the maximum possible radiation at a given temperature (Kirchhoff’s law).</li>
+                <li><strong>Spectral distribution:</strong> The emitted radiation is continuous and spans the entire electromagnetic spectrum; its shape is fixed solely by \(T\).</li>
+                <li><strong>Isotropy:</strong> The radiance is independent of direction (Lambertian emission from a surface element).</li>
+                <li><strong>Universality:</strong> Two blackbodies at the same temperature emit identical spectra; the radiation field inside a closed isothermal cavity is universal.</li>
             </ul>
         </div>
         
         <div class="deduction">
-            <h3>Spectral Radiance and Its Dependence</h3>
+            <h3>Spectral Radiance and Spectral Energy Density</h3>
             <p>
-                The <strong>spectral radiance</strong> \( B_\nu(T) \) of a blackbody is defined as the power emitted per unit area, per unit solid angle, 
-                and per unit frequency. It is a function of:
-                <ul>
-                    <li>Frequency \( \nu \) or wavelength \( \lambda \) of the radiation.</li>
-                    <li>Temperature \( T \) of the blackbody.</li>
-                </ul>
-                The relationship between frequency and wavelength is given by:
+                Two complementary descriptions are used in the literature.
+            </p>
+            <p>
+                <strong>1. Spectral radiance (surface quantity)</strong><br>
+                The spectral radiance \( B_\nu(T) \) is the power emitted by a blackbody surface per unit area, per unit solid angle, and per unit frequency interval:
             </p>
             <div class="math">
-                \[ \lambda = \frac{c}{\nu} \]
+                \[ B_\nu(T)\;=\;\frac{\mathrm{d}^3P}{\mathrm{d}A\,\mathrm{d}\Omega\,\mathrm{d}\nu}\qquad\bigl(\mathrm{W\,m^{-2}\,sr^{-1}\,Hz^{-1}}\bigr). \]
             </div>
+            <p>
+                The corresponding quantity per unit wavelength is denoted \( B_\lambda(T) \). Because \(\nu=c/\lambda\) we have the exact transformation
+            </p>
+            <div class="math">
+                \[ B_\lambda(T)\,\mathrm{d}\lambda \;=\; -B_\nu(T)\,\mathrm{d}\nu \qquad\Rightarrow\qquad
+                   B_\lambda(T) \;=\; B_\nu(T)\,\frac{c}{\lambda^2}. \]
+            </div>
+            <p>
+                <strong>2. Spectral energy density (volume quantity)</strong><br>
+                Inside a closed cavity in thermodynamic equilibrium the radiation field is isotropic. The spectral energy density \( u_\nu(T) \) (also written \( E_\nu \)) is the energy contained per unit volume per unit frequency interval:
+            </p>
+            <div class="math">
+                \[ u_\nu(T)\;=\;\frac{\mathrm{d}u}{\mathrm{d}\nu}\qquad\bigl(\mathrm{J\,m^{-3}\,Hz^{-1}}\bigr). \]
+            </div>
+            <p>
+                The relation between the two descriptions follows from the fact that the energy flux crossing a surface is \( c \) times the energy density, averaged over the hemisphere:
+            </p>
+            <div class="math">
+                \[ B_\nu(T) \;=\; \frac{c}{4\pi}\,u_\nu(T) \qquad\text{or}\qquad u_\nu(T) \;=\; \frac{4\pi}{c}\,B_\nu(T). \]
+            </div>
+            <p>
+                Integrating over all frequencies yields the total energy density \( u(T)=\int_0^\infty u_\nu(T)\,\mathrm{d}\nu \) and the total radiated power per unit area \( M=\sigma T^4 \).
+            </p>
         </div>
         
         <div class="graph-container">
@@ -589,123 +633,192 @@
         <p class="hint">Tip: Scroll to zoom, drag to pan, double-click to reset. Click temperature buttons to overlay multiple curves.</p>
         
         <div class="note">
-            <p><strong>Observation:</strong> As the temperature increases, the peak of the spectral radiance shifts to higher frequencies (shorter wavelengths), and the total emitted power increases rapidly.</p>
+            <p><strong>Observation:</strong> As the temperature increases, the peak of the spectral radiance shifts to higher frequencies (shorter wavelengths) according to Wien’s displacement law, and the total emitted power increases as \( T^4 \) according to the Stefan–Boltzmann law. These two classical limits will be derived from Planck’s formula later in the article.</p>
         </div>
     </div>
 
     <!-- Energy Density Section -->
     <div id="energy-density" class="container">
-        <h2>Concept of Energy Density</h2>
+        <h2>Concept of the Energy Density of Blackbody Radiation</h2>
         
         <div class="definition">
             <h3>Definition</h3>
             <p>
-                The <strong>energy density</strong> \( u \) of blackbody radiation is the total energy per unit volume of the radiation field. 
-                It is a measure of how much energy is contained in the electromagnetic radiation inside a cavity in thermal equilibrium.
+                Consider a closed cavity whose walls are maintained at a uniform absolute temperature \( T \). 
+                In thermodynamic equilibrium the electromagnetic field inside the cavity is completely determined by \( T \). 
+                The <strong>total energy density</strong> \( u(T) \) is the electromagnetic energy contained in unit volume:
+            </p>
+            <div class="math">
+                \[ u(T) \;=\; \frac{U}{V} \;=\; \int_0^\infty u_\nu(T)\,\mathrm{d}\nu, \]
+            </div>
+            <p>
+                where \( u_\nu(T)\,\mathrm{d}\nu \) (sometimes written \( E_\nu\,\mathrm{d}\nu \)) is the energy per unit volume lying in the frequency interval \( [\nu,\nu+\mathrm{d}\nu] \). 
+                The quantity \( u_\nu \) is called the <strong>spectral energy density</strong>.
             </p>
         </div>
         
         <div class="deduction">
-            <h3>Relationship with Spectral Radiance</h3>
+            <h3>Relation between Energy Density and Spectral Radiance</h3>
             <p>
-                The energy density is related to the spectral radiance \( B_\nu(T) \) by integrating over all frequencies and solid angles. 
-                The relationship is given by:
+                Because the radiation field is isotropic, the energy flux (irradiance) that crosses any imaginary surface element is related to the energy density by the factor \( c/4 \):
             </p>
             <div class="math">
-                \[ u = \frac{4\pi}{c} \int_0^\infty B_\nu(T) d\nu \]
+                \[ M \;=\; \frac{c}{4}\,u(T). \]
             </div>
             <p>
-                Substituting Planck's law for \( B_\nu(T) \):
+                In spectral form the same geometric factor appears:
             </p>
             <div class="math">
-                \[ u = \frac{4\pi}{c} \int_0^\infty \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} d\nu \]
+                \[ B_\nu(T) \;=\; \frac{c}{4\pi}\,u_\nu(T) \qquad\text{or}\qquad
+                   u_\nu(T) \;=\; \frac{4\pi}{c}\,B_\nu(T). \]
+            </div>
+            <p>
+                Consequently the total energy density can be written
+            </p>
+            <div class="math">
+                \[ u(T) \;=\; \frac{4\pi}{c}\int_0^\infty B_\nu(T)\,\mathrm{d}\nu. \]
             </div>
         </div>
         
         <div class="proof">
-            <h3>Derivation of Energy Density</h3>
+            <h3>Explicit Evaluation from Planck’s Law</h3>
             <p>
-                To derive the energy density, we start with Planck's law and integrate over all frequencies:
+                Inserting the Planck spectral radiance
             </p>
             <div class="math">
-                \[ u = \frac{8\pi h}{c^3} \int_0^\infty \frac{\nu^3}{e^{h\nu / kT} - 1} d\nu \]
+                \[ B_\nu(T) \;=\; \frac{2h\nu^3}{c^2}\frac{1}{e^{h\nu/kT}-1} \]
             </div>
             <p>
-                Let \( x = \frac{h\nu}{kT} \), then \( d\nu = \frac{kT}{h} dx \), and the integral becomes:
+                yields the spectral energy density
             </p>
             <div class="math">
-                \[ u = \frac{8\pi h}{c^3} \left( \frac{kT}{h} \right)^4 \int_0^\infty \frac{x^3}{e^x - 1} dx \]
+                \[ u_\nu(T) \;=\; \frac{8\pi h\nu^3}{c^3}\frac{1}{e^{h\nu/kT}-1}. \]
             </div>
             <p>
-                The integral \( \int_0^\infty \frac{x^3}{e^x - 1} dx \) is a standard definite integral and evaluates to \( \frac{\pi^4}{15} \). 
-                Therefore:
+                The total energy density is therefore
             </p>
             <div class="math">
-                \[ u = \frac{8\pi^5 k^4}{15 c^3 h^3} T^4 \]
+                \[ u(T) \;=\; \frac{8\pi h}{c^3}\int_0^\infty\frac{\nu^3}{e^{h\nu/kT}-1}\,\mathrm{d}\nu. \]
             </div>
+            <p>
+                Change of variable \( x=h\nu/kT \) converts the integral into a pure number:
+            </p>
+            <div class="math">
+                \[ u(T) \;=\; \frac{8\pi h}{c^3}\Bigl(\frac{kT}{h}\Bigr)^4\int_0^\infty\frac{x^3}{e^x-1}\,\mathrm{d}x. \]
+            </div>
+            <p>
+                The definite integral is a well-known Bose–Einstein integral:
+            </p>
+            <div class="math">
+                \[ \int_0^\infty\frac{x^3}{e^x-1}\,\mathrm{d}x \;=\; \Gamma(4)\zeta(4) \;=\; \frac{\pi^4}{15}. \]
+            </div>
+            <p>
+                Hence
+            </p>
+            <div class="math">
+                \[ u(T) \;=\; \frac{8\pi^5 k^4}{15\,c^3 h^3}\,T^4 \;=\; a\,T^4, \]
+            </div>
+            <p>
+                where the radiation constant \( a=4\sigma/c\approx 7.5657\times10^{-16}\,\mathrm{J\,m^{-3}\,K^{-4}} \).
+            </p>
         </div>
         
         <div class="summary">
             <h3>Summary</h3>
             <p>
-                The energy density of blackbody radiation is proportional to the fourth power of the temperature. 
-                This result is consistent with the Stefan-Boltzmann law, which describes the total power radiated by a blackbody.
+                The energy density of blackbody radiation is strictly proportional to the fourth power of the absolute temperature. 
+                This \( T^4 \) dependence is the microscopic origin of the Stefan–Boltzmann law for the total power radiated by a black surface.
             </p>
         </div>
     </div>
 
     <!-- Planck's Law Section -->
     <div id="planck-law" class="container">
-        <h2>Derivation of Planck's Law</h2>
+        <h2>Derivation of Planck’s Law</h2>
         
         <div class="statement">
             <h3>Statement</h3>
             <p>
-                Planck's law describes the spectral density of electromagnetic radiation emitted by a blackbody in thermal equilibrium at a given temperature \( T \). 
-                It is one of the most fundamental results in quantum mechanics and marks the beginning of quantum theory.
+                Planck’s law gives the spectral energy density (or equivalently the spectral radiance) of electromagnetic radiation in thermal equilibrium at temperature \( T \). 
+                In terms of frequency it reads
+            </p>
+            <div class="math">
+                \[ u_\nu(T) \;=\; \frac{8\pi h\nu^3}{c^3}\frac{1}{e^{h\nu/kT}-1}, \qquad
+                   B_\nu(T) \;=\; \frac{2h\nu^3}{c^2}\frac{1}{e^{h\nu/kT}-1}. \]
+            </div>
+            <p>
+                The wavelength form is
+            </p>
+            <div class="math">
+                \[ B_\lambda(T) \;=\; \frac{2hc^2}{\lambda^5}\frac{1}{e^{hc/\lambda kT}-1}. \]
+            </div>
+            <p>
+                The law is exact for an ideal blackbody and marks the historical birth of quantum theory.
             </p>
         </div>
         
         <div class="deduction">
-            <h3>Historical Context</h3>
+            <h3>Historical Context and the Ultraviolet Catastrophe</h3>
             <p>
-                In the late 19th century, classical physics failed to explain the spectral distribution of blackbody radiation, particularly at high frequencies (the "ultraviolet catastrophe"). 
-                Max Planck resolved this issue in 1900 by proposing that the energy of electromagnetic oscillators is quantized, i.e., it can only take discrete values:
+                Classical statistical mechanics applied to the electromagnetic modes inside a cavity (Rayleigh–Jeans, 1900–1905) predicts
             </p>
             <div class="math">
-                \[ E = n h \nu \quad \text{where} \quad n = 0, 1, 2, \dots \]
+                \[ u_\nu^{\mathrm{RJ}}(T) \;=\; \frac{8\pi\nu^2}{c^3}\,kT. \]
             </div>
             <p>
-                Here, \( h \) is Planck's constant, and \( \nu \) is the frequency of the radiation.
+                Integration over all frequencies diverges – the famous “ultraviolet catastrophe”. 
+                Max Planck resolved the paradox in December 1900 by postulating that the energy of a harmonic oscillator of frequency \(\nu\) can take only discrete values
+            </p>
+            <div class="math">
+                \[ E_n \;=\; n\,h\nu, \qquad n=0,1,2,\dots \]
+            </div>
+            <p>
+                (the zero-point energy \(\tfrac12 h\nu\) was added later by quantum mechanics and does not affect the thermal spectrum).
             </p>
         </div>
         
         <div class="proof">
-            <h3>Derivation</h3>
+            <h3>Step-by-step Derivation</h3>
+            <p><strong>1. Density of electromagnetic modes</strong></p>
             <p>
-                The spectral radiance \( B_\nu(T) \) is derived by considering the average energy of a quantum harmonic oscillator and the density of states in the radiation field. 
-                The average energy of an oscillator with frequency \( \nu \) is:
+                In a large cubic cavity of side \( L \) the allowed wave-vectors form a lattice in \( k \)-space with spacing \( \pi/L \). 
+                Counting both polarisation states one finds that the number of modes per unit volume in the frequency interval \( [\nu,\nu+\mathrm{d}\nu] \) is
             </p>
             <div class="math">
-                \[ \langle E \rangle = \frac{h\nu}{e^{h\nu / kT} - 1} \]
+                \[ D(\nu)\,\mathrm{d}\nu \;=\; \frac{8\pi\nu^2}{c^3}\,\mathrm{d}\nu. \]
+            </div>
+            <p><strong>2. Average energy of a quantised oscillator</strong></p>
+            <p>
+                The Boltzmann factor for the \( n \)-th level is \( e^{-n x} \) where \( x=h\nu/kT \). 
+                The partition function is a geometric series:
+            </p>
+            <div class="math">
+                \[ Z \;=\; \sum_{n=0}^\infty e^{-n x} \;=\; \frac{1}{1-e^{-x}}. \]
             </div>
             <p>
-                The number of modes per unit volume per unit frequency in the radiation field is:
+                The mean energy follows at once:
             </p>
             <div class="math">
-                \[ D(\nu) = \frac{8\pi \nu^2}{c^3} \]
+                \[ \langle E\rangle \;=\; -\frac{\partial\ln Z}{\partial\beta} \;=\; \frac{h\nu}{e^{h\nu/kT}-1}. \]
+            </div>
+            <p><strong>3. Spectral energy density</strong></p>
+            <p>
+                Multiplying the mode density by the mean energy yields Planck’s spectral energy density
+            </p>
+            <div class="math">
+                \[ u_\nu(T) \;=\; D(\nu)\,\langle E\rangle \;=\; \frac{8\pi h\nu^3}{c^3}\frac{1}{e^{h\nu/kT}-1}. \]
             </div>
             <p>
-                Combining these results, the spectral radiance is:
+                The corresponding spectral radiance is obtained by the geometric factor \( c/4\pi \):
             </p>
             <div class="math">
-                \[ B_\nu(T) = \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} \]
+                \[ B_\nu(T) \;=\; \frac{c}{4\pi}\,u_\nu(T) \;=\; \frac{2h\nu^3}{c^2}\frac{1}{e^{h\nu/kT}-1}. \]
             </div>
             <p>
-                This is <strong>Planck's law</strong> in terms of frequency. In terms of wavelength \( \lambda \), it can be written as:
+                Changing to wavelength variables (\( \nu=c/\lambda \), \( |\mathrm{d}\nu|=(c/\lambda^2)|\mathrm{d}\lambda| \)) produces the familiar form
             </p>
             <div class="math">
-                \[ B_\lambda(T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^{hc / \lambda kT} - 1} \]
+                \[ B_\lambda(T) \;=\; \frac{2hc^2}{\lambda^5}\frac{1}{e^{hc/\lambda kT}-1}. \]
             </div>
         </div>
         
@@ -726,134 +839,119 @@
         <p class="hint">Scroll / pinch to zoom · Drag to pan · Overlay multiple temperatures</p>
         
         <div class="note">
-            <p><strong>Observation:</strong> Planck's law predicts a peak in the spectral radiance, which shifts to higher frequencies as the temperature increases. This explains the color change of objects as they are heated.</p>
+            <p><strong>Observation:</strong> Planck’s law predicts a maximum in the spectral radiance whose location shifts to higher frequencies (shorter wavelengths) as temperature rises. This is the microscopic origin of the colour change of heated objects and of Wien’s displacement law.</p>
         </div>
     </div>
 
     <!-- Stefan-Boltzmann Law Section -->
     <div id="stefan-boltzmann" class="container">
-        <h2>Deduction of the Stefan-Boltzmann Law</h2>
+        <h2>Deduction of the Stefan–Boltzmann Law from Planck’s Law</h2>
         
         <div class="statement">
             <h3>Statement</h3>
             <p>
-                The Stefan-Boltzmann law states that the <strong>total energy radiated per unit surface area</strong> of a blackbody across all wavelengths is directly proportional to the fourth power of the blackbody's thermodynamic temperature \( T \).
+                The Stefan–Boltzmann law asserts that the total power radiated by a blackbody per unit surface area (the radiant exitance \( M \)) is proportional to the fourth power of its absolute temperature:
             </p>
             <div class="math">
-                \[ P = \sigma T^4 \]
+                \[ M \;=\; \sigma T^4, \qquad
+                   \sigma \;=\; \frac{2\pi^5 k^4}{15 c^2 h^3}
+                   \;\approx\; 5.670374419\times10^{-8}\,\mathrm{W\,m^{-2}\,K^{-4}}. \]
             </div>
             <p>
-                where \( P \) is the total power radiated per unit area, and \( \sigma \) is the Stefan-Boltzmann constant.
+                Equivalently, the total energy density inside a cavity is \( u=aT^4 \) with \( a=4\sigma/c \).
             </p>
         </div>
         
         <div class="deduction">
-            <h3>Relationship with Planck's Law</h3>
+            <h3>Integration of Planck’s Spectral Radiance</h3>
             <p>
-                The Stefan-Boltzmann law can be derived by integrating Planck's law over all frequencies and solid angles. 
-                The total power radiated per unit area is:
+                The total exitance is obtained by integrating the spectral radiance over all frequencies and over the outward hemisphere. 
+                For a Lambertian surface the solid-angle integral yields a factor of \(\pi\):
             </p>
             <div class="math">
-                \[ P = \int_0^\infty \pi B_\nu(T) d\nu \]
-            </div>
-            <p>
-                Substituting Planck's law:
-            </p>
-            <div class="math">
-                \[ P = \pi \int_0^\infty \frac{2h\nu^3}{c^2} \frac{1}{e^{h\nu / kT} - 1} d\nu \]
+                \[ M \;=\; \pi\int_0^\infty B_\nu(T)\,\mathrm{d}\nu
+                     \;=\; \pi\int_0^\infty\frac{2h\nu^3}{c^2}\frac{1}{e^{h\nu/kT}-1}\,\mathrm{d}\nu. \]
             </div>
         </div>
         
         <div class="proof">
-            <h3>Derivation</h3>
+            <h3>Evaluation of the Integral</h3>
             <p>
-                Let \( x = \frac{h\nu}{kT} \), then \( d\nu = \frac{kT}{h} dx \), and the integral becomes:
+                Substitute \( x=h\nu/kT \) so that \( \mathrm{d}\nu=(kT/h)\,\mathrm{d}x \):
             </p>
             <div class="math">
-                \[ P = \frac{2\pi h}{c^2} \left( \frac{kT}{h} \right)^4 \int_0^\infty \frac{x^3}{e^x - 1} dx \]
+                \[ M \;=\; \frac{2\pi h}{c^2}\Bigl(\frac{kT}{h}\Bigr)^4\int_0^\infty\frac{x^3}{e^x-1}\,\mathrm{d}x. \]
             </div>
             <p>
-                The integral \( \int_0^\infty \frac{x^3}{e^x - 1} dx \) evaluates to \( \frac{\pi^4}{15} \). Therefore:
+                The definite integral equals \( \pi^4/15 \), therefore
             </p>
             <div class="math">
-                \[ P = \frac{2\pi^5 k^4}{15 c^2 h^3} T^4 \]
+                \[ M \;=\; \frac{2\pi^5 k^4}{15\,c^2 h^3}\,T^4 \;=\; \sigma T^4. \]
             </div>
             <p>
-                Comparing with the Stefan-Boltzmann law, we identify the Stefan-Boltzmann constant as:
+                The same \( T^4 \) dependence is recovered by integrating the spectral energy density \( u_\nu \) and converting to flux via \( M=cu/4 \).
             </p>
-            <div class="math">
-                \[ \sigma = \frac{2\pi^5 k^4}{15 c^2 h^3} \approx 5.670374419 \times 10^{-8} \, \text{W} \cdot \text{m}^{-2} \cdot \text{K}^{-4} \]
-            </div>
         </div>
         
         <div class="summary">
             <h3>Physical Interpretation</h3>
             <p>
-                The Stefan-Boltzmann law shows that the total energy radiated by a blackbody increases <strong>rapidly</strong> with temperature. 
-                This explains why hot objects (e.g., stars) emit enormous amounts of energy as their temperature rises.
+                Because the number of thermally accessible modes grows as \( T^3 \) while the average energy per mode grows as \( T \), the total radiated power scales as \( T^4 \). 
+                This rapid increase explains the enormous luminosities of hot stars and the feasibility of radiative cooling in high-temperature technology.
             </p>
         </div>
     </div>
 
     <!-- Rayleigh-Jeans Law Section -->
     <div id="rayleigh-jeans" class="container">
-        <h2>Rayleigh-Jeans Law</h2>
+        <h2>Rayleigh–Jeans Law (Classical Low-Frequency Limit of Planck’s Law)</h2>
         
         <div class="statement">
             <h3>Statement</h3>
             <p>
-                The Rayleigh-Jeans law describes the spectral radiance of blackbody radiation at <strong>low frequencies</strong> (long wavelengths). 
-                It is a classical limit of Planck's law and is derived from the equipartition theorem of classical statistical mechanics.
+                In the classical (long-wavelength / low-frequency) limit \( h\nu\ll kT \) Planck’s law reduces to the Rayleigh–Jeans formula
             </p>
             <div class="math">
-                \[ B_\nu(T) = \frac{2\nu^2 kT}{c^2} \]
+                \[ B_\nu(T) \;=\; \frac{2\nu^2 kT}{c^2}, \qquad
+                   u_\nu(T) \;=\; \frac{8\pi\nu^2}{c^3}\,kT. \]
+            </div>
+            <p>
+                The corresponding wavelength form is
+            </p>
+            <div class="math">
+                \[ B_\lambda(T) \;=\; \frac{2ckT}{\lambda^4}. \]
             </div>
         </div>
         
         <div class="deduction">
-            <h3>Classical Derivation</h3>
+            <h3>Classical Equipartition Argument</h3>
             <p>
-                In classical physics, the average energy of an oscillator is given by the equipartition theorem:
+                Each electromagnetic mode behaves as a classical harmonic oscillator with two quadratic degrees of freedom. 
+                By the equipartition theorem the mean energy per mode is simply \( kT \). 
+                Multiplying by the mode density \( 8\pi\nu^2/c^3 \) immediately yields the Rayleigh–Jeans spectral energy density.
             </p>
-            <div class="math">
-                \[ \langle E \rangle = kT \]
-            </div>
-            <p>
-                The number of modes per unit volume per unit frequency is:
-            </p>
-            <div class="math">
-                \[ D(\nu) = \frac{8\pi \nu^2}{c^3} \]
-            </div>
-            <p>
-                Combining these results, the spectral radiance is:
-            </p>
-            <div class="math">
-                \[ B_\nu(T) = \frac{2\nu^2 kT}{c^2} \]
-            </div>
         </div>
         
         <div class="proof">
-            <h3>Deduction from Planck's Law</h3>
+            <h3>Direct Deduction from Planck’s Law</h3>
             <p>
-                For low frequencies (\( h\nu \ll kT \)), the exponential term in Planck's law can be approximated using the Taylor series:
+                Expand the exponential for small \( x=h\nu/kT \):
             </p>
             <div class="math">
-                \[ e^{h\nu / kT} \approx 1 + \frac{h\nu}{kT} + \frac{1}{2} \left( \frac{h\nu}{kT} \right)^2 + \dots \]
+                \[ e^x \;=\; 1+x+\frac{x^2}{2!}+\cdots \qquad\Rightarrow\qquad
+                   e^x-1 \;\approx\; x \quad(x\ll1). \]
             </div>
             <p>
-                For \( h\nu \ll kT \), higher-order terms can be neglected, so:
+                Substitution into Planck’s formula gives
             </p>
             <div class="math">
-                \[ e^{h\nu / kT} \approx 1 + \frac{h\nu}{kT} \]
+                \[ B_\nu(T) \;=\; \frac{2h\nu^3}{c^2}\cdot\frac{1}{x}
+                     \;=\; \frac{2h\nu^3}{c^2}\cdot\frac{kT}{h\nu}
+                     \;=\; \frac{2\nu^2 kT}{c^2}. \]
             </div>
             <p>
-                Substituting this into Planck's law:
-            </p>
-            <div class="math">
-                \[ B_\nu(T) = \frac{2h\nu^3}{c^2} \frac{1}{1 + \frac{h\nu}{kT} - 1} = \frac{2h\nu^3}{c^2} \frac{kT}{h\nu} = \frac{2\nu^2 kT}{c^2} \]
-            </div>
-            <p>
-                This is the Rayleigh-Jeans law. It agrees with Planck's law at low frequencies but fails at high frequencies, leading to the ultraviolet catastrophe.
+                The same limit applied to the wavelength form recovers \( B_\lambda=2ckT/\lambda^4 \). 
+                The classical expression diverges as \( \nu\to\infty \) (ultraviolet catastrophe) and therefore cannot be used at short wavelengths.
             </p>
         </div>
         
@@ -872,71 +970,73 @@
         <p class="hint">Compare classical Rayleigh-Jeans (diverges) vs quantum Planck (correct) — zoom into the low-frequency region</p>
         
         <div class="note">
-            <p><strong>Observation:</strong> The Rayleigh-Jeans law matches Planck's law at low frequencies but diverges significantly at high frequencies, where quantum effects dominate.</p>
+            <p><strong>Observation:</strong> The Rayleigh–Jeans law is an excellent approximation in the radio and far-infrared, but fails dramatically in the optical and ultraviolet where quantum effects dominate.</p>
         </div>
     </div>
 
     <!-- Wien's Displacement Law Section -->
     <div id="wien-displacement" class="container">
-        <h2>Wien's Displacement Law</h2>
+        <h2>Wien’s Displacement Law (Location of the Spectral Maximum)</h2>
         
         <div class="statement">
             <h3>Statement</h3>
             <p>
-                Wien's displacement law states that the wavelength at which the spectral radiance of a blackbody is at its maximum is <strong>inversely proportional</strong> to the temperature:
+                The wavelength \( \lambda_{\max} \) at which the spectral radiance \( B_\lambda(T) \) attains its maximum is inversely proportional to the absolute temperature:
             </p>
             <div class="math">
-                \[ \lambda_{\text{max}} = \frac{b}{T} \]
+                \[ \lambda_{\max}\,T \;=\; b, \qquad
+                   b \;=\; \frac{hc}{k\,x_{\mathrm{root}}}
+                   \;\approx\; 2.897771955\times10^{-3}\,\mathrm{m\,K}, \]
             </div>
             <p>
-                where \( b \approx 2.897771955 \times 10^{-3} \, \text{m} \cdot \text{K} \) is Wien's displacement constant.
+                where \( x_{\mathrm{root}}\approx4.9651 \) is the positive root of the transcendental equation \( (5-x)e^x=5 \).
             </p>
         </div>
         
         <div class="deduction">
             <h3>Physical Interpretation</h3>
             <p>
-                Wien's displacement law explains why the color of a hot object changes as its temperature increases. 
-                For example:
-                <ul>
-                    <li>At \( T = 3000 \, \text{K} \), \( \lambda_{\text{max}} \approx 966 \, \text{nm} \) (infrared/red).</li>
-                    <li>At \( T = 6000 \, \text{K} \) (Sun's surface), \( \lambda_{\text{max}} \approx 483 \, \text{nm} \) (visible light, green).</li>
-                </ul>
+                Wien’s law accounts for the progressive change in colour of a heated body:
+            </p>
+            <ul>
+                <li>\( T=3000\,\mathrm{K} \) \(\rightarrow\) \( \lambda_{\max}\approx966\,\mathrm{nm} \) (near-infrared / deep red),</li>
+                <li>\( T=5778\,\mathrm{K} \) (solar photosphere) \(\rightarrow\) \( \lambda_{\max}\approx502\,\mathrm{nm} \) (green-yellow),</li>
+                <li>\( T=10\,000\,\mathrm{K} \) \(\rightarrow\) \( \lambda_{\max}\approx290\,\mathrm{nm} \) (ultraviolet).</li>
+            </ul>
+            <p>
+                The same scaling appears for the frequency of maximum spectral radiance: \( \nu_{\max}/T= \) constant.
             </p>
         </div>
         
         <div class="proof">
-            <h3>Deduction from Planck's Law</h3>
+            <h3>Deduction from Planck’s Law</h3>
             <p>
-                To find the maximum of Planck's law, we take the derivative of \( B_\lambda(T) \) with respect to \( \lambda \) and set it to zero:
+                Start from the wavelength form of Planck’s law
             </p>
             <div class="math">
-                \[ B_\lambda(T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^{hc / \lambda kT} - 1} \]
+                \[ B_\lambda(T) \;=\; \frac{2hc^2}{\lambda^5}\frac{1}{e^{hc/\lambda kT}-1}. \]
             </div>
             <p>
-                Let \( x = \frac{hc}{\lambda kT} \), then:
+                Introduce the dimensionless variable \( x=hc/(\lambda kT) \). Then
             </p>
             <div class="math">
-                \[ B_\lambda(T) = \frac{2hc^2}{\lambda^5} \frac{1}{e^x - 1} = \frac{2k^5 T^5}{h^4 c^3} \frac{x^5}{e^x - 1} \]
+                \[ B_\lambda \;\propto\; T^5\,\frac{x^5}{e^x-1}. \]
             </div>
             <p>
-                To find the maximum, we set \( \frac{dB_\lambda}{d\lambda} = 0 \), which reduces to solving:
+                Differentiating with respect to \( x \) and setting the derivative to zero yields the transcendental equation
             </p>
             <div class="math">
-                \[ \frac{d}{dx} \left( \frac{x^5}{e^x - 1} \right) = 0 \]
+                \[ (5-x)e^x \;=\; 5. \]
             </div>
             <p>
-                This equation is transcendental and cannot be solved analytically. However, its solution is approximately:
+                The unique positive root is \( x\approx4.9651 \). Consequently
             </p>
             <div class="math">
-                \[ x \approx 4.965 \]
+                \[ \lambda_{\max} \;=\; \frac{hc}{x\,kT} \;=\; \frac{b}{T}. \]
             </div>
             <p>
-                Therefore:
+                (A high-frequency / Wien approximation that discards the “\(-1\)” in the denominator gives the slightly different root \( x=5 \) and a constant \( b' \) that is only a few percent larger.)
             </p>
-            <div class="math">
-                \[ \lambda_{\text{max}} = \frac{hc}{4.965 kT} = \frac{b}{T} \]
-            </div>
         </div>
         
         <div class="graph-container">
@@ -956,7 +1056,7 @@
         <p class="hint">Peak marker automatically follows Wien's law. Zoom to inspect the peak precisely.</p>
         
         <div class="note">
-            <p><strong>Observation:</strong> As the temperature increases, the peak wavelength shifts to shorter wavelengths (higher frequencies), which is why hotter stars appear bluer.</p>
+            <p><strong>Observation:</strong> The displacement of the spectral maximum toward shorter wavelengths with rising temperature is the reason hotter stars appear bluer and cooler stars appear redder.</p>
         </div>
     </div>
 
@@ -1273,7 +1373,7 @@
         </ul>
     </div>
 
-    <footer>🄯 Copyleft 2026 by Soumyajit Roy under The Unlicense Revamped V2 with WebGL + advanced Chart.js</footer>
+    <footer>🄯 Copyleft 2026 by SJR under The Unlicense Revamped V2 with WebGL + advanced Chart.js</footer>
     </div><!-- /.page-wrap -->
 
     <script>
