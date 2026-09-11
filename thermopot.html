@@ -4,18 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thermodynamic Potentials, Maxwell Relations & Related Identities</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
-        onload="renderMathInElement(document.body, {
-          delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '\\(', right: '\\)', display: false}
-          ]
-        });"></script>
+
+<!-- MathJax 3 - robust configuration -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [ ['\\(', '\\)'] ],
+    displayMath: [ ['$$', '$$'], ['\\[', '\\]'] ],
+    processEscapes: true,
+    processEnvironments: true,
+    tags: 'ams'
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
 <style>
   :root {
-    --bg: #0f172a;
+    --bg: #96BB85;
     --card: #1e293b;
     --text: #e2e8f0;
     --accent: #38bdf8;
@@ -69,10 +81,10 @@
 </head>
 <body>
 
-<h1>Thermodynamic Potentials, \(T\,dS\) Equations, Maxwell Relations & Compressibility Identities</h1>
+<h1>Thermodynamic Potentials, \( T\,dS \) Equations, Maxwell Relations &amp; Compressibility Identities</h1>
 
 <p>
-This note provides a systematic, self-contained treatment of the four primary thermodynamic potentials, the two \(T\,dS\) equations, the derivation of Maxwell’s relations, and the important identities connecting heat capacities and compressibilities.
+This note provides a systematic, self-contained treatment of the four primary thermodynamic potentials, the two \( T\,dS \) equations, the derivation of Maxwell’s relations, and the important identities connecting heat capacities and compressibilities. Derivations are expanded with intermediate steps, physical insights, and quick-memorize tips.
 </p>
 
 <!-- ============================================================ -->
@@ -83,100 +95,192 @@ A <strong>thermodynamic potential</strong> is a state function whose natural var
 </p>
 
 <div class="card">
-<strong>Internal Energy \(U\)</strong><br>
-Natural variables: \(S, V, \{N_i\}\)<br>
-Fundamental relation: \(U = U(S,V,\{N_i\})\)
+<strong>Internal Energy \( U \)</strong><br>
+Natural variables: \( S, V, \{N_i\} \)<br>
+Fundamental relation: \( U = U(S,V,\{N_i\}) \)
 </div>
 
 <div class="card">
-<strong>Enthalpy \(H\)</strong><br>
-Definition: \(H = U + PV\)<br>
-Natural variables: \(S, P, \{N_i\}\)
+<strong>Enthalpy \( H \)</strong><br>
+Definition: \( H = U + PV \)<br>
+Natural variables: \( S, P, \{N_i\} \)
 </div>
 
 <div class="card">
-<strong>Helmholtz Free Energy \(F\) (or \(A\))</strong><br>
-Definition: \(F = U - TS\)<br>
-Natural variables: \(T, V, \{N_i\}\)
+<strong>Helmholtz Free Energy \( F \) (or \( A \))</strong><br>
+Definition: \( F = U - TS \)<br>
+Natural variables: \( T, V, \{N_i\} \)
 </div>
 
 <div class="card">
-<strong>Gibbs Free Energy \(G\)</strong><br>
-Definition: \(G = H - TS = U + PV - TS = F + PV\)<br>
-Natural variables: \(T, P, \{N_i\}\)
+<strong>Gibbs Free Energy \( G \)</strong><br>
+Definition: \( G = H - TS = U + PV - TS = F + PV \)<br>
+Natural variables: \( T, P, \{N_i\} \)
 </div>
 
 <h3>1.1 Differential Forms (Closed System, No Composition Change)</h3>
 
-From the combined first and second laws:
-\[
+From the combined first and second laws for a reversible process in a closed system (no composition change):
+
+$$
 dU = T\,dS - P\,dV
-\]
+$$
 
-The other potentials follow by Legendre transforms:
+The other potentials are obtained by Legendre transforms that replace one extensive variable by its intensive conjugate:
 
-\[
-\begin{align*}
-dH &= T\,dS + V\,dP \\
-dF &= -S\,dT - P\,dV \\
-dG &= -S\,dT + V\,dP
-\end{align*}
-\]
+$$
+\begin{align}
+H &= U + PV &&\Rightarrow&& dH = T\,dS + V\,dP \\
+F &= U - TS &&\Rightarrow&& dF = -S\,dT - P\,dV \\
+G &= H - TS = U + PV - TS &&\Rightarrow&& dG = -S\,dT + V\,dP
+\end{align}
+$$
 
 These are the <strong>fundamental thermodynamic relations</strong> (Gibbs equations).
 
-<h3>1.2 Physical Meaning & Usefulness</h3>
+<div class="highlight">
+<strong>Quick memorize – natural variables &amp; signs</strong><br>
+Remember the pattern of signs by the Legendre transform: when you subtract \( XY \) you get \( -Y\,dX \) in the differential.<br>
+Mnemonic order: \( U(S,V) \), \( H(S,P) \), \( F(T,V) \), \( G(T,P) \).<br>
+“S and V → U; then swap V→P to get H; swap S→T to get F or G.”
+</div>
+
+<h3>1.2 Physical Meaning &amp; Usefulness</h3>
 
 <ul>
-  <li><strong>\(U\)</strong> – total microscopic energy. Useful for constant-\(S\), constant-\(V\) processes (isolated systems).</li>
-  <li><strong>\(H\)</strong> – heat absorbed at constant pressure (for reversible processes). Natural for constant-\(P\) processes.</li>
-  <li><strong>\(F\)</strong> – maximum work obtainable at constant \(T,V\) (excluding \(PdV\) work). Useful for constant-volume, isothermal processes; also the generating function for the canonical ensemble.</li>
-  <li><strong>\(G\)</strong> – maximum non-expansion work at constant \(T,P\). Criteria for spontaneous processes and equilibrium at constant \(T,P\): \(dG_{T,P} \le 0\). Central in chemistry (phase equilibria, chemical reactions).</li>
+  <li><strong>\( U \)</strong> – total microscopic energy. Useful for constant-\( S \), constant-\( V \) processes (isolated systems).</li>
+  <li><strong>\( H \)</strong> – heat absorbed at constant pressure (for reversible processes). Natural for constant-\( P \) processes (most laboratory chemistry).</li>
+  <li><strong>\( F \)</strong> – maximum work obtainable at constant \( T,V \) (excluding \( PdV \) work). Useful for constant-volume, isothermal processes; also the generating function for the canonical ensemble.</li>
+  <li><strong>\( G \)</strong> – maximum non-expansion work at constant \( T,P \). Criteria for spontaneous processes and equilibrium at constant \( T,P \): \( dG_{T,P} \le 0 \). Central in chemistry (phase equilibria, chemical reactions).</li>
 </ul>
 
 <div class="highlight">
 <strong>Equilibrium criteria</strong> (for closed systems):
 <ul>
-  <li>\(U\) minimum at fixed \(S,V\)</li>
-  <li>\(H\) minimum at fixed \(S,P\)</li>
-  <li>\(F\) minimum at fixed \(T,V\)</li>
-  <li>\(G\) minimum at fixed \(T,P\)</li>
+  <li>\( U \) minimum at fixed \( S,V \)</li>
+  <li>\( H \) minimum at fixed \( S,P \)</li>
+  <li>\( F \) minimum at fixed \( T,V \)</li>
+  <li>\( G \) minimum at fixed \( T,P \)</li>
 </ul>
+Insight: each potential is the appropriate “energy” whose decrease drives spontaneity under the constraints that match its natural variables.
 </div>
 
 <!-- ============================================================ -->
-<h2>2. The \(T\,dS\) Equations</h2>
+<h2>2. The \( T\,dS \) Equations</h2>
 
-Starting from \(dU = T\,dS - P\,dV\) and expressing \(S = S(T,V)\) or \(S = S(T,P)\), one obtains the two fundamental \(T\,dS\) equations.
+Starting from \( dU = T\,dS - P\,dV \) and expressing entropy as a function of the experimentally convenient variables \( T,V \) or \( T,P \), one obtains the two fundamental \( T\,dS \) equations.
 
-<h3>2.1 First \(T\,dS\) Equation (variables \(T,V\))</h3>
+<h3>2.1 First \( T\,dS \) Equation (variables \( T,V \))</h3>
 
-\[
+Write the total differential of \( S = S(T,V) \):
+
+$$
 dS = \left(\frac{\partial S}{\partial T}\right)_V dT + \left(\frac{\partial S}{\partial V}\right)_T dV
-\]
+$$
 
-Using Maxwell’s relation \(\left(\frac{\partial S}{\partial V}\right)_T = \left(\frac{\partial P}{\partial T}\right)_V\) and the definition \(C_V = T\left(\frac{\partial S}{\partial T}\right)_V\),
+Multiply through by \( T \):
 
-\[
+$$
+T\,dS = T\left(\frac{\partial S}{\partial T}\right)_V dT + T\left(\frac{\partial S}{\partial V}\right)_T dV
+$$
+
+By definition the heat capacity at constant volume is
+
+$$
+C_V = T\left(\frac{\partial S}{\partial T}\right)_V
+$$
+
+The cross derivative is given by a Maxwell relation (derived in §3 from \( dF \)):
+
+$$
+\left(\frac{\partial S}{\partial V}\right)_T = \left(\frac{\partial P}{\partial T}\right)_V
+$$
+
+Substitution immediately yields the first \( T\,dS \) equation:
+
+$$
 T\,dS = C_V\,dT + T\left(\frac{\partial P}{\partial T}\right)_V dV
-\]
+$$
 
-<h3>2.2 Second \(T\,dS\) Equation (variables \(T,P\))</h3>
+<div class="highlight">
+<strong>Insight</strong>: The second term is the “entropy of expansion.” When a system expands at constant \( T \), the pressure rises with temperature at fixed volume, so the system absorbs heat to keep \( T \) constant.
+</div>
 
-\[
+<h3>2.2 Second \( T\,dS \) Equation (variables \( T,P \))</h3>
+
+Now take \( S = S(T,P) \):
+
+$$
+dS = \left(\frac{\partial S}{\partial T}\right)_P dT + \left(\frac{\partial S}{\partial P}\right)_T dP
+$$
+
+$$
+T\,dS = C_P\,dT + T\left(\frac{\partial S}{\partial P}\right)_T dP
+$$
+
+The Maxwell relation coming from \( dG \) is
+
+$$
+\left(\frac{\partial S}{\partial P}\right)_T = -\left(\frac{\partial V}{\partial T}\right)_P
+$$
+
+Hence the second \( T\,dS \) equation:
+
+$$
 T\,dS = C_P\,dT - T\left(\frac{\partial V}{\partial T}\right)_P dP
-\]
+$$
+
+<div class="highlight">
+<strong>Quick memorize</strong><br>
+Both equations have the form “\( C\,dT \) + (Maxwell term)”.<br>
+First: \( +T(\partial P/\partial T)_V\,dV \) (volume change).<br>
+Second: \( -T(\partial V/\partial T)_P\,dP \) (pressure change).<br>
+The sign is opposite because \( V \) and \( P \) are conjugate with opposite signs in \( dU \).
+</div>
 
 These equations are extremely useful for calculating entropy changes and for deriving relations between heat capacities and equation-of-state derivatives.
 
 <!-- ============================================================ -->
 <h2>3. Maxwell’s Relations</h2>
 
-Maxwell’s relations follow directly from the equality of mixed second partial derivatives of the thermodynamic potentials (Schwarz’s theorem).
+Maxwell’s relations follow directly from the equality of mixed second partial derivatives of the thermodynamic potentials (Schwarz’s theorem / equality of cross derivatives).
 
-<h3>3.1 Derivation</h3>
+<h3>3.1 Derivation – step by step</h3>
 
-From the four differentials:
+Because each potential is a state function, its mixed second derivatives are equal.
+
+<ol>
+<li>From \( dU = T\,dS - P\,dV \):
+$$
+\left(\frac{\partial T}{\partial V}\right)_S = \frac{\partial^2 U}{\partial V\,\partial S},\qquad
+-\left(\frac{\partial P}{\partial S}\right)_V = \frac{\partial^2 U}{\partial S\,\partial V}
+$$
+Equality \(\Rightarrow\)
+$$
+\left(\frac{\partial T}{\partial V}\right)_S = -\left(\frac{\partial P}{\partial S}\right)_V
+$$
+</li>
+
+<li>From \( dH = T\,dS + V\,dP \):
+$$
+\left(\frac{\partial T}{\partial P}\right)_S = \left(\frac{\partial V}{\partial S}\right)_P
+$$
+</li>
+
+<li>From \( dF = -S\,dT - P\,dV \):
+$$
+\left(\frac{\partial S}{\partial V}\right)_T = \left(\frac{\partial P}{\partial T}\right)_V
+$$
+</li>
+
+<li>From \( dG = -S\,dT + V\,dP \):
+$$
+\left(\frac{\partial S}{\partial P}\right)_T = -\left(\frac{\partial V}{\partial T}\right)_P
+$$
+</li>
+</ol>
+
+Summary table:
 
 <table>
   <tr>
@@ -185,80 +289,129 @@ From the four differentials:
     <th>Maxwell Relation</th>
   </tr>
   <tr>
-    <td>\(U(S,V)\)</td>
-    <td>\(dU = T\,dS - P\,dV\)</td>
-    <td>\(\displaystyle\left(\frac{\partial T}{\partial V}\right)_S = -\left(\frac{\partial P}{\partial S}\right)_V\)</td>
+    <td>\( U(S,V) \)</td>
+    <td>\( dU = T\,dS - P\,dV \)</td>
+    <td>\( \displaystyle\left(\frac{\partial T}{\partial V}\right)_S = -\left(\frac{\partial P}{\partial S}\right)_V \)</td>
   </tr>
   <tr>
-    <td>\(H(S,P)\)</td>
-    <td>\(dH = T\,dS + V\,dP\)</td>
-    <td>\(\displaystyle\left(\frac{\partial T}{\partial P}\right)_S = \left(\frac{\partial V}{\partial S}\right)_P\)</td>
+    <td>\( H(S,P) \)</td>
+    <td>\( dH = T\,dS + V\,dP \)</td>
+    <td>\( \displaystyle\left(\frac{\partial T}{\partial P}\right)_S = \left(\frac{\partial V}{\partial S}\right)_P \)</td>
   </tr>
   <tr>
-    <td>\(F(T,V)\)</td>
-    <td>\(dF = -S\,dT - P\,dV\)</td>
-    <td>\(\displaystyle\left(\frac{\partial S}{\partial V}\right)_T = \left(\frac{\partial P}{\partial T}\right)_V\)</td>
+    <td>\( F(T,V) \)</td>
+    <td>\( dF = -S\,dT - P\,dV \)</td>
+    <td>\( \displaystyle\left(\frac{\partial S}{\partial V}\right)_T = \left(\frac{\partial P}{\partial T}\right)_V \)</td>
   </tr>
   <tr>
-    <td>\(G(T,P)\)</td>
-    <td>\(dG = -S\,dT + V\,dP\)</td>
-    <td>\(\displaystyle\left(\frac{\partial S}{\partial P}\right)_T = -\left(\frac{\partial V}{\partial T}\right)_P\)</td>
+    <td>\( G(T,P) \)</td>
+    <td>\( dG = -S\,dT + V\,dP \)</td>
+    <td>\( \displaystyle\left(\frac{\partial S}{\partial P}\right)_T = -\left(\frac{\partial V}{\partial T}\right)_P \)</td>
   </tr>
 </table>
 
-The last two are the most frequently used in applications involving equations of state.
+The last two are the most frequently used because they relate entropy derivatives (hard to measure) to \( P \)–\( V \)–\( T \) derivatives (easy to measure from an equation of state).
+
+<div class="highlight">
+<strong>Quick memorize – “square” method</strong><br>
+Write the four variables in a square:<br>
+\( T \) \( P \)<br>
+\( S \) \( V \)<br>
+Going around the square (clockwise or anti-clockwise) with the sign rule “+ when both intensive or both extensive change in the same sense” recovers all four Maxwell relations.<br>
+Most useful pair to remember by heart:<br>
+\( \bigl(\partial S/\partial V\bigr)_T = \bigl(\partial P/\partial T\bigr)_V \)<br>
+\( \bigl(\partial S/\partial P\bigr)_T = -\bigl(\partial V/\partial T\bigr)_P \)
+</div>
 
 <h3>3.2 Applications</h3>
 
 <ul>
   <li>Expressing entropy derivatives in terms of measurable quantities (thermal expansion, compressibility).</li>
-  <li>Deriving the difference \(C_P - C_V\).</li>
+  <li>Deriving the difference \( C_P - C_V \).</li>
   <li>Obtaining thermodynamic identities for real gases, solids and liquids.</li>
   <li>Relating adiabatic and isothermal processes.</li>
 </ul>
 
 <!-- ============================================================ -->
-<h2>4. The Relation \(C_P - C_V = \dfrac{TV\beta^2}{\kappa_T}\)</h2>
+<h2>4. The Relation \( C_P - C_V = \dfrac{TV\beta^2}{\kappa_T} \)</h2>
 
 <p>
-(Here \(\beta\) denotes the isobaric volume expansivity; the notation \(\alpha\) is also common.)
+(Here \( \beta \) denotes the isobaric volume expansivity; the notation \( \alpha \) is also common.)
 </p>
 
 <strong>Definitions:</strong>
 
-\[
+$$
 \beta = \frac{1}{V}\left(\frac{\partial V}{\partial T}\right)_P, \qquad
 \kappa_T = -\frac{1}{V}\left(\frac{\partial V}{\partial P}\right)_T
-\]
+$$
 
-<strong>Derivation</strong>
+<strong>Full derivation</strong>
 
-From the two \(T\,dS\) equations one can write expressions for \(C_P\) and \(C_V\):
+Start from the definitions of the two heat capacities:
 
-\[
+$$
+C_P = T\left(\frac{\partial S}{\partial T}\right)_P, \qquad
+C_V = T\left(\frac{\partial S}{\partial T}\right)_V
+$$
+
+Therefore
+
+$$
 C_P - C_V = T\left[\left(\frac{\partial S}{\partial T}\right)_P - \left(\frac{\partial S}{\partial T}\right)_V\right]
-\]
+$$
 
-Using the cyclic relation and Maxwell’s relations, one obtains the general identity:
+To relate the two partials we use the triple-product (cyclic) identity for any three variables \( x,y,z \):
 
-\[
+$$
+\left(\frac{\partial x}{\partial y}\right)_z\left(\frac{\partial y}{\partial z}\right)_x\left(\frac{\partial z}{\partial x}\right)_y = -1
+$$
+
+A standard thermodynamic identity obtained by expressing \( S = S(T,V) \) and changing independent variables to \( T,P \) yields
+
+$$
+\left(\frac{\partial S}{\partial T}\right)_P - \left(\frac{\partial S}{\partial T}\right)_V = \left(\frac{\partial S}{\partial V}\right)_T\left(\frac{\partial V}{\partial T}\right)_P
+$$
+
+Insert the Maxwell relation \( \bigl(\partial S/\partial V\bigr)_T = \bigl(\partial P/\partial T\bigr)_V \):
+
+$$
 C_P - C_V = T\left(\frac{\partial V}{\partial T}\right)_P\left(\frac{\partial P}{\partial T}\right)_V
-\]
+$$
 
-Now express \(\left(\frac{\partial P}{\partial T}\right)_V\) via the cyclic identity:
+It remains only to rewrite \( \bigl(\partial P/\partial T\bigr)_V \). Again apply the cyclic relation to \( P,V,T \):
 
-\[
-\left(\frac{\partial P}{\partial T}\right)_V = -\frac{(\partial V/\partial T)_P}{(\partial V/\partial P)_T} = \frac{\beta}{\kappa_T}
-\]
+$$
+\left(\frac{\partial P}{\partial T}\right)_V\left(\frac{\partial T}{\partial V}\right)_P\left(\frac{\partial V}{\partial P}\right)_T = -1
+$$
 
-Substitution immediately yields:
+$$
+\left(\frac{\partial P}{\partial T}\right)_V = -\frac{(\partial V/\partial T)_P}{(\partial V/\partial P)_T}
+$$
 
-\[
-C_P - C_V = T V \beta \cdot \frac{\beta}{\kappa_T} = \frac{T V \beta^2}{\kappa_T}
-\]
+Introduce the definitions of \( \beta \) and \( \kappa_T \):
+
+$$
+\left(\frac{\partial V}{\partial T}\right)_P = V\beta, \qquad
+\left(\frac{\partial V}{\partial P}\right)_T = -V\kappa_T
+$$
+
+$$
+\left(\frac{\partial P}{\partial T}\right)_V = \frac{V\beta}{V\kappa_T} = \frac{\beta}{\kappa_T}
+$$
+
+Substitute back:
+
+$$
+C_P - C_V = T\cdot(V\beta)\cdot\frac{\beta}{\kappa_T} = \frac{TV\beta^2}{\kappa_T}
+$$
 
 <div class="highlight">
-This is an exact thermodynamic identity. For an ideal gas \(\beta = 1/T\) and \(\kappa_T = 1/P\), recovering the familiar result \(C_P - C_V = nR\).
+<strong>Insight &amp; quick check</strong><br>
+This is an exact thermodynamic identity, valid for any homogeneous system.<br>
+For an ideal gas \( \beta = 1/T \) and \( \kappa_T = 1/P \), so<br>
+\( C_P - C_V = TV(1/T)^2/(1/P) = PV = nR \), recovering the familiar result.<br>
+Physically \( C_P > C_V \) because part of the heat added at constant pressure goes into expansion work.
 </div>
 
 <!-- ============================================================ -->
@@ -266,54 +419,70 @@ This is an exact thermodynamic identity. For an ideal gas \(\beta = 1/T\) and \(
 
 <strong>Isothermal compressibility</strong>
 
-\[
+$$
 \kappa_T = -\frac{1}{V}\left(\frac{\partial V}{\partial P}\right)_T
-\]
+$$
 
 <strong>Adiabatic (isentropic) compressibility</strong>
 
-\[
+$$
 \kappa_S = -\frac{1}{V}\left(\frac{\partial V}{\partial P}\right)_S
-\]
+$$
 
-\(\kappa_S\) is the relevant quantity for rapid (adiabatic) processes such as the propagation of sound waves.
+\( \kappa_S \) is the relevant quantity for rapid (adiabatic) processes such as the propagation of sound waves, because the compression/rarefaction is too fast for heat exchange.
 
 <!-- ============================================================ -->
-<h2>6. Ratio of Compressibilities: \(\dfrac{\kappa_T}{\kappa_S} = \dfrac{C_P}{C_V}\)</h2>
+<h2>6. Ratio of Compressibilities: \( \dfrac{\kappa_T}{\kappa_S} = \dfrac{C_P}{C_V} \)</h2>
 
 <strong>Derivation</strong>
 
-Consider the Jacobian identity or, equivalently, the chain rule for the three variables \(P,V,S\):
+One clean route uses the general relation between second derivatives that follows from the chain rule / Jacobian identities for the three variables \( P,V,S \):
 
-\[
+$$
 \left(\frac{\partial V}{\partial P}\right)_S = \left(\frac{\partial V}{\partial P}\right)_T + \left(\frac{\partial V}{\partial T}\right)_P\left(\frac{\partial T}{\partial P}\right)_S
-\]
+$$
 
-A more systematic route uses the general thermodynamic identity between second derivatives:
+A more compact and systematic derivation starts from the observation that both heat capacities can be written as Jacobians:
 
-\[
+$$
+C_V = T\frac{\partial(S,V)}{\partial(T,V)}, \qquad
+C_P = T\frac{\partial(S,P)}{\partial(T,P)}
+$$
+
+After a short calculation with the properties of Jacobians one obtains the exact identity
+
+$$
 \left(\frac{\partial V}{\partial P}\right)_S = \frac{C_V}{C_P}\left(\frac{\partial V}{\partial P}\right)_T
-\]
+$$
 
-(This follows from expressing both heat capacities in terms of Jacobians of \(S\) and \(T\) with respect to \(V\) and \(P\).)
+Taking the definition of the two compressibilities immediately gives
 
-Consequently:
-
-\[
+$$
 \kappa_S = \frac{C_V}{C_P}\kappa_T \qquad\Rightarrow\qquad \frac{\kappa_T}{\kappa_S} = \frac{C_P}{C_V}
-\]
+$$
 
 <div class="highlight">
-Since \(C_P > C_V\) for all stable systems, it follows that \(\kappa_T > \kappa_S\). Physically, an isothermal compression is “softer” than an adiabatic compression because heat can leave the system, allowing a larger volume change for the same pressure increase.
+<strong>Physical insight</strong><br>
+Since \( C_P > C_V \) for all stable systems, it follows that \( \kappa_T > \kappa_S \).<br>
+An isothermal compression is “softer” than an adiabatic compression: heat can leave the system, allowing a larger volume change for the same pressure increase. In an adiabatic compression the temperature rises, which opposes the volume reduction.
 </div>
 
 <strong>Important corollary – speed of sound</strong>
 
-The speed of sound in a fluid is
+The speed of sound in a fluid is the adiabatic derivative
 
-\[
+$$
 c = \sqrt{\left(\frac{\partial P}{\partial\rho}\right)_S} = \frac{1}{\sqrt{\rho\,\kappa_S}} = \sqrt{\frac{C_P}{C_V}\frac{1}{\rho\,\kappa_T}}
-\]
+$$
+
+where \( \rho \) is the mass density. The factor \( \gamma = C_P/C_V \) therefore appears naturally in the expression for the speed of sound.
+
+<div class="highlight">
+<strong>Quick memorize</strong><br>
+\( \kappa_T/\kappa_S = C_P/C_V = \gamma \) (for an ideal gas).<br>
+Always \( \kappa_T > \kappa_S \).<br>
+Sound speed uses \( \kappa_S \), not \( \kappa_T \).
+</div>
 
 <!-- ============================================================ -->
 <h2>Summary Table of Key Relations</h2>
@@ -325,40 +494,40 @@ c = \sqrt{\left(\frac{\partial P}{\partial\rho}\right)_S} = \frac{1}{\sqrt{\rho\
   </tr>
   <tr>
     <td>Internal energy differential</td>
-    <td>\(dU = T\,dS - P\,dV\)</td>
+    <td>\( dU = T\,dS - P\,dV \)</td>
   </tr>
   <tr>
     <td>Enthalpy</td>
-    <td>\(H = U + PV\), \(dH = T\,dS + V\,dP\)</td>
+    <td>\( H = U + PV \), \( dH = T\,dS + V\,dP \)</td>
   </tr>
   <tr>
     <td>Helmholtz free energy</td>
-    <td>\(F = U - TS\), \(dF = -S\,dT - P\,dV\)</td>
+    <td>\( F = U - TS \), \( dF = -S\,dT - P\,dV \)</td>
   </tr>
   <tr>
     <td>Gibbs free energy</td>
-    <td>\(G = H - TS\), \(dG = -S\,dT + V\,dP\)</td>
+    <td>\( G = H - TS \), \( dG = -S\,dT + V\,dP \)</td>
   </tr>
   <tr>
-    <td>First \(T\,dS\) equation</td>
-    <td>\(T\,dS = C_V\,dT + T(\partial P/\partial T)_V\,dV\)</td>
+    <td>First \( T\,dS \) equation</td>
+    <td>\( T\,dS = C_V\,dT + T(\partial P/\partial T)_V\,dV \)</td>
   </tr>
   <tr>
-    <td>Second \(T\,dS\) equation</td>
-    <td>\(T\,dS = C_P\,dT - T(\partial V/\partial T)_P\,dP\)</td>
+    <td>Second \( T\,dS \) equation</td>
+    <td>\( T\,dS = C_P\,dT - T(\partial V/\partial T)_P\,dP \)</td>
   </tr>
   <tr>
-    <td>\(C_P - C_V\)</td>
-    <td>\(\dfrac{TV\beta^2}{\kappa_T}\)</td>
+    <td>\( C_P - C_V \)</td>
+    <td>\( \dfrac{TV\beta^2}{\kappa_T} \)</td>
   </tr>
   <tr>
     <td>Compressibility ratio</td>
-    <td>\(\dfrac{\kappa_T}{\kappa_S} = \dfrac{C_P}{C_V}\)</td>
+    <td>\( \dfrac{\kappa_T}{\kappa_S} = \dfrac{C_P}{C_V} \)</td>
   </tr>
 </table>
 
 <div class="footer">
-In-depth thermodynamic note • All relations are exact for homogeneous systems in equilibrium • Notation: \(\beta\) = isobaric expansivity, \(\kappa_T\) = isothermal compressibility, \(\kappa_S\) = adiabatic compressibility.
+In-depth thermodynamic note • All relations are exact for homogeneous systems in equilibrium • Notation: \( \beta \) = isobaric expansivity, \( \kappa_T \) = isothermal compressibility, \( \kappa_S \) = adiabatic compressibility.
 </div>
 
 </body>
