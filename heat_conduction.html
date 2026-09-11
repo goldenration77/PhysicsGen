@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heat Conduction — Thermal Conductivity, Diffusivity &amp; Fourier’s Equation</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card: #1a2332;
+    --accent: #3b82f6;
+    --accent2: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #334155;
+    --success: #10b981;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+  header {
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  header p { color: var(--muted); font-size: 1.1rem; }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  nav a:hover { background: var(--accent); color: white; }
+  section {
+    margin: 2.5rem 0;
+    padding: 1.8rem;
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  h2 {
+    font-size: 1.55rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+  h3 { font-size: 1.2rem; color: var(--accent2); margin: 1.4rem 0 0.6rem; }
+  p { margin-bottom: 1rem; }
+  .formula {
+    background: #0c1220;
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.2rem;
+    margin: 1.2rem 0;
+    border-radius: 0 8px 8px 0;
+    overflow-x: auto;
+  }
+  .highlight {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 1rem 1.2rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+  th, td {
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th { background: #0c1220; color: var(--accent); }
+  tr:hover { background: rgba(255,255,255,0.03); }
+  .chart-box {
+    background: #0c1220;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1.2rem 0;
+    border: 1px solid var(--border);
+  }
+  .chart-box canvas { max-height: 340px; }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin: 1rem 0;
+    align-items: center;
+  }
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .control-group label {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  input[type="range"] {
+    width: 160px;
+    accent-color: var(--accent);
+  }
+  .value-display {
+    font-family: ui-monospace, monospace;
+    color: var(--accent2);
+    font-size: 0.95rem;
+  }
+  #webgl-container {
+    width: 100%;
+    height: 380px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #0a0e17;
+    margin: 1rem 0;
+  }
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    margin-top: 0.8rem;
+  }
+  .legend span { display: flex; align-items: center; gap: 0.4rem; }
+  .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .exp-diagram {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+  }
+  .rod {
+    width: 70px;
+    height: 220px;
+    border-radius: 6px 6px 4px 4px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+    border: 2px solid #475569;
+    transition: all 0.4s;
+  }
+  .rod-label {
+    position: absolute;
+    top: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 1px 2px #000;
+  }
+  .melt-zone {
+    width: 100%;
+    background: linear-gradient(to top, #fbbf24, #f59e0b);
+    transition: height 0.6s ease;
+  }
+  .heat-source {
+    width: 100%;
+    height: 28px;
+    background: linear-gradient(to top, #ef4444, #f97316);
+    border-radius: 0 0 3px 3px;
+  }
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+  .btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+  }
+  .btn:hover { background: #2563eb; }
+  ul { margin: 0.8rem 0 0.8rem 1.4rem; }
+  li { margin-bottom: 0.4rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Heat Conduction</h1>
+  <p>Thermal Conductivity · Diffusivity · Fourier’s Equation · Ingen-Hausz Experiment</p>
+</header>
+
+<nav>
+  <a href="#intro">Introduction</a>
+  <a href="#conductivity">Thermal Conductivity \(K\)</a>
+  <a href="#diffusivity">Diffusivity \(D\)</a>
+  <a href="#fourier">Fourier’s Equation</a>
+  <a href="#rectilinear">Rectilinear Flow</a>
+  <a href="#ingen">Ingen-Hausz Experiment</a>
+  <a href="#3d">3-D Visualisation</a>
+</nav>
+
+<div class="container">
+
+<!-- ========== INTRODUCTION ========== -->
+<section id="intro">
+  <h2>1. Introduction to Heat Conduction</h2>
+  <p>
+    Heat conduction is the transfer of thermal energy through a material without bulk motion of the material itself.
+    It occurs via microscopic collisions and diffusion of particles (atoms, molecules, free electrons).
+    In solids—especially metals—conduction is highly efficient because free electrons carry energy rapidly.
+  </p>
+  <p>
+    The rate of heat flow depends on the temperature gradient, the cross-sectional area, and an intrinsic material property called
+    <strong>thermal conductivity</strong>.
+  </p>
+  <div class="highlight">
+    <strong>Key idea:</strong> Heat flows from hotter to colder regions. The steeper the temperature gradient and the higher the conductivity, the greater the heat flux.
+  </div>
+</section>
+
+<!-- ========== THERMAL CONDUCTIVITY ========== -->
+<section id="conductivity">
+  <h2>2. Thermal Conductivity \(K\)</h2>
+  <p>
+    Thermal conductivity \(K\) (also written \(k\) or \(\kappa\)) quantifies how well a material conducts heat.
+    It appears in <strong>Fourier’s law of heat conduction</strong>:
+  </p>
+  <div class="formula">
+    \[
+    \vec{q} = -K\,\nabla T
+    \]
+  </div>
+  <p>
+    where \(\vec{q}\) is the heat flux vector (W m<sup>−2</sup>) and \(\nabla T\) is the temperature gradient (K m<sup>−1</sup>).
+    The negative sign indicates heat flows opposite to the gradient (from hot to cold).
+  </p>
+  <p>
+    For one-dimensional steady flow through a slab of thickness \(L\) and area \(A\):
+  </p>
+  <div class="formula">
+    \[
+    \frac{dQ}{dt} = K A \frac{\Delta T}{L}
+    \]
+  </div>
+  <p>
+    SI unit of \(K\) is W m<sup>−1</sup> K<sup>−1</sup>.
+  </p>
+
+  <h3>Typical values of thermal conductivity</h3>
+  <table>
+    <thead>
+      <tr><th>Material</th><th>\(K\) (W m<sup>−1</sup> K<sup>−1</sup>)</th><th>Category</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Silver</td><td>429</td><td>Metal</td></tr>
+      <tr><td>Copper</td><td>401</td><td>Metal</td></tr>
+      <tr><td>Gold</td><td>317</td><td>Metal</td></tr>
+      <tr><td>Aluminium</td><td>237</td><td>Metal</td></tr>
+      <tr><td>Iron</td><td>80</td><td>Metal</td></tr>
+      <tr><td>Glass</td><td>≈ 1.0</td><td>Insulator</td></tr>
+      <tr><td>Water</td><td>0.6</td><td>Liquid</td></tr>
+      <tr><td>Wood</td><td>0.1–0.2</td><td>Insulator</td></tr>
+      <tr><td>Air</td><td>0.026</td><td>Gas</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Interactive: Steady-state heat current vs conductivity</h3>
+  <p>Adjust \(K\), temperature difference and thickness to see how heat current changes (area fixed at 1 cm²).</p>
+  <div class="controls">
+    <div class="control-group">
+      <label>Thermal conductivity \(K\) (W m<sup>−1</sup> K<sup>−1</sup>)</label>
+      <input type="range" id="kSlider" min="10" max="450" value="200" step="5">
+      <span class="value-display" id="kVal">200</span>
+    </div>
+    <div class="control-group">
+      <label>ΔT (K)</label>
+      <input type="range" id="dTSlider" min="10" max="200" value="50" step="5">
+      <span class="value-display" id="dTVal">50</span>
+    </div>
+    <div class="control-group">
+      <label>Thickness L (cm)</label>
+      <input type="range" id="LSlider" min="1" max="20" value="5" step="0.5">
+      <span class="value-display" id="LVal">5.0</span>
+    </div>
+  </div>
+  <div class="chart-box">
+    <canvas id="kChart"></canvas>
+  </div>
+</section>
+
+<!-- ========== DIFFUSIVITY ========== -->
+<section id="diffusivity">
+  <h2>3. Thermal Diffusivity \(D\)</h2>
+  <p>
+    Thermal diffusivity \(D\) (often denoted \(\alpha\)) measures how quickly a temperature disturbance propagates through a material.
+    It is defined as
+  </p>
+  <div class="formula">
+    \[
+    D = \frac{K}{\rho\, c}
+    \]
+  </div>
+  <p>
+    where \(\rho\) is density (kg m<sup>−3</sup>) and \(c\) is specific heat capacity (J kg<sup>−1</sup> K<sup>−1</sup>).
+    Units of \(D\) are m<sup>2</sup> s<sup>−1</sup>.
+  </p>
+  <div class="highlight">
+    <strong>Physical meaning:</strong> High \(K\) means heat flows easily; high \(\rho c\) means the material stores a lot of heat per unit volume.
+    Diffusivity is the ratio of “how fast heat moves” to “how much heat is stored”.
+  </div>
+  <p>
+    Metals have high \(D\) (≈ 10<sup>−5</sup>–10<sup>−4</sup> m<sup>2</sup> s<sup>−1</sup>); insulators have low \(D\) (≈ 10<sup>−7</sup> m<sup>2</sup> s<sup>−1</sup>).
+  </p>
+</section>
+
+<!-- ========== FOURIER EQUATION ========== -->
+<section id="fourier">
+  <h2>4. Fourier’s Equation of Heat Conduction</h2>
+  <p>
+    Combining Fourier’s law with energy conservation (continuity equation) yields the heat equation.
+    In the absence of internal heat sources the temperature field \(T(\vec{r},t)\) obeys
+  </p>
+  <div class="formula">
+    \[
+    \frac{\partial T}{\partial t} = D\,\nabla^2 T
+    \]
+  </div>
+  <p>
+    This is a parabolic partial differential equation. It is linear, so solutions can be superposed.
+  </p>
+  <h3>Derivation sketch</h3>
+  <ul>
+    <li>Heat flux \(\vec{q} = -K\nabla T\).</li>
+    <li>Energy balance on a small volume: rate of heat accumulation = −divergence of flux.</li>
+    <li>Accumulation = \(\rho c\,\partial T/\partial t\).</li>
+    <li>Hence \(\rho c\,\partial T/\partial t = \nabla\cdot(K\nabla T)\). For constant \(K\) this reduces to the diffusion equation above.</li>
+  </ul>
+</section>
+
+<!-- ========== RECTILINEAR FLOW ========== -->
+<section id="rectilinear">
+  <h2>5. Solution for Rectilinear (One-Dimensional) Flow of Heat</h2>
+  <p>
+    Consider a long thin rod of uniform cross-section lying along the \(x\)-axis. Lateral surfaces are insulated, so heat flows only in the \(x\)-direction.
+    The heat equation simplifies to
+  </p>
+  <div class="formula">
+    \[
+    \frac{\partial T}{\partial t} = D\frac{\partial^2 T}{\partial x^2}
+    \]
+  </div>
+
+  <h3>Steady state</h3>
+  <p>
+    When \(\partial T/\partial t = 0\), we obtain \(d^2T/dx^2 = 0\), so temperature varies linearly:
+  </p>
+  <div class="formula">
+    \[
+    T(x) = T_0 + \frac{T_L - T_0}{L}x
+    \]
+  </div>
+
+  <h3>Time-dependent solution – infinite rod</h3>
+  <p>
+    For an infinite rod initially at temperature \(T=0\) except for a heat pulse at \(x=0\), the fundamental solution is the Gaussian
+  </p>
+  <div class="formula">
+    \[
+    T(x,t) = \frac{Q}{\rho c\sqrt{4\pi D t}}\,e^{-x^2/(4Dt)}
+    \]
+  </div>
+  <p>
+    where \(Q\) is the energy deposited per unit area.
+  </p>
+
+  <h3>Finite rod with fixed end temperatures</h3>
+  <p>
+    A rod of length \(L\) with ends held at \(T(0,t)=T_1\) and \(T(L,t)=T_2\), and arbitrary initial condition, can be solved by separation of variables.
+    The general solution is a linear steady-state part plus a Fourier sine series that decays exponentially in time:
+  </p>
+  <div class="formula">
+    \[
+    T(x,t) = T_1 + (T_2-T_1)\frac{x}{L} + \sum_{n=1}^\infty B_n\sin\Bigl(\frac{n\pi x}{L}\Bigr)e^{-n^2\pi^2 Dt/L^2}
+    \]
+  </div>
+  <p>
+    The coefficients \(B_n\) are determined by the initial temperature distribution.
+  </p>
+
+  <h3>Interactive temperature profiles along a rod</h3>
+  <p>
+    Watch how an initially uniform temperature (except the hot end) evolves toward the linear steady state.
+    Higher diffusivity accelerates the approach to equilibrium.
+  </p>
+  <div class="controls">
+    <div class="control-group">
+      <label>Diffusivity \(D\) (×10<sup>−5</sup> m² s<sup>−1</sup>)</label>
+      <input type="range" id="dSlider" min="1" max="20" value="5" step="0.5">
+      <span class="value-display" id="dVal">5.0</span>
+    </div>
+    <div class="control-group">
+      <label>Time (s)</label>
+      <input type="range" id="tSlider" min="0" max="300" value="30" step="5">
+      <span class="value-display" id="tVal">30</span>
+    </div>
+    <button class="btn" id="playBtn">Play animation</button>
+  </div>
+  <div class="chart-box">
+    <canvas id="rodChart"></canvas>
+  </div>
+</section>
+
+<!-- ========== INGEN-HAUSZ ========== -->
+<section id="ingen">
+  <h2>6. Ingen-Hausz’s Experiment</h2>
+  <p>
+    In 1789 Jan Ingen-Hausz devised a simple comparative method to rank the thermal conductivities of different metals.
+  </p>
+  <h3>Apparatus &amp; procedure</h3>
+  <ul>
+    <li>Several rods of identical length, diameter and surface finish but of different metals are coated with a thin layer of wax.</li>
+    <li>One end of each rod is inserted into a common heat source (e.g. a vessel of boiling water or a heated block) so that they all receive the same temperature at \(x=0\).</li>
+    <li>Heat conducts along each rod; the wax melts progressively from the hot end.</li>
+    <li>After a fixed time the length of the melted zone is measured. The longer the melted length, the higher the thermal conductivity.</li>
+  </ul>
+  <div class="highlight">
+    <strong>Quantitative relation (approximate):</strong> For rods of the same cross-section and under similar heat-loss conditions the melted length \(l\) satisfies
+    \[
+    l \propto \sqrt{K}
+    \]
+    more precisely, the temperature distribution in the presence of surface losses leads to an exponential decay whose characteristic length scales with \(\sqrt{K}\).
+  </div>
+
+  <h3>Interactive demonstration</h3>
+  <p>Compare five common metals. The height of the yellow “melted wax” zone is proportional to \(\sqrt{K}\). Click “Run experiment” to animate.</p>
+  <div class="controls">
+    <button class="btn" id="runIngen">Run experiment</button>
+    <button class="btn" id="resetIngen" style="background:#64748b;">Reset</button>
+  </div>
+  <div class="exp-diagram" id="ingenDiagram">
+    <!-- rods generated by JS -->
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:#fbbf24;"></span> Melted wax zone</span>
+    <span><span class="dot" style="background:#ef4444;"></span> Heat source</span>
+  </div>
+</section>
+
+<!-- ========== 3-D WEBGL ========== -->
+<section id="3d">
+  <h2>7. Three-Dimensional Visualisation of Heat Flow (WebGL)</h2>
+  <p>
+    The coloured rod below is a live WebGL (Three.js) rendering. Colour maps temperature from red (hot) to blue (cold).
+    You can rotate the view with the mouse. The temperature field evolves according to the one-dimensional heat equation with the diffusivity you choose.
+  </p>
+  <div class="controls">
+    <div class="control-group">
+      <label>Diffusivity (relative)</label>
+      <input type="range" id="d3dSlider" min="1" max="15" value="4" step="0.5">
+      <span class="value-display" id="d3dVal">4.0</span>
+    </div>
+    <button class="btn" id="restart3d">Restart simulation</button>
+  </div>
+  <div id="webgl-container"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:#ef4444;"></span> Hot end</span>
+    <span><span class="dot" style="background:#3b82f6;"></span> Cold end</span>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  Illustrative textbook article · Heat Conduction · Single-file HTML with Chart.js &amp; Three.js (WebGL) · Educational use
+</footer>
+
+<script>
+// ========== KaTeX ==========
+document.addEventListener("DOMContentLoaded", function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "\\(", right: "\\)", display: false},
+      {left: "\\[", right: "\\]", display: true},
+      {left: "$$", right: "$$", display: true}
+    ],
+    throwOnError: false
+  });
+});
+
+// ========== Thermal conductivity chart ==========
+const kCtx = document.getElementById('kChart').getContext('2d');
+const kChart = new Chart(kCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Heat current (W)'],
+    datasets: [{
+      label: 'dQ/dt',
+      data: [0],
+      backgroundColor: 'rgba(59, 130, 246, 0.7)',
+      borderColor: '#3b82f6',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: 'Heat current (W)', color: '#94a3b8' },
+        ticks: { color: '#94a3b8' },
+        grid: { color: '#334155' }
+      },
+      x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+    },
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Steady-state heat current through 1 cm² area', color: '#e2e8f0' }
+    }
+  }
+});
+
+function updateKChart() {
+  const K = +document.getElementById('kSlider').value;
+  const dT = +document.getElementById('dTSlider').value;
+  const Lcm = +document.getElementById('LSlider').value;
+  const L = Lcm / 100; // m
+  const A = 1e-4; // 1 cm²
+  const current = K * A * dT / L;
+  document.getElementById('kVal').textContent = K;
+  document.getElementById('dTVal').textContent = dT;
+  document.getElementById('LVal').textContent = Lcm.toFixed(1);
+  kChart.data.datasets[0].data = [current];
+  kChart.update();
+}
+['kSlider','dTSlider','LSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateKChart);
+});
+updateKChart();
+
+// ========== Rod temperature profile (Fourier solution approx) ==========
+const rodCtx = document.getElementById('rodChart').getContext('2d');
+const N = 50;
+const Lrod = 1.0; // metres
+let rodChart = new Chart(rodCtx, {
+  type: 'line',
+  data: {
+    labels: Array.from({length: N}, (_,i) => (i/(N-1)*Lrod).toFixed(2)),
+    datasets: [{
+      label: 'T(x,t)',
+      data: [],
+      borderColor: '#f59e0b',
+      backgroundColor: 'rgba(245, 158, 11, 0.15)',
+      fill: true,
+      tension: 0.3,
+      pointRadius: 0
+    },{
+      label: 'Steady state',
+      data: [],
+      borderColor: '#64748b',
+      borderDash: [5,5],
+      pointRadius: 0,
+      fill: false
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        min: 0, max: 100,
+        title: { display: true, text: 'Temperature (°C)', color: '#94a3b8' },
+        ticks: { color: '#94a3b8' },
+        grid: { color: '#334155' }
+      },
+      x: {
+        title: { display: true, text: 'Position x (m)', color: '#94a3b8' },
+        ticks: { color: '#94a3b8' },
+        grid: { color: '#334155' }
+      }
+    },
+    plugins: {
+      legend: { labels: { color: '#e2e8f0' } },
+      title: { display: true, text: 'Temperature distribution along an insulated rod', color: '#e2e8f0' }
+    }
+  }
+});
+
+function computeRodProfile(D, t) {
+  // Ends: T(0)=100, T(L)=0. Initial: T=0 everywhere except end.
+  // Approximate with first few Fourier modes + steady state.
+  const T1 = 100, T2 = 0;
+  const data = [];
+  const steady = [];
+  for (let i = 0; i < N; i++) {
+    const x = i / (N-1) * Lrod;
+    let T = T1 + (T2 - T1) * x / Lrod;
+    // transient: assume initial T=0, so Bn = -2*(T1-T2)/(nπ) for odd n, etc.
+    for (let n = 1; n <= 15; n++) {
+      const Bn = 2 * (T1 - T2) / (n * Math.PI) * (n % 2 === 1 ? 1 : 0) * (-1); // simplified
+      // better coefficients for initial T=0:
+      // Bn = 2/L ∫[0,L] (0 - steady) sin(nπx/L) dx
+      const Bn_correct = -2 * (T1 - T2) / (n * Math.PI);
+      T += Bn_correct * Math.sin(n * Math.PI * x / Lrod) * Math.exp(-n*n*Math.PI*Math.PI * D * t / (Lrod*Lrod));
+    }
+    data.push(Math.max(0, Math.min(100, T)));
+    steady.push(T1 + (T2 - T1) * x / Lrod);
+  }
+  return { data, steady };
+}
+
+function updateRodChart() {
+  const D = +document.getElementById('dSlider').value * 1e-5;
+  const t = +document.getElementById('tSlider').value;
+  document.getElementById('dVal').textContent = (+document.getElementById('dSlider').value).toFixed(1);
+  document.getElementById('tVal').textContent = t;
+  const { data, steady } = computeRodProfile(D, t);
+  rodChart.data.datasets[0].data = data;
+  rodChart.data.datasets[1].data = steady;
+  rodChart.update('none');
+}
+['dSlider','tSlider'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateRodChart);
+});
+updateRodChart();
+
+let playInterval = null;
+document.getElementById('playBtn').addEventListener('click', function() {
+  if (playInterval) {
+    clearInterval(playInterval);
+    playInterval = null;
+    this.textContent = 'Play animation';
+    return;
+  }
+  this.textContent = 'Stop';
+  let t = 0;
+  document.getElementById('tSlider').value = 0;
+  playInterval = setInterval(() => {
+    t += 5;
+    if (t > 300) { t = 0; }
+    document.getElementById('tSlider').value = t;
+    updateRodChart();
+  }, 120);
+});
+
+// ========== Ingen-Hausz experiment ==========
+const metals = [
+  { name: 'Ag', K: 429, color: '#c0c0c0' },
+  { name: 'Cu', K: 401, color: '#b87333' },
+  { name: 'Au', K: 317, color: '#ffd700' },
+  { name: 'Al', K: 237, color: '#a8a8a8' },
+  { name: 'Fe', K: 80,  color: '#71797e' }
+];
+const maxSqrtK = Math.sqrt(429);
+const diagram = document.getElementById('ingenDiagram');
+
+function buildRods(melted = false) {
+  diagram.innerHTML = '';
+  metals.forEach(m => {
+    const rod = document.createElement('div');
+    rod.className = 'rod';
+    rod.style.background = `linear-gradient(to top, ${m.color}88, ${m.color}44)`;
+    const label = document.createElement('div');
+    label.className = 'rod-label';
+    label.textContent = m.name;
+    const melt = document.createElement('div');
+    melt.className = 'melt-zone';
+    const heightPct = melted ? (Math.sqrt(m.K) / maxSqrtK * 70) : 0;
+    melt.style.height = heightPct + '%';
+    const heat = document.createElement('div');
+    heat.className = 'heat-source';
+    rod.appendChild(label);
+    rod.appendChild(melt);
+    rod.appendChild(heat);
+    diagram.appendChild(rod);
+  });
+}
+buildRods(false);
+
+document.getElementById('runIngen').addEventListener('click', () => {
+  buildRods(false);
+  setTimeout(() => buildRods(true), 80);
+});
+document.getElementById('resetIngen').addEventListener('click', () => buildRods(false));
+
+// ========== Three.js WebGL heat rod ==========
+(function() {
+  const container = document.getElementById('webgl-container');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0e17);
+
+  const camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 100);
+  camera.position.set(0, 1.8, 4.5);
+  camera.lookAt(0, 0, 0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  // Lighting
+  const amb = new THREE.AmbientLight(0x404060, 0.6);
+  scene.add(amb);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.8);
+  dir.position.set(2, 3, 4);
+  scene.add(dir);
+
+  // Rod geometry – many thin discs for colour gradient
+  const segments = 40;
+  const rodGroup = new THREE.Group();
+  const discs = [];
+  const radius = 0.18;
+  const length = 3.2;
+  for (let i = 0; i < segments; i++) {
+    const geo = new THREE.CylinderGeometry(radius, radius, length/segments, 16);
+    const mat = new THREE.MeshStandardMaterial({
+      color: 0x3b82f6,
+      metalness: 0.3,
+      roughness: 0.5
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.y = -length/2 + (i + 0.5) * (length/segments);
+    rodGroup.add(mesh);
+    discs.push(mesh);
+  }
+  // rotate so rod is horizontal
+  rodGroup.rotation.z = Math.PI / 2;
+  scene.add(rodGroup);
+
+  // simple orbit via mouse
+  let isDragging = false, prevX = 0, prevY = 0;
+  let rotY = 0.4, rotX = 0.3;
+  renderer.domElement.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
+  window.addEventListener('mouseup', () => isDragging = false);
+  window.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    rotY += (e.clientX - prevX) * 0.008;
+    rotX += (e.clientY - prevY) * 0.008;
+    rotX = Math.max(-1.2, Math.min(1.2, rotX));
+    prevX = e.clientX; prevY = e.clientY;
+  });
+
+  // Temperature field simulation (1-D heat equation discrete)
+  let T = new Float32Array(segments);
+  let Tnew = new Float32Array(segments);
+  function resetTemp() {
+    for (let i = 0; i < segments; i++) T[i] = 0;
+    T[0] = 1.0; // hot end
+  }
+  resetTemp();
+
+  function heatStep(diff) {
+    const dx = 1 / (segments - 1);
+    const dt = 0.4 * dx * dx / Math.max(diff, 0.01); // stable CFL
+    const r = diff * dt / (dx * dx);
+    Tnew[0] = 1.0;
+    Tnew[segments-1] = 0.0;
+    for (let i = 1; i < segments-1; i++) {
+      Tnew[i] = T[i] + r * (T[i+1] - 2*T[i] + T[i-1]);
+    }
+    for (let i = 0; i < segments; i++) T[i] = Tnew[i];
+  }
+
+  function tempToColor(t) {
+    // t in [0,1] → blue → cyan → yellow → red
+    const r = Math.min(1, Math.max(0, 1.5*t));
+    const g = Math.min(1, Math.max(0, 1.5*(1-Math.abs(t-0.5)*2)));
+    const b = Math.min(1, Math.max(0, 1.5*(1-t)));
+    return new THREE.Color(r, g, b);
+  }
+
+  let D3d = 4;
+  document.getElementById('d3dSlider').addEventListener('input', function() {
+    D3d = +this.value;
+    document.getElementById('d3dVal').textContent = D3d.toFixed(1);
+  });
+  document.getElementById('restart3d').addEventListener('click', resetTemp);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    // advance heat equation several sub-steps
+    for (let s = 0; s < 3; s++) heatStep(D3d * 0.015);
+    // update colours
+    for (let i = 0; i < segments; i++) {
+      discs[i].material.color.copy(tempToColor(T[i]));
+    }
+    rodGroup.rotation.y = rotY;
+    rodGroup.rotation.x = rotX;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+})();
+</script>
+</body>
+</html>
